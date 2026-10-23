@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>AIGC · 本地工作台</title>
+  <link rel="icon" href="/static/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/"><span class="brand-icon">a</span><span>AIGC <small>本地工作台</small></span></a>
+    <div class="connection"><span id="status-dot" class="dot"></span><span id="server-state">DGX · 未连接</span><button id="connect" class="button secondary">连接 DGX</button><button id="disconnect" class="button quiet" hidden>断开</button></div>
+  </header>
+  <main>
+    <div class="page-title"><div><p class="eyebrow" id="model-title">QWEN IMAGE 2.1</p><h1>影像与声音工作台</h1><p class="subtitle">用文字、图片和声音，开始一次创作实验。</p></div><div class="storage-note"><span>●</span> 作品保存到本机</div></div>
+    <div id="error" role="alert" class="error" hidden></div>
+    <div class="workspace">
+      <section class="card controls" aria-label="生成设置">
+        <form id="generate-form">
+          <div class="section-heading"><h2>创作设置</h2><span class="subtle">01 / 输入</span></div>
+          <label class="label" for="engine">生成模型</label>
+          <select id="engine"><option value="qwen21">Qwen Image 2.1 UC · 图片</option><option value="h3">MiniMax H3 · 视频</option><option value="music3">MiniMax Music 3 · 音乐</option><option value="voxcpm2">VoxCPM2 · 语音与声音克隆</option></select>
+          <p id="engine-hint" class="field-note">选择模型后连接 DGX。</p>
+          <div class="tabs" role="group" aria-label="生成模式"><button type="button" data-mode="image" class="tab selected" aria-pressed="true">图生视频</button><button type="button" data-mode="reference" class="tab" aria-pressed="false">参考图生视频</button></div>
+          <div id="upload-fields">
+          <label class="label" for="images">参考图片 <span id="image-hint">第 1 张为首帧，第 2 张为可选尾帧</span></label>
+          <label class="upload" id="drop-zone" for="images"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8" cy="8" r="1.5"/><path d="m3 17 5-5 4 4 3-3 6 6"/></svg><strong>选择图片，或拖到这里</strong><span>PNG、JPG、WebP · 每张不超过 32 MB</span></label>
+          <input id="images" name="images" type="file" accept="image/png,image/jpeg,image/webp" multiple class="file-input">
+          <div id="image-previews" class="image-previews"></div>
+          </div>
+          <div id="audio-upload-fields" hidden>
+            <label class="label" for="reference-audio">参考录音 <span>3–30 秒，建议 5–15 秒清晰人声</span></label>
+            <input id="reference-audio" type="file" accept="audio/wav,audio/mpeg,audio/mp4,audio/flac,audio/ogg,.m4a">
+            <details id="reference-tools" class="reference-tools">
+              <summary>从视频提取／裁剪参考录音</summary>
+              <p class="field-note">在本机处理，无需连接 DGX。选择 3–30 秒清晰人声，提取后可直接用于克隆。</p>
+              <label class="label" for="reference-media">源视频或录音 <span>MP4、MOV、MKV、WAV、MP3 等 · 上限 128 MB</span></label>
+              <input id="reference-media" type="file" accept="video/*,audio/*,.mp4,.mov,.mkv,.m4a,.wav,.mp3,.flac,.ogg,.webm">
+              <video id="reference-source" controls playsinline preload="metadata" hidden></video>
+              <p id="reference-source-info" class="field-note" role="status"></p>
+              <fieldset id="reference-range" disabled>
+                <div class="parameters">
+                  <label>开始（秒）<input id="reference-start" type="number" min="0" step="0.01" value="0"></label>
+                  <label>结束（秒）<input id="reference-end" type="number" min="0" step="0.01" value="15"></label>
+                </div>
+                <button id="reference-use-position" type="button" class="button quiet">从当前播放位置开始</button>
+                <label class="reference-check"><input id="reference-trim" type="checkbox">裁去首尾静音 <span>保留自然停顿</span></label>
+                <button id="reference-extract" type="button" class="button secondary">提取并用作参考录音</button>
+              </fieldset>
+              <p id="reference-extract-status" class="field-note" role="status" aria-live="polite"></p>
+              <p id="reference-extract-error" class="job-error" role="alert" hidden></p>
+            </details>
+            <audio id="reference-player" controls preload="metadata" hidden></audio>
+            <p id="reference-info" class="field-note" role="status" hidden></p>
+            <a id="reference-download" class="button secondary" hidden>下载参考 WAV ↓</a>
+            <label class="label" for="reference-text">录音原文 <span>选填；填写时需与录音一致</span></label>
+            <textarea id="reference-text" rows="2" maxlength="2000" placeholder="填写参考录音中实际说的内容，可以帮助保留发音与语气。"></textarea>
+          </div>
+          <label class="label" id="prompt-label" for="prompt">画面描述</label>
+          <textarea id="prompt" rows="5" maxlength="12000" required placeholder="描述主体动作、镜头运动、光线与声音。例如：镜头缓慢向前，微风轻轻吹动叶片，背景是清晨的鸟鸣。"></textarea>
+          <p id="prompt-hint" class="field-note">动作越具体，越方便比较不同参数的效果。</p>
+          <div id="lyrics-field" hidden>
+            <label class="label" for="lyrics">歌词 <span>可用 [Verse]、[Chorus] 标记段落</span></label>
+            <textarea id="lyrics" rows="5" maxlength="8000" placeholder="留空可尝试纯音乐，请在音乐描述中注明不要人声。"></textarea>
+          </div>
+          <div id="voice-fields" hidden>
+            <label class="label" for="language">语言</label>
+            <select id="language"><option value="auto">跟随文本与参考录音</option><option value="zh">普通话</option><option value="yue">粤语／广东话</option><option value="en">英语</option></select>
+            <label class="label" for="voice-style">声音风格 <span>选填</span></label>
+            <input id="voice-style" maxlength="500" placeholder="例如：温柔、轻快、慢一点。">
+            <p class="field-note">粤语建议使用粤语文案和粤语参考录音。无参考录音时由模型生成音色。</p>
+          </div>
+          <div class="parameters">
+            <label id="size-field">画面尺寸<select id="size"><option value="768,448">768 × 448 · 默认</option><option value="512,320">512 × 320 · 较快</option><option value="864,480">864 × 480</option><option value="448,768">448 × 768 · 竖屏</option><option value="custom">自定义</option></select></label>
+            <label id="seconds-field"><span id="seconds-label">目标时长（秒）</span><input id="seconds" type="number" min="0.2" max="15" step="0.1" value="2" required></label>
+            <label>采样步数<input id="steps" type="number" min="1" max="40" value="8" required></label>
+            <label>随机种子<div class="seed-field"><input id="seed" type="number" min="0" max="9007199254740991" value="42" required><button id="random-seed" type="button" title="换一个随机种子" aria-label="换一个随机种子">↻</button></div></label>
+          </div>
+          <div id="custom-size" class="parameters" hidden><label>宽度<input id="width" type="number" min="128" max="1536" step="32" value="768"></label><label>高度<input id="height" type="number" min="128" max="1536" step="32" value="448"></label></div>
+          <p id="duration-hint" class="field-note">实际时长约 2.33 秒 · 56 帧 · 24 fps</p>
+          <button id="generate" type="submit" class="button primary generate" disabled>连接 DGX 后开始生成 <span>↗</span></button>
+          <p class="privacy-note">远端任务文件会在下载校验后清理；模型服务空闲 10 分钟自动释放。共享服务器的 swap 和管理员访问仍不在此保护范围内。</p>
+        </form>
+      </section>
+      <div class="right-column">
+        <section class="card result-card" aria-label="生成结果">
+          <div class="section-heading"><h2>生成结果</h2><div class="heading-actions"><button id="clear-preview" type="button" class="button quiet" title="收起当前结果，记录和文件仍保留在本地历史中" hidden>清空预览</button><span class="subtle">02 / 输出</span></div></div>
+          <div id="empty-result" class="empty-result"><div class="film-icon">✧</div><h3>下一次创作，从这里开始</h3><p>生成结果会在这里展示，<br>文件与参数一起保存在你的电脑上。</p></div>
+          <div id="job-panel" hidden>
+            <video id="result-video" controls playsinline preload="metadata" hidden></video>
+            <img id="result-image" alt="生成图片" hidden>
+            <div id="audio-result" class="audio-result" hidden><div class="audio-symbol" aria-hidden="true">♫</div><p id="audio-title">声音已生成</p><audio id="result-audio" controls preload="metadata"></audio></div>
+            <div id="working-preview" class="working-preview"><img id="working-image" alt="本次参考图片"><div class="working-caption">正在准备画面</div></div>
+            <div class="job-status"><strong id="job-stage"></strong><span id="job-elapsed"></span></div>
+            <progress id="job-progress" max="100" value="0" aria-label="生成进度"></progress>
+            <p id="job-details" class="field-note"></p>
+            <p id="job-error" class="job-error" hidden></p>
+            <div class="result-actions"><span id="cleanup-status" class="cleanup-status"></span><a id="download" class="button primary" hidden>下载视频 ↓</a><button id="cancel" class="button secondary" hidden>取消任务</button></div>
+          </div>
+        </section>
+        <section class="card history-card" aria-label="本地历史">
+          <div class="section-heading"><h2>本地历史</h2><span id="history-count" class="subtle">0 个实验</span></div>
+          <p class="field-note history-note">删除记录会同时删除该任务的本地结果、参考素材与参数文件。</p>
+          <div id="history-empty" class="history-empty">完成第一次生成后，作品会保留在这里。</div>
+          <div id="history-list" class="history-list"></div>
+        </section>
+        <details id="connection-details" class="connection-details"><summary>连接诊断与退出</summary><pre id="connection-log">等待连接。</pre><button id="shutdown" class="button quiet">关闭本地工作台</button></details>
+      </div>
+    </div>
+    <footer><span>AIGC / 学习与实验</span><span>本地输入 · DGX 推理 · 本地保存</span></footer>
+  </main>
+</body>
+</html>

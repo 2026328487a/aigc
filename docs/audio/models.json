@@ -1,0 +1,113 @@
+{
+  "music3": {
+    "repository": "Comfy-Org/MiniMax-Music-3",
+    "revision": "9e364ccd290a401561091fb441ed19cd7de92550",
+    "files": [
+      {
+        "rfilename": "README.md",
+        "blobId": "9930b298da86731cf58300263b07c8a402f11162",
+        "size": 1790
+      },
+      {
+        "rfilename": "diffusion_models/minimax_music3_dit_fp16.safetensors",
+        "blobId": "8a78566fb928812c0e086a9bb352711beb00ea15",
+        "size": 4914197682,
+        "lfs": {
+          "sha256": "45494a2b6b69af115902ff28eaf54118d19067aa54da01000f3e3efce7ba0e34",
+          "size": 4914197682,
+          "pointerSize": 135
+        }
+      },
+      {
+        "rfilename": "text_encoders/minimax_music3_text_encoder_pruned_int8_convrot.safetensors",
+        "blobId": "77ae312bab407581300764c4dbf2e6dcdc67b760",
+        "size": 9196611886,
+        "lfs": {
+          "sha256": "010b7416d2336a08c711bc22ee65849c9623069ddb7d89bec011a75699e52014",
+          "size": 9196611886,
+          "pointerSize": 135
+        }
+      },
+      {
+        "rfilename": "vae/minimax_music3_dav.safetensors",
+        "blobId": "0f2dc1c708ba94de9b24e58355fefc56eeb84db3",
+        "size": 216696128,
+        "lfs": {
+          "sha256": "2a32155b769be01445fcc2a8663b910fc9e1751e18dc1c3ec528064512d9ef0c",
+          "size": 216696128,
+          "pointerSize": 134
+        }
+      }
+    ]
+  },
+  "voxcpm2": {
+    "repository": "openbmb/VoxCPM2",
+    "revision": "32279effe8c19989596f05d353d1447f51d9e915",
+    "files": [
+      {
+        "rfilename": "README.md",
+        "blobId": "14573f986536306e3d9d65f988a3fc4b863b895c",
+        "size": 7939
+      },
+      {
+        "rfilename": "audiovae.pth",
+        "blobId": "036ef0b5ced85736b842e31d35bd39606845d830",
+        "size": 376951122,
+        "lfs": {
+          "sha256": "94b5d51e107e0507d4acc976cfdadb64edd6fd06d1f751dadbf2fd1594274bf1",
+          "size": 376951122,
+          "pointerSize": 134
+        }
+      },
+      {
+        "rfilename": "config.json",
+        "blobId": "792f1c223ed607f9e508c0a0deb15dd9532483be",
+        "size": 4336
+      },
+      {
+        "rfilename": "model.safetensors",
+        "blobId": "d53929032ba7405f13a6236df11cd12da17d995a",
+        "size": 4580080592,
+        "lfs": {
+          "sha256": "f7f964cfa9da23653baec6e6f7750719977ad944ed9f95fe52fe3a620506891d",
+          "size": 4580080592,
+          "pointerSize": 135
+        }
+      },
+      {
+        "rfilename": "special_tokens_map.json",
+        "blobId": "8619dda6f3eb6d60d0a1bb274820054e46f41699",
+        "size": 1632
+      },
+      {
+        "rfilename": "tokenization_voxcpm2.py",
+        "blobId": "e7d768677298d058fa6ef8b160e3ca4430997fad",
+        "size": 2895
+      },
+      {
+        "rfilename": "tokenizer.json",
+        "blobId": "41a5c2a8dba4058dd1ad73fb898abf5e4f64f0f9",
+        "size": 3676772
+      },
+      {
+        "rfilename": "tokenizer_config.json",
+        "blobId": "fecf4cdae73b57053cac2ad34c67febbe4e4f08b",
+        "size": 5059
+      }
+    ]
+  },
+  "voxcpm_source": {
+    "revision": "cce58a5b59303c9bd63d12f23afe6a49a4a80c59"
+  },
+  "music_license": {
+    "repository": "MiniMaxAI/MiniMax-Music3",
+    "revision": "fbdf52fbaaca799592917417eb05f1899f1255ec",
+    "files": [
+      {
+        "rfilename": "LICENSE",
+        "blobId": "6df669dd190b8a36bc0829b604ce186ee0a1a357",
+        "size": 7373
+      }
+    ]
+  }
+}

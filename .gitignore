@@ -1,0 +1,34 @@
+# Python environments and bytecode
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+
+# Local runtime data and generated media
+/data/
+/logs/
+/test-results/
+*.log
+
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Development caches and editor settings
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Local reference images, unused by the application
+/test.png
+/微信图片_20261015153200_162_58.jpg
