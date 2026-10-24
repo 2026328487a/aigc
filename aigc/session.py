@@ -95,6 +95,9 @@ class Session:
             config["worker_source"] = (source_dir / "remote_tts_worker.py").read_text(encoding="utf-8")
         bootstrap = base64.b64encode((source_dir / "remote_supervisor.py").read_bytes())
         try:
+            user_snapshot = ROOT / "data/comfy/user" / engine / "snapshot.json"
+            if engine != "voxcpm2" and user_snapshot.is_file():
+                config["user_files"] = json.loads(user_snapshot.read_text(encoding="utf-8"))
             self.remote = await asyncio.create_subprocess_exec(
                 "ssh", *SSH_OPTIONS, "dgx",
                 "python3 -u -c 'import base64;exec(compile(base64.b64decode(input()), \"<aigc-session>\", \"exec\"))'",

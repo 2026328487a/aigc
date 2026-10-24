@@ -1,5 +1,6 @@
 const $ = (id) => document.getElementById(id);
-let engine = 'qwen21', mode = 'text', files = [], selectedJob, allJobs = [], server = {}, busy = false, shuttingDown = false;
+const requestedEngine = new URLSearchParams(location.search).get('engine');
+let engine = requestedEngine === 'voxcpm2' ? 'voxcpm2' : 'qwen21', mode = engine === 'voxcpm2' ? 'speech' : 'text', files = [], selectedJob, allJobs = [], server = {}, busy = false, shuttingDown = false;
 let activeJob = null, jobsRevision = 0;
 const deletingJobs = new Set();
 try {
@@ -329,4 +330,5 @@ async function refresh() {
   } catch(error) {$('server-state').textContent='本地服务连接中断'; $('generate').disabled=true; showError(error.message);}
   finally {polling=false;}
 }
+$('engine').value = engine;
 configureEngine(); refresh(); setInterval(refresh,2000);

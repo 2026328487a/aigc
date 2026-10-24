@@ -74,7 +74,7 @@ uvicorn.run(workbench.app, host='127.0.0.1', port={port}, access_log=False, life
                 browser = playwright.chromium.launch(channel='msedge', headless=True)
                 page = browser.new_page(viewport={'width': 1440, 'height': 1100})
                 page.on('pageerror', lambda error: errors.append(str(error)))
-                page.goto(url, wait_until='networkidle')
+                page.goto(url + '/workbench', wait_until='networkidle')
                 page.locator('#engine').select_option('voxcpm2')
                 page.locator('[data-mode=clone]').click()
                 expect(page.locator('#generate')).to_be_disabled()

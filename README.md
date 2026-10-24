@@ -1,10 +1,12 @@
-# AIGC 本地工作台
+# AIGC · ComfyUI 本地管理器
 
-本地网页输入文字、上传图片或参考录音，通过 SSH 调用 DGX 上的 Qwen Image 2.1、MiniMax H3、MiniMax Music 3 或 VoxCPM2，图片、视频、音频和任务历史保存到本机。Qwen 的安装记录见 [图片部署说明](docs/qwen21/deployment.md)，音乐和粤语声音克隆见 [音频部署说明](docs/audio/deployment.md)。
+本地管理器通过 SSH 按需启动 DGX 上的独立 ComfyUI，在本机浏览器使用完整节点界面，自动下载和校验生成结果，空闲 10 分钟或手动断开时回收实例与会话文件。图片、视频和音乐分别复用已部署的 Qwen Image 2.1、MiniMax H3、MiniMax Music 3 环境；VoxCPM2 语音保留已有独立入口，后续再接入 ComfyUI 节点。
+
+Qwen 的安装记录见 [图片部署说明](docs/qwen21/deployment.md)，音乐和粤语声音克隆见 [音频部署说明](docs/audio/deployment.md)。原简化表单及历史仍可在 [原工作台](http://127.0.0.1:8765/workbench) 使用。
 
 **获取项目与首次配置**
 
-本地运行环境为 Windows、Python 3.13 和 Windows OpenSSH；克隆项目需要 Git。
+本地运行环境为 Windows、Python 3.12 或更新版本和 Windows OpenSSH；克隆项目需要 Git。本次验证使用 Python 3.12.10。
 
 ```powershell
 git clone https://github.com/2026328487a/aigc.git
@@ -23,11 +25,18 @@ python -m venv .venv
 .\.venv\Scripts\python.exe -m aigc --open-browser
 ```
 
-1. 选择生成模型，点击“连接 DGX”，等待“已就绪”。这会启动自己的临时推理实例。
-2. Qwen 支持只输入描述的文生图，以及上传参考图的图片编辑；H3 提供图生视频和参考图生视频。
-   MiniMax Music 3 输入音乐描述和可选歌词；VoxCPM2 输入待朗读文字，声音克隆模式再上传 3–30 秒参考录音。
-3. 点击“开始生成”。页面显示阶段和采样进度，完成后自动下载到本地并提供播放、下载。
-4. 不用服务器时点击“断开”；空闲 10 分钟也会自动断开。关闭整个程序可展开“连接诊断与退出”，点击“关闭本地工作台”，或在启动终端按 Ctrl+C。
+1. 在本地管理页选择图片、视频或音乐环境，点击“启动 ComfyUI”，等待“已就绪”。
+2. 点击“打开 ComfyUI”。这是服务器自带的完整节点界面，HTTP、上传、预览和 WebSocket 都经过本地代理及 SSH 隧道。
+3. 下载页面上的现有模型模板，把 `.api.json` 文件拖入 ComfyUI 画布。修改提示词和参数；图片编辑及视频模板先在 LoadImage 节点上传参考图，再运行。
+4. 任务完成后，管理器自动保存输出、API 工作流、原生工作流（提交携带时）和任务历史，校验文件大小与 SHA-256。管理页“最近任务”可下载本地文件。
+5. 素材和输出在同一会话内保留，以便后续工作流引用。点击“断开并清理”或队列空闲 10 分钟后，停止实例并删除整个远端会话目录。运行、排队或归档中的任务不会触发空闲回收；下载失败会保留会话并重试。
+6. 语音点击右上角“语音与声音克隆”，使用既有 VoxCPM2 入口。关闭程序可展开“连接诊断与退出”，点击“关闭本地管理器”，或在启动终端按 Ctrl+C。
+
+原生 ComfyUI 的已归档预览可由本地代理提供；核心 `/history` 返回本地保存的任务记录。工作流及设置的 JSON/CSS 等用户文件备份到本机，启动同一模型环境时恢复。当前备份单文件上限 5 MB、总计 20 MB。
+
+不同模型环境仍按需切换，当前使用各环境已有内置节点。新增模型、第三方节点和语音 ComfyUI 节点后续按需要接入。原生前端的新资产库等功能若依赖服务器持久数据库，暂不承诺完整持久化；本地归档和核心历史是结果保存依据。
+
+以下“清空预览”“删除历史”等表单功能说明对应保留的 `/workbench` 页面。
 
 生成结果右上角的“清空预览”可以随时收起已结束任务的图片或视频，停止视频播放；历史和文件仍然保留。清空后，定时刷新及当前标签页重新加载都不会自动展示旧图；点击一条历史或开始下一次生成会重新展示结果。
 
@@ -35,7 +44,7 @@ python -m venv .venv
 
 2026-10-16 已实查远端会话及 ComfyUI 文件目录，未发现工作台任务照片残留。功能说明和检查范围见 [历史与预览说明](docs/history-controls.md)。
 
-关闭浏览器标签页不会取消任务。本地服务继续下载结果，随后按空闲超时回收服务器。再次打开网页仍能查看本地历史，播放历史视频不需要连接 DGX。
+关闭浏览器标签页不会取消任务。本地管理器继续下载结果，随后按空闲超时回收服务器。再次打开管理页仍可下载本地归档；重新启动实例后可以打开原生 ComfyUI。
 
 **当前功能**
 
@@ -50,9 +59,23 @@ python -m venv .venv
 - 尺寸、时长、采样步数和随机种子；显示模型对齐后的实际时长。
 - 生成进度、取消、H.264/AAC 视频播放和下载、本地历史、逐条删除历史及文件、手动清空结果预览。
 - SHA-256、文件大小、图片／视频解码及提示词／工作流元数据检查。
-- 单任务运行，避免重复点击提交多个任务；当前只接 DGX，4090 尚未接入。
+- 原表单按单任务运行，ComfyUI 使用原生任务队列；两种入口互相避免干扰。当前只接 DGX，4090 尚未接入。
 
 Qwen 建议使用默认 1024×1024、25 步；512×512 可更快试图。H3 建议先用 768×448、2 秒；帧数必须对齐到 `17k+5`，所以目标 2 秒会得到 56 帧，即约 2.33 秒。时长、分辨率和参考图数量增加会提高计算和内存开销。
+
+**原生 ComfyUI 验证（2026-10-23）**
+
+51 项本地测试通过。通过真实 Edge 浏览器加载原生前端、导入 API 工作流，并由前端提交以下模型小样：
+
+| 环境 | 参数 | 已校验的本地结果 |
+| --- | --- | --- |
+| Qwen Image 2.1 | 512×512，4 步 | PNG，512×512 |
+| MiniMax H3 | 320×192，39 帧，2 步 | H.264 MP4，1.625 秒，含音轨 |
+| MiniMax Music 3 | 目标 10 秒，10 步 | WAV，约 9.996 秒，双声道 44.1 kHz |
+
+三种任务均验证了本地文件 SHA-256、断开后的本地预览，以及通过独立 SSH 检查确认远端会话目录已删除。Qwen 重连验证了工作流与设置恢复；390 像素宽的管理页和语音入口检查通过。原 VoxCPM2 接口也重新生成了 2.4 秒语音，完成下载、WAV 校验及清理。原生前端未出现 JavaScript 页面错误；页面切换期间有少量可选样式／设置请求被浏览器取消，保留在测试报告中。
+
+这些是小参数的流程验证，不代表默认参数的生成质量或速度。报告位于本机 `test-results/native-*-generate.json` 与 `test-results/native-media-validation.json`。
 
 **Qwen 实测结果（2026-10-15）**
 
@@ -74,7 +97,15 @@ Qwen 建议使用默认 1024×1024、25 步；512×512 可更快试图。H3 建�
 **数据在哪里**
 
 ```text
-D:\aigc\
+E:\ai\aigc\
+  data\comfy\jobs\<归档ID>\
+    job.json             原生 ComfyUI 任务状态及输出校验和
+    workflow-api.json    实际提交的 API 节点图
+    workflow.json        原生画布工作流（提交携带时）
+    history.json         原生任务执行记录
+    000.png/mp4/wav/...   自动下载的输出，多个文件依次编号
+  data\comfy\user\<模型环境>\snapshot.json
+                         工作流、设置等用户文件的本地备份
   data\jobs\<任务ID>\
     reference_1.png      本地参考图（规范化为 PNG，不携带源图元数据）
     workflow.json        本次实际提交的节点图
@@ -89,7 +120,7 @@ D:\aigc\
 
 H3 复用 `/home/jnu/src/ComfyUI`、`/home/jnu/venvs/comfyui-ltx23`；Qwen 使用 `/home/jnu/src/ComfyUI-qwen21`、`/home/jnu/venvs/comfyui-qwen21`。音乐使用独立的 `ComfyUI-music3` 源码与 `comfyui-music3` 环境；语音使用 `VoxCPM-aigc` 源码与 `voxcpm2-aigc` 环境，模型位于 `/home/jnu/models/aigc/VoxCPM2`。会话启动器通过 SSH 标准输入发送。
 
-每个远端会话使用权限 `0700` 的 `/dev/shm/aigc-<随机标识>`，输入、输出、用户目录、上传暂存和主要运行缓存都指向其中。数据库放内存，视频关闭 prompt/workflow 元数据，不加载额外自定义节点或云端 API 节点。每个任务下载并校验后清理对应文件和历史，断开时回收整个实例。
+每个远端会话使用权限 `0700` 的 `/dev/shm/aigc-<随机标识>`，输入、输出、用户目录、上传暂存和主要运行缓存都指向其中。数据库放内存，关闭 prompt/workflow 媒体元数据，不加载额外自定义节点或云端 API 节点。原表单每个任务下载并校验后清理对应文件和历史；原生 ComfyUI 为支持素材复用，在当前会话内保留远端任务文件，断开或空闲回收时删除整个会话目录。
 
 远端所有接口统一使用一次性会话令牌认证，令牌只保存在进程内存，通过 SSH 标准输入传递。本地网页不接触 SSH 密钥；已有 Windows OpenSSH 配置中的 `dgx` 别名负责连接。
 
@@ -101,15 +132,17 @@ H3 复用 `/home/jnu/src/ComfyUI`、`/home/jnu/venvs/comfyui-ltx23`；Qwen 使�
 | --- | --- |
 | `aigc/app.py` | 本地 API、上传、任务状态、下载校验与清理协调 |
 | `aigc/session.py` | SSH 生命周期、认证、隧道、心跳和诊断 |
+| `aigc/native_comfy.py` | 原生 ComfyUI HTTP／WebSocket 代理、队列检查、本地归档与预览 |
 | `aigc/remote_supervisor.py` | 远端临时目录、进程管理、超时回收 |
 | `aigc/remote_service.py` | ComfyUI 启动适配、统一鉴权、限定目录内的清理接口 |
 | `aigc/remote_tts_service.py` | 独立 TTS 接口、参考录音上传、进程取消及会话文件管理 |
 | `aigc/remote_tts_worker.py` | 单任务 VoxCPM2 推理与 WAV 输出 |
 | `aigc/workflows.py` | H3 与 Qwen 参数、文生图、编辑和视频工作流 |
-| `static/` | 简单 HTML、CSS、JavaScript 页面 |
+| `static/launcher.*` | ComfyUI 启动、环境选择、模板和本地归档入口 |
+| `static/index.html`、`static/app.js` | 保留的简化表单，含独立语音入口 |
 | `docs/inspection.md` | 初始环境检查与方案存档 |
 
-本地环境为 Python 3.13；依赖装在项目 `.venv`，直接依赖版本记录在 `requirements.txt`。修改 Python 后，先关闭本地工作台，再重新运行启动器。暂不使用 uvicorn 的 Windows `--reload` 模式，因为本项目需要异步 SSH 子进程。
+本次本地环境为 Python 3.12.10；依赖装在项目 `.venv`，直接依赖版本记录在 `requirements.txt`。修改 Python 后，先关闭本地工作台，再重新运行启动器。暂不使用 uvicorn 的 Windows `--reload` 模式，因为本项目需要异步 SSH 子进程。
 
 ```powershell
 # 本地单元测试，不连接 GPU
@@ -118,6 +151,17 @@ H3 复用 `/home/jnu/src/ComfyUI`、`/home/jnu/venvs/comfyui-ltx23`；Qwen 使�
 # 浏览器检查需要已安装的 Microsoft Edge
 .\.venv\Scripts\python.exe -m pip install -r requirements-dev.txt
 .\.venv\Scripts\python.exe scripts\ui_smoke.py
+
+# 原生 ComfyUI 检查：连接真实 DGX，运行 CPU 图片保存工作流，验证归档和清理
+.\.venv\Scripts\python.exe -X utf8 scripts\native_comfy_smoke.py --engine qwen21
+.\.venv\Scripts\python.exe -X utf8 scripts\native_comfy_smoke.py --engine h3
+# 音乐环境检查使用合成测试录音与 CPU 音频保存，不运行音乐模型推理
+.\.venv\Scripts\python.exe -X utf8 scripts\native_comfy_smoke.py --engine music3
+
+# 原生画布的真实模型推理小样（逐个运行）
+.\.venv\Scripts\python.exe -X utf8 scripts\native_comfy_smoke.py --engine qwen21 --generate --restore
+.\.venv\Scripts\python.exe -X utf8 scripts\native_comfy_smoke.py --engine h3 --generate
+.\.venv\Scripts\python.exe -X utf8 scripts\native_comfy_smoke.py --engine music3 --generate
 
 # 历史删除与预览检查：使用独立测试数据，不连接 DGX
 .\.venv\Scripts\python.exe -X utf8 scripts\history_ui_smoke.py

@@ -1,5 +1,6 @@
 """Sent over SSH stdin; never installed in the shared ComfyUI checkout."""
 
+import base64
 import json
 import os
 import pathlib
@@ -31,6 +32,18 @@ def main():
             signal.signal(signum, terminate)
         for name in ("input", "output", "user", "scratch", "scratch/temp", "cache"):
             (root / name).mkdir(parents=True, exist_ok=True)
+        user_root = root / "user/default"
+        total = 0
+        for item in config.pop("user_files", []):
+            path = user_root / item["path"]
+            if not path.resolve().is_relative_to(user_root) or path.suffix.lower() not in (".json", ".json5", ".css", ".txt", ".yaml", ".yml"):
+                raise ValueError("Invalid user-data restore path")
+            content = base64.b64decode(item["data"], validate=True)
+            total += len(content)
+            if len(content) > 5 * 1024 * 1024 or total > 20 * 1024 * 1024:
+                raise ValueError("User data is too large")
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(content)
         with socket.socket() as sock:
             sock.bind(("127.0.0.1", 0))
             port = sock.getsockname()[1]

@@ -15,7 +15,7 @@ with sync_playwright() as playwright:
     browser = playwright.chromium.launch(channel="msedge", headless=True)
     page = browser.new_page(viewport={"width": 1440, "height": 1100})
     page.on("pageerror", lambda error: errors.append(str(error)))
-    page.goto(BASE, wait_until="networkidle")
+    page.goto(BASE + "/workbench", wait_until="networkidle")
     page.locator("#engine").select_option("qwen21")
     expect(page.locator("#upload-fields")).to_be_hidden()
     expect(page.locator("#steps")).to_have_value("25")

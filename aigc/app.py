@@ -13,6 +13,7 @@ import uuid
 import wave
 
 import av
+import httpx
 from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse, JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
@@ -25,10 +26,12 @@ from websockets.asyncio.client import connect as websocket_connect
 from .session import ROOT, Session
 from .workflows import Settings, build_workflow
 from .reference_audio import MAX_MEDIA_BYTES, extract_reference
+from .native_comfy import NativeComfy
 
 
 DATA = ROOT / "data/jobs"
 session = Session()
+native = NativeComfy(session)
 active_task = None
 active_job = None
 submission_lock = asyncio.Lock()
@@ -277,13 +280,23 @@ async def run_job(job, settings):
 
 async def maintenance():
     while True:
-        await asyncio.sleep(10)
-        if session.state == "ready" and active_job is None:
-            if session.remote.returncode is not None or session.tunnel.returncode is not None:
-                await session.stop()
-                session.error = "连接已断开，可重新连接 DGX"
-            elif time.monotonic() - session.last_used > 600:
-                await session.stop()
+        await asyncio.sleep(2)
+        async with submission_lock:
+            if session.state == "ready" and active_job is None:
+                if session.remote.returncode is not None or session.tunnel.returncode is not None:
+                    native.ended()
+                    await session.stop()
+                    session.error = "连接已断开，可重新连接 DGX"
+                else:
+                    try:
+                        await native.collect()
+                        if await native.busy():
+                            session.last_used = time.monotonic()
+                        elif time.monotonic() - session.last_used > 600:
+                            await native.before_stop()
+                            await session.stop()
+                    except (RuntimeError, httpx.HTTPError, OSError) as error:
+                        session.error = str(error)[:500]
 
 
 async def cancel_active():
@@ -306,6 +319,7 @@ async def cancel_active():
 @asynccontextmanager
 async def lifespan(app):
     DATA.mkdir(parents=True, exist_ok=True)
+    native.load()
     for path in DATA.glob("*/job.json"):
         job = json.loads(path.read_text(encoding="utf-8"))
         if job["state"] not in TERMINAL:
@@ -317,6 +331,11 @@ async def lifespan(app):
     with suppress(asyncio.CancelledError):
         await task
     await cancel_active()
+    try:
+        await native.before_stop()
+    except (RuntimeError, httpx.HTTPError, OSError) as error:
+        session.logs.append("退出前归档未完成：" + str(error)[:300])
+    native.ended()
     await session.stop()
 
 
@@ -326,6 +345,14 @@ app.add_middleware(TrustedHostMiddleware, allowed_hosts=["127.0.0.1", "localhost
 
 @app.middleware("http")
 async def local_only(request: Request, call_next):
+    if request.url.path == "/comfy" or request.url.path.startswith("/comfy/"):
+        # Native ComfyUI uses its own same-origin HTTP/WebSocket guard.
+        if request.method not in ("GET", "HEAD", "OPTIONS"):
+            async with submission_lock:
+                if active_job:
+                    return JSONResponse({"error": "原工作台任务正在运行，请等待完成"}, status_code=409)
+                return await call_next(request)
+        return await call_next(request)
     origin = request.headers.get("origin")
     expected = f"http://{request.headers.get('host')}"
     if (origin and origin != expected) or request.headers.get("sec-fetch-site") == "cross-site":
@@ -342,12 +369,17 @@ async def local_only(request: Request, call_next):
 
 @app.get("/")
 async def index():
+    return FileResponse(ROOT / "static/launcher.html")
+
+
+@app.get("/workbench")
+async def existing_workbench():
     return FileResponse(ROOT / "static/index.html")
 
 
 @app.get("/api/status")
 async def status():
-    return {"session": session.public(), "active_job": active_job}
+    return {"session": session.public(), "active_job": active_job, "comfy": native.public()}
 
 
 @app.get("/api/diagnostics")
@@ -365,6 +397,12 @@ async def connect(engine: Literal["h3", "qwen21", "music3", "voxcpm2"] = "h3"):
         if active_job:
             raise HTTPException(409, "请先等待当前任务完成或取消，再切换模型")
         if session.engine != engine and session.state in ("ready", "starting"):
+            if await native.busy():
+                raise HTTPException(409, "ComfyUI 正在运行或归档任务，请先等待完成或断开")
+            try:
+                await native.before_stop()
+            except (RuntimeError, httpx.HTTPError, OSError) as error:
+                raise HTTPException(409, str(error))
             await session.stop()
         if session.state not in ("ready", "starting") and (not session.connect_task or session.connect_task.done()):
             session.engine = engine
@@ -374,9 +412,14 @@ async def connect(engine: Literal["h3", "qwen21", "music3", "voxcpm2"] = "h3"):
 
 @app.post("/api/disconnect")
 async def disconnect():
-    await cancel_active()
-    await session.stop()
-    return session.public()
+    async with submission_lock:
+        await cancel_active()
+        try:
+            await native.before_stop()
+        except (RuntimeError, httpx.HTTPError, OSError) as error:
+            raise HTTPException(409, str(error))
+        await session.stop()
+        return session.public()
 
 
 @app.get("/api/jobs")
@@ -389,8 +432,13 @@ async def shutdown():
     callback = getattr(app.state, "shutdown", None)
     if callback is None:
         raise HTTPException(409, "请在启动终端按 Ctrl+C 关闭本地服务")
-    await cancel_active()
-    await session.stop()
+    async with submission_lock:
+        await cancel_active()
+        try:
+            await native.before_stop()
+        except (RuntimeError, httpx.HTTPError, OSError) as error:
+            raise HTTPException(409, str(error))
+        await session.stop()
     return JSONResponse({"stopped": True, "remote_cleaned": session.cleaned}, background=BackgroundTask(callback))
 
 
@@ -426,6 +474,8 @@ async def create_job(settings: str = Form(...), images: list[UploadFile] = File(
     async with submission_lock:
         if session.state != "ready":
             raise HTTPException(409, "请先连接 DGX，等待模型服务就绪")
+        if native.pending():
+            raise HTTPException(409, "ComfyUI 正在运行或归档任务，请先等待完成")
         if active_task and not active_task.done():
             raise HTTPException(409, "已有任务在运行，请等待完成或取消")
         try:
@@ -533,4 +583,36 @@ async def job_file(job_id: str, filename: str, download: bool = False):
     return FileResponse(path, filename=filename if download else None)
 
 
+@app.get("/api/comfy/templates/{name}")
+async def native_template(name: str):
+    options = {
+        "qwen-text": (Settings(engine="qwen21", mode="text", prompt="A small red boat on a quiet lake, soft morning light", width=512, height=512, steps=25), []),
+        "qwen-edit": (Settings(engine="qwen21", mode="edit", prompt="Change the background to a quiet garden", width=512, height=512, steps=25), ["reference.png"]),
+        "h3-image": (Settings(engine="h3", mode="image", prompt="The camera slowly moves forward", width=768, height=448), ["reference.png"]),
+        "h3-reference": (Settings(engine="h3", mode="reference", prompt="<Picture 1> moves gently in the breeze", width=512, height=320, steps=4), ["reference.png"]),
+        "music": (Settings(engine="music3", mode="music", prompt="Gentle acoustic guitar and warm piano, calm instrumental music", seconds=10, steps=30), []),
+    }
+    if name not in options:
+        raise HTTPException(404)
+    settings, images = options[name]
+    graph = build_workflow(settings, images, uuid.uuid4().hex)
+    return JSONResponse(graph, headers={"Content-Disposition": f'attachment; filename="{name}.api.json"'})
+
+
+@app.get("/api/comfy/jobs/{archive_id}/files/{filename}")
+async def native_file(archive_id: str, filename: str):
+    record = native.records.get(archive_id)
+    if not record:
+        raise HTTPException(404)
+    allowed = {"workflow-api.json", "workflow.json", "history.json", "job.json"}
+    allowed.update(f["local_name"] for f in record["files"])
+    if filename not in allowed:
+        raise HTTPException(404)
+    path = native.directory(archive_id) / filename
+    if not path.is_file() or path.is_symlink():
+        raise HTTPException(404)
+    return FileResponse(path, filename=filename)
+
+
+app.mount("/comfy", native.gateway, name="comfy")
 app.mount("/static", StaticFiles(directory=ROOT / "static"), name="static")

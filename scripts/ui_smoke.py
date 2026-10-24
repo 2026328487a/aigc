@@ -36,7 +36,7 @@ with sync_playwright() as playwright:
     browser = playwright.chromium.launch(channel="msedge", headless=True)
     page = browser.new_page(viewport={"width": 1440, "height": 1100}, device_scale_factor=1)
     page.on("pageerror", lambda error: errors.append(str(error)))
-    page.goto("http://127.0.0.1:8765", wait_until="networkidle")
+    page.goto("http://127.0.0.1:8765/workbench", wait_until="networkidle")
     page.screenshot(path=output / "workbench-desktop.png", full_page=True)
     if args.submit:
         page.locator("#engine").select_option("h3")

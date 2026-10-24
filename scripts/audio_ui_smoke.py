@@ -14,7 +14,7 @@ with sync_playwright() as playwright:
     browser = playwright.chromium.launch(channel='msedge', headless=True)
     page = browser.new_page(viewport={'width': 1440, 'height': 1100})
     page.on('pageerror', lambda error: errors.append(str(error)))
-    page.goto('http://127.0.0.1:8765', wait_until='networkidle')
+    page.goto('http://127.0.0.1:8765/workbench', wait_until='networkidle')
     page.locator('#engine').select_option('voxcpm2')
     page.locator('[data-mode=clone]').click()
     page.locator('#reference-audio').set_input_files(str(reference))

@@ -12,7 +12,7 @@ with sync_playwright() as p:
     browser = p.chromium.launch(channel='msedge', headless=True)
     page = browser.new_page(viewport={'width': 1440, 'height': 1100})
     page.on('pageerror', lambda error: errors.append(str(error)))
-    page.goto('http://127.0.0.1:8765', wait_until='networkidle')
+    page.goto('http://127.0.0.1:8765/workbench', wait_until='networkidle')
     page.locator('#engine').select_option('music3')
     expect(page.locator('#lyrics-field')).to_be_visible()
     page.locator('#prompt').fill('Warm Mandarin acoustic pop with gentle female vocals, fingerpicked guitar and soft piano, clear lyrics, hopeful mood.')

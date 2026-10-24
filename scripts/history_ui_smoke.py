@@ -87,7 +87,7 @@ with tempfile.TemporaryDirectory(prefix="history-ui-", dir=OUTPUT) as temporary:
                 browser = playwright.chromium.launch(channel="msedge", headless=True)
                 page = browser.new_page(viewport={"width": 1440, "height": 1100})
                 page.on("pageerror", lambda error: errors.append(str(error)))
-                page.goto(url, wait_until="networkidle")
+                page.goto(url + "/workbench", wait_until="networkidle")
 
                 def item(job_id):
                     return page.locator(f'[data-job-id="{job_id}"]')

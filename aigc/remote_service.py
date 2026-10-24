@@ -1,5 +1,6 @@
 """ComfyUI adapter, executed from memory in a session-owned process."""
 
+import base64
 import hashlib
 import hmac
 import json
@@ -124,9 +125,42 @@ def main():
                       for p in (root / area).rglob("*") if p.is_file()],
         })
 
+    async def native_artifact(request):
+        body = await request.json()
+        area = {"output": root / "output", "temp": root / "scratch/temp"}.get(body.get("type"))
+        if area is None:
+            raise web.HTTPBadRequest(text="Invalid artifact type")
+        filename = body.get("filename", "")
+        subfolder = body.get("subfolder", "")
+        if not isinstance(filename, str) or not isinstance(subfolder, str) or pathlib.Path(filename).name != filename:
+            raise web.HTTPBadRequest(text="Invalid artifact path")
+        path = area / subfolder / filename
+        if path.is_symlink() or not path.resolve().is_relative_to(area.resolve()) or not path.is_file():
+            raise web.HTTPNotFound()
+        digest = hashlib.sha256()
+        with path.open("rb") as stream:
+            for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+                digest.update(chunk)
+        return web.json_response({"size": path.stat().st_size, "sha256": digest.hexdigest()})
+
+    async def native_user_files(request):
+        directory = root / "user/default"
+        files, total = [], 0
+        for path in directory.rglob("*"):
+            if path.is_file() and not path.is_symlink() and path.resolve().is_relative_to(directory):
+                if path.suffix.lower() not in (".json", ".json5", ".css", ".txt", ".yaml", ".yml"):
+                    continue
+                total += path.stat().st_size
+                if path.stat().st_size > 5 * 1024 * 1024 or total > 20 * 1024 * 1024:
+                    raise web.HTTPRequestEntityTooLarge(max_size=20 * 1024 * 1024, actual_size=total)
+                files.append({"path": path.relative_to(directory).as_posix(), "data": base64.b64encode(path.read_bytes()).decode()})
+        return web.json_response(files)
+
     server.app.router.add_post("/aigc/cleanup", cleanup)
     server.app.router.add_post("/aigc/artifact", artifact)
     server.app.router.add_get("/aigc/session", session_info)
+    server.app.router.add_post("/aigc/native/artifact", native_artifact)
+    server.app.router.add_get("/aigc/native/user-files", native_user_files)
     try:
         loop.run_until_complete(start())
     finally:
