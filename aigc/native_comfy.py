@@ -93,10 +93,52 @@ class NativeComfy:
                 record.update(state="interrupted", error=record.get("error") or "服务器会话已结束")
                 self.save(record)
 
+    def public_record(self, record):
+        result = {k: record.get(k) for k in ("id", "prompt_id", "engine", "created", "state", "error", "files")}
+        directory = self.directory(record["id"])
+        result["has_workflow"] = any((directory / name).is_file() for name in ("workflow.json", "workflow-api.json"))
+        return result
+
+    def archives(self, page=1, page_size=12, engine=None, query=""):
+        query = query.strip().casefold()
+        records = [r for r in self.records.values() if not engine or r.get("engine") == engine]
+        if query:
+            records = [r for r in records if query in " ".join(
+                [r["id"], r.get("created", ""), r.get("prompt_id", "")]
+                + [f.get("filename", "") for f in r.get("files", [])]).casefold()]
+        records.sort(key=lambda r: r["created"], reverse=True)
+        total = len(records)
+        pages = max(1, (total + page_size - 1) // page_size)
+        page = min(page, pages)
+        start = (page - 1) * page_size
+        return {"jobs": [self.public_record(r) for r in records[start:start + page_size]],
+                "total": total, "page": page, "page_size": page_size, "pages": pages}
+
     def public(self):
         return {"url": "/comfy/", "pending": self.pending(),
-                "jobs": [{k: r.get(k) for k in ("id", "prompt_id", "engine", "created", "state", "error", "files")}
+                "total": len(self.records),
+                "jobs": [self.public_record(r)
                          for r in sorted(self.records.values(), key=lambda r: r["created"], reverse=True)[:30]]}
+
+    def workflow(self, archive_id):
+        record = self.records.get(archive_id)
+        if not record:
+            raise HTTPException(404, "任务不存在")
+        directory = self.directory(archive_id)
+        for filename, format_name in (("workflow.json", "native"), ("workflow-api.json", "api")):
+            path = directory / filename
+            if not path.is_file() or path.is_symlink():
+                continue
+            try:
+                graph = json.loads(path.read_text(encoding="utf-8"))
+            except (ValueError, OSError):
+                continue
+            valid = isinstance(graph, dict) and (
+                isinstance(graph.get("nodes"), list) if format_name == "native"
+                else bool(graph) and all(isinstance(node, dict) and "class_type" in node for node in graph.values()))
+            if valid:
+                return {"engine": record["engine"], "format": format_name, "filename": filename, "workflow": graph}
+        raise HTTPException(404, "此任务没有可加载的工作流")
 
     def register(self, archive_id, prompt_id, payload):
         record = {"id": archive_id, "prompt_id": prompt_id, "engine": self.session.engine,

@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>本地作品库 · AIGC</title>
+  <link rel="icon" href="/static/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/launcher.css">
+  <script src="/static/archive.js" defer></script>
+  <script src="/static/library.js" defer></script>
+</head>
+<body>
+  <header><a class="brand" href="/">AIGC <span>ComfyUI</span></a><nav><a href="/">连接与工作流</a><a href="/workbench">原工作台历史</a></nav></header>
+  <main class="library">
+    <p class="eyebrow">保存在本机的 ComfyUI 作品</p>
+    <h1>本地作品库</h1>
+    <p class="intro">在这里查看图片、播放视频和试听音频。浏览本地作品无需连接服务器；打开工作流时会启动对应模型环境。</p>
+    <form id="filters" class="library-filters">
+      <div><label for="filter-engine">模型环境</label><select id="filter-engine"><option value="">全部环境</option><option value="qwen21">Qwen Image 2.1 · 图片</option><option value="h3">MiniMax H3 · 视频</option><option value="music3">MiniMax Music 3 · 音乐</option></select></div>
+      <div class="search-field"><label for="search">查找作品</label><input id="search" type="search" maxlength="200" placeholder="文件名、日期或任务编号"></div>
+      <button type="submit">查找 / 刷新</button>
+    </form>
+    <p id="library-status" role="status">正在读取本地作品…</p>
+    <p id="library-error" role="alert" hidden></p>
+    <div id="library-jobs" class="library-grid"></div>
+    <nav class="pagination" aria-label="作品分页"><button id="previous" class="secondary" disabled>上一页</button><span id="page-number"></span><button id="next" class="secondary" disabled>下一页</button></nav>
+    <p class="note">历史工作流中的参考图、录音等输入素材，重连后可能需要重新上传。原工作台的历史可从右上角入口查看。</p>
+  </main>
+</body>
+</html>

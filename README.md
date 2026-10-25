@@ -27,8 +27,8 @@ python -m venv .venv
 
 1. 在本地管理页选择图片、视频或音乐环境，点击“启动 ComfyUI”，等待“已就绪”。
 2. 点击“打开 ComfyUI”。这是服务器自带的完整节点界面，HTTP、上传、预览和 WebSocket 都经过本地代理及 SSH 隧道。
-3. 下载页面上的现有模型模板，把 `.api.json` 文件拖入 ComfyUI 画布。修改提示词和参数；图片编辑及视频模板先在 LoadImage 节点上传参考图，再运行。
-4. 任务完成后，管理器自动保存输出、API 工作流、原生工作流（提交携带时）和任务历史，校验文件大小与 SHA-256。管理页“最近任务”可下载本地文件。
+3. 在“从已有工作流开始”点击模板的“一键打开”，页面会在需要时启动对应环境，并把工作流加载到 ComfyUI 画布，不会自动运行。修改提示词和参数；图片编辑及视频模板先在 LoadImage 节点上传参考图，再手动运行。也可以点“下载模板”，把 `.api.json` 拖入画布。
+4. 任务完成后，管理器自动保存输出、API 工作流、原生工作流（提交携带时）和任务历史，校验文件大小与 SHA-256。管理页“最近任务”可直接预览最近 8 条结果；“本地作品库”（`/library`）提供完整历史，支持分页、按模型环境筛选和按文件名、日期或任务编号查找，图片、视频和音频可直接查看或下载，断开服务器后仍可浏览。每条任务可“在 ComfyUI 中打开”，优先恢复原生画布，没有时加载 API 工作流；参考图、录音等输入素材在会话结束后已清理，需要重新上传。
 5. 素材和输出在同一会话内保留，以便后续工作流引用。点击“断开并清理”或队列空闲 10 分钟后，停止实例并删除整个远端会话目录。运行、排队或归档中的任务不会触发空闲回收；下载失败会保留会话并重试。
 6. 语音点击右上角“语音与声音克隆”，使用既有 VoxCPM2 入口。关闭程序可展开“连接诊断与退出”，点击“关闭本地管理器”，或在启动终端按 Ctrl+C。
 
@@ -139,6 +139,9 @@ H3 复用 `/home/jnu/src/ComfyUI`、`/home/jnu/venvs/comfyui-ltx23`；Qwen 使�
 | `aigc/remote_tts_worker.py` | 单任务 VoxCPM2 推理与 WAV 输出 |
 | `aigc/workflows.py` | H3 与 Qwen 参数、文生图、编辑和视频工作流 |
 | `static/launcher.*` | ComfyUI 启动、环境选择、模板和本地归档入口 |
+| `static/archive.js` | 首页与作品库共用的作品卡片、媒体预览和弹窗 |
+| `static/library.*` | 本地作品库：分页、筛选、查找 |
+| `static/open-workflow.*` | 一键打开：按需启动环境，把模板或历史工作流加载到 ComfyUI 画布 |
 | `static/index.html`、`static/app.js` | 保留的简化表单，含独立语音入口 |
 | `docs/inspection.md` | 初始环境检查与方案存档 |
 
@@ -151,6 +154,8 @@ H3 复用 `/home/jnu/src/ComfyUI`、`/home/jnu/venvs/comfyui-ltx23`；Qwen 使�
 # 浏览器检查需要已安装的 Microsoft Edge
 .\.venv\Scripts\python.exe -m pip install -r requirements-dev.txt
 .\.venv\Scripts\python.exe scripts\ui_smoke.py
+# 本地作品库检查：用临时归档在 8766 端口启动，不连接 DGX
+.\.venv\Scripts\python.exe -X utf8 scripts\library_ui_smoke.py
 
 # 原生 ComfyUI 检查：连接真实 DGX，运行 CPU 图片保存工作流，验证归档和清理
 .\.venv\Scripts\python.exe -X utf8 scripts\native_comfy_smoke.py --engine qwen21

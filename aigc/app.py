@@ -14,7 +14,7 @@ import wave
 
 import av
 import httpx
-from fastapi import FastAPI, File, Form, HTTPException, Request, UploadFile
+from fastapi import FastAPI, File, Form, HTTPException, Query, Request, UploadFile
 from fastapi.responses import FileResponse, JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
 from PIL import Image, ImageOps, UnidentifiedImageError
@@ -377,6 +377,16 @@ async def existing_workbench():
     return FileResponse(ROOT / "static/index.html")
 
 
+@app.get("/library")
+async def library():
+    return FileResponse(ROOT / "static/library.html")
+
+
+@app.get("/open-workflow")
+async def open_workflow():
+    return FileResponse(ROOT / "static/open-workflow.html")
+
+
 @app.get("/api/status")
 async def status():
     return {"session": session.public(), "active_job": active_job, "comfy": native.public()}
@@ -584,7 +594,7 @@ async def job_file(job_id: str, filename: str, download: bool = False):
 
 
 @app.get("/api/comfy/templates/{name}")
-async def native_template(name: str):
+async def native_template(name: str, download: bool = True):
     options = {
         "qwen-text": (Settings(engine="qwen21", mode="text", prompt="A small red boat on a quiet lake, soft morning light", width=512, height=512, steps=25), []),
         "qwen-edit": (Settings(engine="qwen21", mode="edit", prompt="Change the background to a quiet garden", width=512, height=512, steps=25), ["reference.png"]),
@@ -596,11 +606,24 @@ async def native_template(name: str):
         raise HTTPException(404)
     settings, images = options[name]
     graph = build_workflow(settings, images, uuid.uuid4().hex)
-    return JSONResponse(graph, headers={"Content-Disposition": f'attachment; filename="{name}.api.json"'})
+    headers = {"Content-Disposition": f'attachment; filename="{name}.api.json"'} if download else {}
+    return JSONResponse(graph, headers=headers)
+
+
+@app.get("/api/comfy/jobs")
+async def native_jobs(page: int = Query(1, ge=1), page_size: int = Query(12, ge=1, le=60),
+                      engine: Literal["qwen21", "h3", "music3"] | None = None,
+                      q: str = Query("", max_length=200)):
+    return native.archives(page, page_size, engine, q)
+
+
+@app.get("/api/comfy/jobs/{archive_id}/workflow")
+async def native_workflow(archive_id: str):
+    return native.workflow(archive_id)
 
 
 @app.get("/api/comfy/jobs/{archive_id}/files/{filename}")
-async def native_file(archive_id: str, filename: str):
+async def native_file(archive_id: str, filename: str, download: bool = False):
     record = native.records.get(archive_id)
     if not record:
         raise HTTPException(404)
@@ -609,9 +632,14 @@ async def native_file(archive_id: str, filename: str):
     if filename not in allowed:
         raise HTTPException(404)
     path = native.directory(archive_id) / filename
-    if not path.is_file() or path.is_symlink():
+    if not path.is_file() or path.is_symlink() or path.resolve().parent != native.directory(archive_id).resolve():
         raise HTTPException(404)
-    return FileResponse(path, filename=filename)
+    # Media can be played inline; JSON and unknown formats remain downloads.
+    media_types = {".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".webp": "image/webp",
+                   ".gif": "image/gif", ".mp4": "video/mp4", ".webm": "video/webm", ".mov": "video/quicktime",
+                   ".wav": "audio/wav", ".mp3": "audio/mpeg", ".ogg": "audio/ogg", ".flac": "audio/flac", ".m4a": "audio/mp4"}
+    media_type = media_types.get(path.suffix.lower())
+    return FileResponse(path, media_type=media_type, filename=filename if download or not media_type else None)
 
 
 app.mount("/comfy", native.gateway, name="comfy")

@@ -6,10 +6,11 @@
   <title>AIGC · ComfyUI</title>
   <link rel="icon" href="/static/icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/static/launcher.css">
+  <script src="/static/archive.js" defer></script>
   <script src="/static/launcher.js" defer></script>
 </head>
 <body>
-  <header><a class="brand" href="/">AIGC <span>ComfyUI</span></a><a href="/workbench?engine=voxcpm2">语音与声音克隆</a></header>
+  <header><a class="brand" href="/">AIGC <span>ComfyUI</span></a><nav><a href="/library">本地作品库</a><a href="/workbench?engine=voxcpm2">语音与声音克隆</a></nav></header>
   <main>
     <p class="eyebrow">DGX · 本地连接与作品管理</p>
     <h1>在 ComfyUI 中创作</h1>
@@ -23,11 +24,11 @@
     </section>
     <section aria-label="已有模型工作流">
       <h2>从已有工作流开始</h2>
-      <p>下载模板后，拖入 ComfyUI 画布。图片编辑和视频模板需要先在 LoadImage 节点上传参考图。</p>
+      <p>点击“一键打开”即可加载到 ComfyUI，再手动点击运行。图片编辑和视频模板需要先上传参考图。</p>
       <div id="templates" class="templates"></div>
       <p class="note">服务器素材在本次会话中可重复使用。结束会话会清理输入、输出和临时文件；工作流、设置与已归档结果保留在本机。</p>
     </section>
-    <section aria-label="本地归档"><h2>最近任务</h2><div id="jobs"><p>暂无 ComfyUI 任务。</p></div></section>
+    <section aria-label="本地归档"><div class="section-heading"><h2>最近任务</h2><a id="all-jobs" href="/library">查看全部作品 →</a></div><p class="note">图片、视频和音频可直接预览，断开服务器后仍可查看。</p><div id="jobs"><p>暂无 ComfyUI 任务。</p></div></section>
     <details><summary>连接诊断与退出</summary><pre id="logs"></pre><button id="shutdown" class="secondary">关闭本地管理器</button></details>
   </main>
 </body>
