@@ -10,15 +10,14 @@ from aigc.native_comfy import NativeComfy
 
 out = ROOT / "test-results"; out.mkdir(exist_ok=True)
 temp = tempfile.TemporaryDirectory()
-native = NativeComfy(workbench.session, temp.name); native.load()
-workbench.native = native
 
 def seed(i, engine, name, data):
     aid = f"{i:x}" * 32
     rec = {"id": aid, "prompt_id": f"p{i}", "engine": engine, "session_root": "/x", "created": f"2026-10-{10+i:02}T12:00:00+08:00",
            "state": "saved", "error": None, "files": [{"filename": name, "local_name": "000" + pathlib.Path(name).suffix}]}
-    native.save(rec); native.records[aid] = rec
-    d = native.directory(aid); (d / rec["files"][0]["local_name"]).write_bytes(data)
+    # Seed the legacy random-ID layout so load() exercises the rename to time-based names.
+    d = pathlib.Path(temp.name) / "jobs" / aid; d.mkdir(parents=True)
+    (d / "job.json").write_text(json.dumps(rec)); (d / rec["files"][0]["local_name"]).write_bytes(data)
     (d / "workflow-api.json").write_text(json.dumps({"1": {"class_type": "SaveImage", "inputs": {}}}))
 
 png = io.BytesIO(); Image.new("RGB", (320, 200), (40, 120, 200)).save(png, "PNG")
@@ -37,10 +36,14 @@ for i in range(14):
     kind = i % 3
     seed(i + 1, ["qwen21", "h3", "music3"][kind], [f"img{i}.png", f"clip{i}.mp4", f"song{i}.wav"][kind], [png, mp4, wav][kind].getvalue())
 
+native = NativeComfy(workbench.session, temp.name); native.load()
+workbench.native = native
+report_folders = sorted(p.name for p in (pathlib.Path(temp.name) / "jobs").iterdir())
+
 server = uvicorn.Server(uvicorn.Config(workbench.app, host="127.0.0.1", port=8766, log_level="warning"))
 threading.Thread(target=server.run, daemon=True).start()
 while not server.started: time.sleep(0.1)
-report = {"errors": [], "console": []}
+report = {"errors": [], "console": [], "folders": report_folders[:2]}
 base = "http://127.0.0.1:8766"
 with sync_playwright() as p:
     b = p.chromium.launch(channel="msedge", headless=True)
@@ -70,7 +73,8 @@ with sync_playwright() as p:
     page.select_option("#filter-engine", ""); page.fill("#search", "song5"); page.click("button[type=submit]")
     page.locator('#library-status', has_text='共 1 ').wait_for()
     page.click(".preview-open"); page.wait_for_selector("dialog[open] audio")
-    report["dialog_download_href"] = page.get_attribute("dialog[open] figcaption a", "href")
+    report["dialog_caption"] = page.text_content("dialog[open] figcaption")
+    report["download_links"] = page.locator("a[download], a[href*='download=true']").count()
     page.screenshot(path=out / "library-dialog.png")
     page.keyboard.press("Escape"); page.wait_for_timeout(200)
     report["dialog_closed_and_released"] = page.evaluate("!document.querySelector('dialog').open && !document.querySelector('dialog audio')")
@@ -88,4 +92,6 @@ assert not report["errors"] and not report["console"], report
 assert report["launcher_cards"] == 8 and report["launcher_audio_still_playing"], report
 assert (report["library_cards"], report["page2_cards"], report["h3_engines"]) == (12, 2, ["MiniMax H3"]), report
 assert report["images_loaded"][1] and report["video_meta"] > 0 and report["dialog_closed_and_released"], report
+assert report["folders"][0] == "2026-10-11_12-00-00_qwen21" and report["download_links"] == 0, report
+assert report["dialog_caption"] == "结果 1 · 2026-10-16_12-00-00_music3_01.wav", report
 assert not report["mobile_overflow"] and report["session_state_after"] == "disconnected", report

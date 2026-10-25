@@ -69,7 +69,7 @@ class LibraryApiTests(unittest.IsolatedAsyncioTestCase):
         listed = {j["id"]: j["has_workflow"] for j in (await self.client.get("/api/comfy/jobs")).json()["jobs"]}
         self.assertTrue(listed["a" * 32])
 
-    async def test_media_is_inline_unless_download_requested(self):
+    async def test_media_is_inline_and_metadata_is_an_attachment(self):
         self.record("a" * 32, files=["result.png", "song.wav"], workflows={"workflow-api.json": {}})
         base = f"/api/comfy/jobs/{'a' * 32}/files/"
         inline = await self.client.get(base + "000.png")
@@ -77,8 +77,6 @@ class LibraryApiTests(unittest.IsolatedAsyncioTestCase):
         self.assertNotIn("attachment", inline.headers.get("content-disposition", ""))
         audio = await self.client.get(base + "001.wav")
         self.assertEqual(audio.headers["content-type"], "audio/wav")
-        download = await self.client.get(base + "000.png", params={"download": "true"})
-        self.assertIn("attachment", download.headers["content-disposition"])
         self.assertIn("attachment", (await self.client.get(base + "workflow-api.json")).headers["content-disposition"])
         self.assertEqual((await self.client.get(base + "..%2Fjob.json")).status_code, 404)
 
@@ -94,6 +92,56 @@ class LibraryApiTests(unittest.IsolatedAsyncioTestCase):
             response = await self.client.get(path)
             self.assertEqual(response.status_code, 200)
             self.assertIn("text/html", response.headers["content-type"])
+
+
+class ArchiveNamingTests(unittest.TestCase):
+    def setUp(self):
+        temp = tempfile.TemporaryDirectory()
+        self.addCleanup(temp.cleanup)
+        self.root = pathlib.Path(temp.name)
+
+    def legacy(self, archive_id, created, folder=None, local_names=("000.png",)):
+        directory = self.root / "jobs" / (folder or archive_id)
+        directory.mkdir(parents=True)
+        record = {"id": archive_id, "prompt_id": "p", "engine": "qwen21", "session_root": "/x", "created": created,
+                  "state": "saved", "error": "", "files": [{"filename": "image_00001_.png", "local_name": n} for n in local_names]}
+        (directory / "job.json").write_text(json.dumps(record), encoding="utf-8")
+        for name in local_names:
+            (directory / name).write_bytes(archive_id.encode())
+        (directory / "workflow-api.json").write_text("{}", encoding="utf-8")
+
+    def test_legacy_archives_are_renamed_by_time_and_engine(self):
+        self.legacy("a" * 32, "2026-10-25T14:37:12.469168+08:00", local_names=("000.png", "001.png"))
+        self.legacy("b" * 32, "2026-10-25T14:37:12.900000+08:00")
+        native = NativeComfy(Session(), self.root)
+        native.load()
+        folders = sorted(p.name for p in (self.root / "jobs").iterdir())
+        self.assertEqual(folders, ["2026-10-25_14-37-12_qwen21", "2026-10-25_14-37-12_qwen21-2"])
+        first = native.records["a" * 32]
+        directory = native.directory("a" * 32)
+        self.assertEqual([f["local_name"] for f in first["files"]],
+                         ["2026-10-25_14-37-12_qwen21_01.png", "2026-10-25_14-37-12_qwen21_02.png"])
+        self.assertEqual((directory / first["files"][0]["local_name"]).read_bytes(), b"a" * 32)
+        self.assertTrue((directory / "workflow-api.json").is_file())
+        saved = json.loads((directory / "job.json").read_text(encoding="utf-8"))
+        self.assertEqual(saved["folder"], directory.name)
+        reloaded = NativeComfy(Session(), self.root)
+        reloaded.load()
+        self.assertEqual(reloaded.directory("b" * 32).name, "2026-10-25_14-37-12_qwen21-2")
+        self.assertEqual(sorted(p.name for p in (self.root / "jobs").iterdir()), folders)
+
+    def test_partially_migrated_archive_finishes_renaming(self):
+        self.legacy("c" * 32, "2026-10-20T08:00:00+08:00", folder="2026-10-20_08-00-00_qwen21")
+        native = NativeComfy(Session(), self.root)
+        native.load()
+        self.assertEqual(native.records["c" * 32]["files"][0]["local_name"], "2026-10-20_08-00-00_qwen21_01.png")
+        self.assertTrue((native.directory("c" * 32) / "2026-10-20_08-00-00_qwen21_01.png").is_file())
+
+    def test_unexpected_folder_names_are_ignored(self):
+        self.legacy("d" * 32, "2026-10-20T08:00:00+08:00", folder="..evil")
+        native = NativeComfy(Session(), self.root)
+        native.load()
+        self.assertNotIn("d" * 32, native.records)
 
 
 if __name__ == "__main__":

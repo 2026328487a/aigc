@@ -14,25 +14,19 @@
     if(text) node.textContent = text;
     return node;
   };
-  const fileUrl = (job, name, download = false) => `/api/comfy/jobs/${job.id}/files/${encodeURIComponent(name)}${download ? '?download=true' : ''}`;
+  const fileUrl = (job, name) => `/api/comfy/jobs/${job.id}/files/${encodeURIComponent(name)}`;
   const title = job => `${environments[job.engine] || job.engine} · ${new Date(job.created).toLocaleString()}`;
-  const downloadLink = (job, file, text) => {
-    const link = element('a','',text);
-    link.href = fileUrl(job,file,true);
-    link.download = file;
-    return link;
-  };
   function media(job, file) {
     const extension = file.local_name.split('.').pop().toLowerCase();
     const kind = /^(png|jpe?g|webp|gif)$/.test(extension) ? 'img' : /^(mp4|webm|mov)$/.test(extension) ? 'video' : /^(wav|mp3|ogg|flac|m4a)$/.test(extension) ? 'audio' : null;
-    if(!kind) return element('p','note','此格式暂不支持浏览器预览，可以下载查看。');
+    if(!kind) return element('p','note','此格式暂不支持浏览器预览，请在本地文件夹中打开。');
     const node = element(kind,'archive-media');
     node.src = fileUrl(job,file.local_name);
     if(kind === 'img') {node.alt = file.filename;node.loading = 'lazy';}
     else {node.controls = true;node.preload = 'metadata';if(kind === 'video') node.playsInline = true;}
     node.addEventListener('error',() => {
       if(node.parentElement && !node.parentElement.querySelector('.media-error')) {
-        node.after(element('p','note media-error','预览无法加载，请尝试下载文件查看。'));
+        node.after(element('p','note media-error','预览无法加载，请在本地文件夹中打开。'));
       }
     });
     return node;
@@ -57,8 +51,7 @@
     for(const [index,file] of (job.files || []).entries()) {
       const figure = element('figure','archive-result');
       figure.append(media(job,file));
-      const label = element('figcaption');
-      label.append(element('span','',`结果 ${index+1} · ${file.filename}`),downloadLink(job,file.local_name,'下载结果'));
+      const label = element('figcaption','',`结果 ${index+1} · ${file.local_name}`);
       figure.append(label);contents.append(figure);
     }
     dialog.showModal();
@@ -71,15 +64,14 @@
     const files = job.files || [];
     if(files.length) {
       const figure = element('figure','archive-result');figure.append(media(job,files[0]));
-      const caption = element('figcaption');caption.append(element('span','',files[0].filename),downloadLink(job,files[0].local_name,'下载结果'));
-      figure.append(caption);row.append(figure);
+      figure.append(element('figcaption','',files[0].local_name));row.append(figure);
     }
     const links = element('div','job-links');
     if(files.length) {const button = element('button','secondary preview-open',`查看全部结果（${files.length}）`);button.type = 'button';button.onclick = () => preview(job);links.append(button);}
     if(job.has_workflow) {
       const open = element('a','button workflow-open','在 ComfyUI 中打开');
       open.href = `/open-workflow?job=${encodeURIComponent(job.id)}`;open.target = '_blank';open.rel = 'noopener';
-      links.append(open,downloadLink(job,'workflow-api.json','下载工作流'));
+      links.append(open);
     }
     row.append(links);
     if(job.error) row.append(element('p','',job.error));

@@ -119,7 +119,10 @@ class NativeTests(unittest.IsolatedAsyncioTestCase):
         self.assertFalse(self.native.pending())
         record = self.native.records["a" * 32]
         self.assertEqual(record["state"], "saved")
-        self.assertEqual((self.native.directory(record["id"]) / "000.png").read_bytes(), self.result)
+        directory = self.native.directory(record["id"])
+        self.assertRegex(directory.name, r"^\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}_h3$")
+        self.assertEqual(record["files"][0]["local_name"], directory.name + "_01.png")
+        self.assertEqual((directory / record["files"][0]["local_name"]).read_bytes(), self.result)
         self.session.state = "disconnected"
         history = (await self.client.get("/history")).json()
         descriptor = history["prompt-test"]["outputs"]["1"]["images"][0]
@@ -134,7 +137,7 @@ class NativeTests(unittest.IsolatedAsyncioTestCase):
         self.assertTrue(await self.native.busy())
         with self.assertRaisesRegex(RuntimeError, "保存到本机"):
             await self.native.before_stop()
-        self.assertFalse((self.native.directory("a" * 32) / "000.png").exists())
+        self.assertFalse(list(self.native.directory("a" * 32).glob("*.png")))
 
     async def test_failed_execution_with_completed_false_is_finalized(self):
         self.completed()

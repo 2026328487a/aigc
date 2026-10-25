@@ -22,6 +22,8 @@ from .session import ROOT
 
 
 DONE = {"saved", "failed", "cancelled", "interrupted"}
+# Archives are stored as <time>_<engine>; older ones used the random archive ID.
+FOLDER = re.compile(r"[0-9a-f]{32}|\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}_[a-z0-9]+(-\d+)?")
 HOP_HEADERS = {"connection", "keep-alive", "proxy-authenticate", "proxy-authorization",
                "te", "trailer", "transfer-encoding", "upgrade", "host", "authorization",
                "cookie", "origin", "referer"}
@@ -58,17 +60,62 @@ class NativeComfy:
         for path in (self.root / "jobs").glob("*/job.json"):
             try:
                 record = json.loads(path.read_text(encoding="utf-8"))
+                if not re.fullmatch(r"[0-9a-f]{32}", record["id"]) or not FOLDER.fullmatch(path.parent.name):
+                    continue
+                # The directory on disk is authoritative, so an interrupted rename is still found.
+                record["folder"] = path.parent.name
+                self.records[record["id"]] = record
                 if record["state"] not in DONE:
                     record.update(state="interrupted", error="本地服务已重启，上一会话已结束")
                     self.save(record)
-                self.records[record["id"]] = record
-            except (ValueError, KeyError, OSError):
+                self.migrate(record)
+            except (ValueError, KeyError, TypeError, OSError):
                 continue
+
+    def folder_name(self, engine, created):
+        base = f"{datetime.fromisoformat(created):%Y-%m-%d_%H-%M-%S}_{engine}"
+        used = {r.get("folder") for r in self.records.values()}
+        name, index = base, 1
+        while name in used or (self.root / "jobs" / name).exists():
+            index += 1
+            name = f"{base}-{index}"
+        return name
+
+    def output_name(self, record, index, suffix):
+        return f"{record['folder']}_{index + 1:02d}{suffix}"
+
+    def migrate(self, record):
+        """Move an archive saved under its random ID to the time-based layout.
+
+        Files that are open elsewhere stay in place and are retried on the next start."""
+        if record["folder"] == record["id"]:
+            folder = self.folder_name(record["engine"], record["created"])
+            try:
+                self.directory(record["id"]).rename(self.root / "jobs" / folder)
+            except OSError:
+                return
+            record["folder"] = folder
+            self.save(record)
+        directory = self.directory(record["id"])
+        for index, file in enumerate(record["files"]):
+            name = self.output_name(record, index, pathlib.PurePosixPath(file["local_name"]).suffix)
+            if file["local_name"] == name or (directory / name).exists():
+                continue
+            try:
+                (directory / file["local_name"]).rename(directory / name)
+            except OSError:
+                continue
+            file["local_name"] = name
+            self.save(record)
 
     def directory(self, archive_id):
         if not re.fullmatch(r"[0-9a-f]{32}", archive_id):
             raise HTTPException(404)
-        path = self.root / "jobs" / archive_id
+        record = self.records.get(archive_id)
+        folder = (record.get("folder") or archive_id) if record else archive_id
+        if not FOLDER.fullmatch(folder):
+            raise HTTPException(404)
+        path = self.root / "jobs" / folder
         if path.is_symlink() or path.is_junction() or not path.resolve().is_relative_to(self.root.resolve()):
             raise HTTPException(404)
         return path
@@ -94,7 +141,7 @@ class NativeComfy:
                 self.save(record)
 
     def public_record(self, record):
-        result = {k: record.get(k) for k in ("id", "prompt_id", "engine", "created", "state", "error", "files")}
+        result = {k: record.get(k) for k in ("id", "folder", "prompt_id", "engine", "created", "state", "error", "files")}
         directory = self.directory(record["id"])
         result["has_workflow"] = any((directory / name).is_file() for name in ("workflow.json", "workflow-api.json"))
         return result
@@ -104,8 +151,8 @@ class NativeComfy:
         records = [r for r in self.records.values() if not engine or r.get("engine") == engine]
         if query:
             records = [r for r in records if query in " ".join(
-                [r["id"], r.get("created", ""), r.get("prompt_id", "")]
-                + [f.get("filename", "") for f in r.get("files", [])]).casefold()]
+                [r["id"], r.get("folder", ""), r.get("created", ""), r.get("prompt_id", "")]
+                + [f.get(k, "") for f in r.get("files", []) for k in ("filename", "local_name")]).casefold()]
         records.sort(key=lambda r: r["created"], reverse=True)
         total = len(records)
         pages = max(1, (total + page_size - 1) // page_size)
@@ -145,6 +192,7 @@ class NativeComfy:
                   "session_root": self.session.info["root"], "created": datetime.now().astimezone().isoformat(),
                   "queued_at": time.monotonic(),
                   "state": "queued", "files": [], "error": ""}
+        record["folder"] = self.folder_name(record["engine"], record["created"])
         self.records[archive_id] = record
         self.save(record)
         directory = self.directory(archive_id)
@@ -186,7 +234,7 @@ class NativeComfy:
                         suffix = pathlib.PurePosixPath(descriptor["filename"]).suffix
                         if not re.fullmatch(r"\.[A-Za-z0-9]{1,10}", suffix):
                             suffix = ".bin"
-                        name = f"{index:03d}{suffix}"
+                        name = self.output_name(record, index, suffix)
                         destination = directory / name
                         temporary = directory / (name + ".part")
                         digest, size = hashlib.sha256(), 0

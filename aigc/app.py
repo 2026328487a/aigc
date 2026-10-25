@@ -623,7 +623,7 @@ async def native_workflow(archive_id: str):
 
 
 @app.get("/api/comfy/jobs/{archive_id}/files/{filename}")
-async def native_file(archive_id: str, filename: str, download: bool = False):
+async def native_file(archive_id: str, filename: str):
     record = native.records.get(archive_id)
     if not record:
         raise HTTPException(404)
@@ -634,12 +634,12 @@ async def native_file(archive_id: str, filename: str, download: bool = False):
     path = native.directory(archive_id) / filename
     if not path.is_file() or path.is_symlink() or path.resolve().parent != native.directory(archive_id).resolve():
         raise HTTPException(404)
-    # Media can be played inline; JSON and unknown formats remain downloads.
+    # Media is shown inline; JSON and unknown formats are sent as attachments.
     media_types = {".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".webp": "image/webp",
                    ".gif": "image/gif", ".mp4": "video/mp4", ".webm": "video/webm", ".mov": "video/quicktime",
                    ".wav": "audio/wav", ".mp3": "audio/mpeg", ".ogg": "audio/ogg", ".flac": "audio/flac", ".m4a": "audio/mp4"}
     media_type = media_types.get(path.suffix.lower())
-    return FileResponse(path, media_type=media_type, filename=filename if download or not media_type else None)
+    return FileResponse(path, media_type=media_type, filename=None if media_type else filename)
 
 
 app.mount("/comfy", native.gateway, name="comfy")
