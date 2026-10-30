@@ -22,6 +22,11 @@ from .session import ROOT
 
 
 DONE = {"saved", "failed", "cancelled", "interrupted"}
+MEDIA_TYPES = {".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".webp": "image/webp",
+               ".gif": "image/gif", ".mp4": "video/mp4", ".webm": "video/webm", ".mov": "video/quicktime",
+               ".wav": "audio/wav", ".mp3": "audio/mpeg", ".ogg": "audio/ogg", ".flac": "audio/flac", ".m4a": "audio/mp4"}
+MEDIA_FOLDERS = {"image": "images", "video": "videos", "audio": "audio"}
+ARCHIVE_FILES = {"workflow-api.json", "workflow.json", "history.json", "job.json"}
 # Archives are stored as <time>_<engine>; older ones used the random archive ID.
 FOLDER = re.compile(r"[0-9a-f]{32}|\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}_[a-z0-9]+(-\d+)?")
 HOP_HEADERS = {"connection", "keep-alive", "proxy-authenticate", "proxy-authorization",
@@ -69,7 +74,7 @@ class NativeComfy:
                     record.update(state="interrupted", error="本地服务已重启，上一会话已结束")
                     self.save(record)
                 self.migrate(record)
-            except (ValueError, KeyError, TypeError, OSError):
+            except (ValueError, KeyError, TypeError, OSError, HTTPException):
                 continue
 
     def folder_name(self, engine, created):
@@ -85,7 +90,7 @@ class NativeComfy:
         return f"{record['folder']}_{index + 1:02d}{suffix}"
 
     def migrate(self, record):
-        """Move an archive saved under its random ID to the time-based layout.
+        """Give legacy archives time-based names and move media into shared folders.
 
         Files that are open elsewhere stay in place and are retried on the next start."""
         if record["folder"] == record["id"]:
@@ -99,14 +104,24 @@ class NativeComfy:
         directory = self.directory(record["id"])
         for index, file in enumerate(record["files"]):
             name = self.output_name(record, index, pathlib.PurePosixPath(file["local_name"]).suffix)
-            if file["local_name"] == name or (directory / name).exists():
-                continue
+            source = self.checked_file(directory, file["local_name"])
+            destination = self.output_path(record["id"], name)
             try:
-                (directory / file["local_name"]).rename(directory / name)
-            except OSError:
+                if source != destination and source.is_file():
+                    if destination.exists():
+                        self.session.logs.append(f"媒体迁移遇到同名文件，保留原文件：{source.name}")
+                        continue
+                    destination.parent.mkdir(parents=True, exist_ok=True)
+                    source.rename(destination)
+                elif not destination.is_file():
+                    continue
+            except OSError as error:
+                self.session.logs.append(f"媒体迁移暂未完成，启动时将重试：{source.name}：{error}")
                 continue
-            file["local_name"] = name
-            self.save(record)
+            # Recover a move completed before job.json was updated.
+            if file["local_name"] != name:
+                file["local_name"] = name
+                self.save(record)
 
     def directory(self, archive_id):
         if not re.fullmatch(r"[0-9a-f]{32}", archive_id):
@@ -119,6 +134,39 @@ class NativeComfy:
         if path.is_symlink() or path.is_junction() or not path.resolve().is_relative_to(self.root.resolve()):
             raise HTTPException(404)
         return path
+
+    @staticmethod
+    def checked_file(directory, filename):
+        if not isinstance(filename, str) or not re.fullmatch(r"[^/\\:\x00]+", filename) or filename in (".", ".."):
+            raise HTTPException(404)
+        path = directory / filename
+        if path.is_symlink() or path.is_junction() or path.resolve().parent != directory.resolve():
+            raise HTTPException(404)
+        return path
+
+    def output_path(self, archive_id, filename):
+        directory = self.directory(archive_id)
+        media_type = MEDIA_TYPES.get(pathlib.PurePosixPath(filename).suffix.lower(), "")
+        bucket = MEDIA_FOLDERS.get(media_type.split("/")[0])
+        if bucket:
+            directory = self.root / "media" / bucket
+            if (directory.parent.is_symlink() or directory.parent.is_junction()
+                    or directory.is_symlink() or directory.is_junction()
+                    or not directory.resolve().is_relative_to(self.root.resolve())):
+                raise HTTPException(404)
+        return self.checked_file(directory, filename)
+
+    def file_path(self, archive_id, filename):
+        record = self.records.get(archive_id)
+        if not record:
+            raise HTTPException(404)
+        legacy = self.checked_file(self.directory(archive_id), filename)
+        if filename in ARCHIVE_FILES:
+            return legacy
+        if not any(file["local_name"] == filename for file in record["files"]):
+            raise HTTPException(404)
+        # Locked files or name conflicts can leave individual outputs in the old layout.
+        return legacy if legacy.is_file() else self.output_path(archive_id, filename)
 
     def save(self, record):
         directory = self.directory(record["id"])
@@ -235,7 +283,9 @@ class NativeComfy:
                         if not re.fullmatch(r"\.[A-Za-z0-9]{1,10}", suffix):
                             suffix = ".bin"
                         name = self.output_name(record, index, suffix)
-                        destination = directory / name
+                        destination = self.output_path(record["id"], name)
+                        destination.parent.mkdir(parents=True, exist_ok=True)
+                        # Partial downloads stay with the task, away from ready-to-copy media.
                         temporary = directory / (name + ".part")
                         digest, size = hashlib.sha256(), 0
                         async with self.session.client.stream("GET", "/view", params=descriptor) as response:
@@ -305,7 +355,7 @@ class NativeComfy:
             if record:
                 for file in record["files"]:
                     if file["local_name"] == params.get("filename"):
-                        return self.directory(archive_id) / file["local_name"]
+                        return self.file_path(archive_id, file["local_name"])
             return None
         return self.view_files.get((self.session.info.get("root"), params.get("type", "output"), folder, params.get("filename")))
 

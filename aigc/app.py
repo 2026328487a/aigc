@@ -26,7 +26,7 @@ from websockets.asyncio.client import connect as websocket_connect
 from .session import ROOT, Session
 from .workflows import Settings, build_workflow
 from .reference_audio import MAX_MEDIA_BYTES, extract_reference
-from .native_comfy import NativeComfy
+from .native_comfy import MEDIA_TYPES, NativeComfy
 
 
 DATA = ROOT / "data/jobs"
@@ -624,21 +624,11 @@ async def native_workflow(archive_id: str):
 
 @app.get("/api/comfy/jobs/{archive_id}/files/{filename}")
 async def native_file(archive_id: str, filename: str):
-    record = native.records.get(archive_id)
-    if not record:
-        raise HTTPException(404)
-    allowed = {"workflow-api.json", "workflow.json", "history.json", "job.json"}
-    allowed.update(f["local_name"] for f in record["files"])
-    if filename not in allowed:
-        raise HTTPException(404)
-    path = native.directory(archive_id) / filename
-    if not path.is_file() or path.is_symlink() or path.resolve().parent != native.directory(archive_id).resolve():
+    path = native.file_path(archive_id, filename)
+    if not path.is_file():
         raise HTTPException(404)
     # Media is shown inline; JSON and unknown formats are sent as attachments.
-    media_types = {".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".webp": "image/webp",
-                   ".gif": "image/gif", ".mp4": "video/mp4", ".webm": "video/webm", ".mov": "video/quicktime",
-                   ".wav": "audio/wav", ".mp3": "audio/mpeg", ".ogg": "audio/ogg", ".flac": "audio/flac", ".m4a": "audio/mp4"}
-    media_type = media_types.get(path.suffix.lower())
+    media_type = MEDIA_TYPES.get(path.suffix.lower())
     return FileResponse(path, media_type=media_type, filename=None if media_type else filename)
 
 

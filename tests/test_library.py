@@ -1,4 +1,5 @@
 import json
+import os
 import pathlib
 import tempfile
 import unittest
@@ -70,15 +71,49 @@ class LibraryApiTests(unittest.IsolatedAsyncioTestCase):
         self.assertTrue(listed["a" * 32])
 
     async def test_media_is_inline_and_metadata_is_an_attachment(self):
-        self.record("a" * 32, files=["result.png", "song.wav"], workflows={"workflow-api.json": {}})
+        self.record("a" * 32, files=["result.png", "clip.mp4", "song.wav"], workflows={"workflow-api.json": {}})
+        self.native.load()
+        files = self.native.records["a" * 32]["files"]
         base = f"/api/comfy/jobs/{'a' * 32}/files/"
-        inline = await self.client.get(base + "000.png")
+        inline = await self.client.get(base + files[0]["local_name"])
         self.assertEqual(inline.headers["content-type"], "image/png")
         self.assertNotIn("attachment", inline.headers.get("content-disposition", ""))
-        audio = await self.client.get(base + "001.wav")
+        video = await self.client.get(base + files[1]["local_name"], headers={"Range": "bytes=1-3"})
+        self.assertEqual((video.status_code, video.content), (206, b"edi"))
+        audio = await self.client.get(base + files[2]["local_name"])
         self.assertEqual(audio.headers["content-type"], "audio/wav")
         self.assertIn("attachment", (await self.client.get(base + "workflow-api.json")).headers["content-disposition"])
         self.assertEqual((await self.client.get(base + "..%2Fjob.json")).status_code, 404)
+
+    async def test_shared_media_cannot_be_read_through_another_archive(self):
+        self.record("a" * 32, files=["result.png"])
+        self.record("b" * 32, files=["result.png"])
+        self.native.load()
+        name = self.native.records["a" * 32]["files"][0]["local_name"]
+        self.assertEqual((await self.client.get(f"/api/comfy/jobs/{'a' * 32}/files/{name}")).content, b"media")
+        self.assertEqual((await self.client.get(f"/api/comfy/jobs/{'b' * 32}/files/{name}")).status_code, 404)
+
+    async def test_linked_media_directory_cannot_expose_outside_files(self):
+        self.record("a" * 32, files=["result.png"])
+        self.native.load()
+        name = self.native.records["a" * 32]["files"][0]["local_name"]
+        images = self.native.root / "media/images"
+        (images / name).unlink()
+        images.rmdir()
+        outside = self.native.root / "outside"
+        outside.mkdir()
+        marker = outside / name
+        marker.write_bytes(b"private")
+        if os.name == "nt":
+            import _winapi
+            _winapi.CreateJunction(str(outside), str(images))
+        else:
+            images.symlink_to(outside, target_is_directory=True)
+        try:
+            self.assertEqual((await self.client.get(f"/api/comfy/jobs/{'a' * 32}/files/{name}")).status_code, 404)
+            self.assertEqual(marker.read_bytes(), b"private")
+        finally:
+            images.rmdir() if os.name == "nt" else images.unlink()
 
     async def test_template_can_be_loaded_without_attachment(self):
         attached = await self.client.get("/api/comfy/templates/qwen-text")
@@ -121,7 +156,9 @@ class ArchiveNamingTests(unittest.TestCase):
         directory = native.directory("a" * 32)
         self.assertEqual([f["local_name"] for f in first["files"]],
                          ["2026-10-25_14-37-12_qwen21_01.png", "2026-10-25_14-37-12_qwen21_02.png"])
-        self.assertEqual((directory / first["files"][0]["local_name"]).read_bytes(), b"a" * 32)
+        self.assertEqual(native.file_path("a" * 32, first["files"][0]["local_name"]).read_bytes(), b"a" * 32)
+        self.assertFalse(list(directory.glob("*.png")))
+        self.assertEqual(len(list((self.root / "media/images").iterdir())), 3)
         self.assertTrue((directory / "workflow-api.json").is_file())
         saved = json.loads((directory / "job.json").read_text(encoding="utf-8"))
         self.assertEqual(saved["folder"], directory.name)
@@ -129,13 +166,60 @@ class ArchiveNamingTests(unittest.TestCase):
         reloaded.load()
         self.assertEqual(reloaded.directory("b" * 32).name, "2026-10-25_14-37-12_qwen21-2")
         self.assertEqual(sorted(p.name for p in (self.root / "jobs").iterdir()), folders)
+        self.assertEqual(len(list((self.root / "media/images").iterdir())), 3)
 
     def test_partially_migrated_archive_finishes_renaming(self):
         self.legacy("c" * 32, "2026-10-20T08:00:00+08:00", folder="2026-10-20_08-00-00_qwen21")
         native = NativeComfy(Session(), self.root)
         native.load()
         self.assertEqual(native.records["c" * 32]["files"][0]["local_name"], "2026-10-20_08-00-00_qwen21_01.png")
-        self.assertTrue((native.directory("c" * 32) / "2026-10-20_08-00-00_qwen21_01.png").is_file())
+        self.assertTrue((self.root / "media/images/2026-10-20_08-00-00_qwen21_01.png").is_file())
+
+    def test_named_outputs_move_without_changing_task_metadata(self):
+        folder = "2026-10-20_08-00-00_qwen21"
+        name = folder + "_01.png"
+        self.legacy("c" * 32, "2026-10-20T08:00:00+08:00", folder=folder, local_names=(name,))
+        metadata = self.root / "jobs" / folder / "job.json"
+        original = metadata.read_bytes()
+        native = NativeComfy(Session(), self.root)
+        native.load()
+        self.assertEqual(native.file_path("c" * 32, name), self.root / "media/images" / name)
+        self.assertEqual(metadata.read_bytes(), original)
+
+    def test_move_interrupted_before_metadata_update_is_recovered(self):
+        folder = "2026-10-20_08-00-00_qwen21"
+        self.legacy("c" * 32, "2026-10-20T08:00:00+08:00", folder=folder)
+        images = self.root / "media/images"
+        images.mkdir(parents=True)
+        name = folder + "_01.png"
+        (self.root / "jobs" / folder / "000.png").rename(images / name)
+        native = NativeComfy(Session(), self.root)
+        native.load()
+        self.assertEqual(native.records["c" * 32]["files"][0]["local_name"], name)
+        self.assertEqual(native.file_path("c" * 32, name).read_bytes(), b"c" * 32)
+
+    def test_locked_media_remains_readable_and_moves_on_next_load(self):
+        folder = "2026-10-20_08-00-00_qwen21"
+        name = folder + "_01.png"
+        self.legacy("c" * 32, "2026-10-20T08:00:00+08:00", folder=folder, local_names=(name,))
+        native = NativeComfy(Session(), self.root)
+        with patch.object(pathlib.Path, "rename", side_effect=PermissionError("File in use")):
+            native.load()
+        self.assertEqual(native.file_path("c" * 32, name).parent, self.root / "jobs" / folder)
+        native.load()
+        self.assertEqual(native.file_path("c" * 32, name).parent, self.root / "media/images")
+
+    def test_name_conflict_preserves_both_files_and_original_preview(self):
+        folder = "2026-10-20_08-00-00_qwen21"
+        name = folder + "_01.png"
+        self.legacy("c" * 32, "2026-10-20T08:00:00+08:00", folder=folder, local_names=(name,))
+        images = self.root / "media/images"
+        images.mkdir(parents=True)
+        (images / name).write_bytes(b"other output")
+        native = NativeComfy(Session(), self.root)
+        native.load()
+        self.assertEqual(native.file_path("c" * 32, name).read_bytes(), b"c" * 32)
+        self.assertEqual((images / name).read_bytes(), b"other output")
 
     def test_unexpected_folder_names_are_ignored(self):
         self.legacy("d" * 32, "2026-10-20T08:00:00+08:00", folder="..evil")

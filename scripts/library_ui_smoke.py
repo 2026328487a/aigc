@@ -15,7 +15,7 @@ def seed(i, engine, name, data):
     aid = f"{i:x}" * 32
     rec = {"id": aid, "prompt_id": f"p{i}", "engine": engine, "session_root": "/x", "created": f"2026-10-{10+i:02}T12:00:00+08:00",
            "state": "saved", "error": None, "files": [{"filename": name, "local_name": "000" + pathlib.Path(name).suffix}]}
-    # Seed the legacy random-ID layout so load() exercises the rename to time-based names.
+    # Seed the legacy layout so load() exercises archive naming and media separation.
     d = pathlib.Path(temp.name) / "jobs" / aid; d.mkdir(parents=True)
     (d / "job.json").write_text(json.dumps(rec)); (d / rec["files"][0]["local_name"]).write_bytes(data)
     (d / "workflow-api.json").write_text(json.dumps({"1": {"class_type": "SaveImage", "inputs": {}}}))
@@ -39,11 +39,12 @@ for i in range(14):
 native = NativeComfy(workbench.session, temp.name); native.load()
 workbench.native = native
 report_folders = sorted(p.name for p in (pathlib.Path(temp.name) / "jobs").iterdir())
+report_media = {bucket: len(list((pathlib.Path(temp.name) / "media" / bucket).iterdir())) for bucket in ("images", "videos", "audio")}
 
 server = uvicorn.Server(uvicorn.Config(workbench.app, host="127.0.0.1", port=8766, log_level="warning"))
 threading.Thread(target=server.run, daemon=True).start()
 while not server.started: time.sleep(0.1)
-report = {"errors": [], "console": [], "folders": report_folders[:2]}
+report = {"errors": [], "console": [], "folders": report_folders[:2], "media": report_media}
 base = "http://127.0.0.1:8766"
 with sync_playwright() as p:
     b = p.chromium.launch(channel="msedge", headless=True)
@@ -93,5 +94,7 @@ assert report["launcher_cards"] == 8 and report["launcher_audio_still_playing"],
 assert (report["library_cards"], report["page2_cards"], report["h3_engines"]) == (12, 2, ["MiniMax H3"]), report
 assert report["images_loaded"][1] and report["video_meta"] > 0 and report["dialog_closed_and_released"], report
 assert report["folders"][0] == "2026-10-11_12-00-00_qwen21" and report["download_links"] == 0, report
+assert report["media"] == {"images": 5, "videos": 5, "audio": 4}, report
+assert not list((pathlib.Path(temp.name) / "jobs").glob("*/*.png")), report
 assert report["dialog_caption"] == "结果 1 · 2026-10-16_12-00-00_music3_01.wav", report
 assert not report["mobile_overflow"] and report["session_state_after"] == "disconnected", report

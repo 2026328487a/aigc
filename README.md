@@ -97,11 +97,15 @@ Qwen 建议使用默认 1024×1024、25 步；512×512 可更快试图。H3 建�
 **数据在哪里**
 
 ```text
-E:\ai\aigc\
+D:\aigc\
+  data\comfy\media\
+    images\              成品图片，直接平铺，方便全选复制
+    videos\              成品视频，直接平铺，方便全选复制
+    audio\               成品音频，直接平铺
+                         文件名为 <生成时间>_<模型环境>_01.png/mp4/wav/...
+                         多个输出依次编号；同一秒的任务追加 -2、-3，避免重名
   data\comfy\jobs\<生成时间>_<模型环境>\
                          例如 2026-10-25_14-37-12_qwen21；同一秒的任务追加 -2、-3
-    <文件夹名>_01.png/mp4/wav/...
-                         自动下载的输出，多个文件依次编号
     job.json             原生 ComfyUI 任务状态及输出校验和
     workflow-api.json    实际提交的 API 节点图
     workflow.json        原生画布工作流（提交携带时）
@@ -119,6 +123,8 @@ E:\ai\aigc\
   logs\                  本地程序与远端服务诊断日志
   test-results\          本次验证记录、截图和测试素材
 ```
+
+ComfyUI 成品与任务资料分开保存。复制到手机时，只需进入 `data\comfy\media\images` 或 `videos` 全选文件，不会混入任务 JSON。程序启动时自动将旧任务目录里的媒体移入对应分类；文件被占用或遇到重名时保留原文件并在下次启动重试。作品库、下载与原生历史预览同时兼容两种位置。下载过程中的 `.part` 文件及不支持分类的其他输出保留在任务目录。
 
 H3 复用 `/home/jnu/src/ComfyUI`、`/home/jnu/venvs/comfyui-ltx23`；Qwen 使用 `/home/jnu/src/ComfyUI-qwen21`、`/home/jnu/venvs/comfyui-qwen21`。音乐使用独立的 `ComfyUI-music3` 源码与 `comfyui-music3` 环境；语音使用 `VoxCPM-aigc` 源码与 `voxcpm2-aigc` 环境，模型位于 `/home/jnu/models/aigc/VoxCPM2`。会话启动器通过 SSH 标准输入发送。
 

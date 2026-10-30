@@ -122,12 +122,36 @@ class NativeTests(unittest.IsolatedAsyncioTestCase):
         directory = self.native.directory(record["id"])
         self.assertRegex(directory.name, r"^\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}_h3$")
         self.assertEqual(record["files"][0]["local_name"], directory.name + "_01.png")
-        self.assertEqual((directory / record["files"][0]["local_name"]).read_bytes(), self.result)
+        path = self.native.file_path(record["id"], record["files"][0]["local_name"])
+        self.assertEqual(path.parent, self.native.root / "media/images")
+        self.assertEqual(path.read_bytes(), self.result)
+        self.assertFalse(list(directory.glob("*.png")))
         self.session.state = "disconnected"
         history = (await self.client.get("/history")).json()
         descriptor = history["prompt-test"]["outputs"]["1"]["images"][0]
         response = await self.client.get("/view", params=descriptor)
         self.assertEqual(response.content, self.result)
+
+    async def test_new_outputs_are_grouped_and_previews_survive_reload(self):
+        self.completed()
+        self.history["prompt-test"]["outputs"]["1"] = {"files": [
+            {"filename": name, "subfolder": "example", "type": "output"}
+            for name in ("image.PNG", "clip.mp4", "song.wav", "extra.bin")
+        ]}
+        await self.native.collect()
+        record = self.native.records["a" * 32]
+        directory = self.native.directory(record["id"])
+        expected = [self.native.root / "media/images", self.native.root / "media/videos",
+                    self.native.root / "media/audio", directory]
+        for file, parent in zip(record["files"], expected):
+            self.assertEqual(self.native.file_path(record["id"], file["local_name"]).parent, parent)
+        self.assertFalse(list(directory.glob("*.part")))
+        reloaded = NativeComfy(self.session, self.native.root)
+        reloaded.load()
+        self.session.state = "disconnected"
+        history = reloaded.local_history()["prompt-test"]
+        for descriptor in history["outputs"]["1"]["files"]:
+            self.assertEqual(reloaded.cached_view(descriptor).read_bytes(), self.result)
 
     async def test_corrupt_download_blocks_idle_and_stop(self):
         self.completed()
@@ -138,6 +162,8 @@ class NativeTests(unittest.IsolatedAsyncioTestCase):
         with self.assertRaisesRegex(RuntimeError, "保存到本机"):
             await self.native.before_stop()
         self.assertFalse(list(self.native.directory("a" * 32).glob("*.png")))
+        self.assertFalse(list((self.native.root / "media").rglob("*.png")))
+        self.assertTrue(list(self.native.directory("a" * 32).glob("*.part")))
 
     async def test_failed_execution_with_completed_false_is_finalized(self):
         self.completed()
