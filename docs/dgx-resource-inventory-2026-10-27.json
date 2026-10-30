@@ -1,0 +1,1188 @@
+{
+  "schema_version": 1,
+  "collected_at_utc": "2026-10-27T07:21:15.994879+00:00",
+  "hostname": "spark-b34f",
+  "architecture": "aarch64",
+  "scope": [
+    "/home/jnu/models",
+    "/home/jnu/src/ComfyUI/models",
+    "/home/jnu/src/ComfyUI-qwen21/models",
+    "/home/jnu/src/ComfyUI-music3/models",
+    "/home/jnu/.cache/huggingface/hub",
+    "/home/jnu/.cache/openpi",
+    "/home/jnu/.cache/torch/hub/checkpoints",
+    "/home/jnu/.ollama/models"
+  ],
+  "limitations": [
+    "Not an all-users or all-mounts inventory.",
+    "Model status cannot be inferred from modification/access times.",
+    "Distinct inodes with identical contents are not detected; no full-file hashing.",
+    "nvidia-smi memory is not a separate VRAM pool on GB10."
+  ],
+  "hardware": {
+    "nvidia_smi": {
+      "returncode": 0,
+      "stdout": "Tue Oct 27 15:21:16 2026       \n+-----------------------------------------------------------------------------------------+\n| NVIDIA-SMI 580.142                Driver Version: 580.142        CUDA Version: 13.0     |\n+-----------------------------------------+------------------------+----------------------+\n| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |\n| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |\n|                                         |                        |               MIG M. |\n|=========================================+========================+======================|\n|   0  NVIDIA GB10                    On  |   0000000F:01:00.0  On |                  N/A |\n| N/A   63C    P0             36W /  N/A  | Not Supported          |     96%      Default |\n|                                         |                        |                  N/A |\n+-----------------------------------------+------------------------+----------------------+\n\n+-----------------------------------------------------------------------------------------+\n| Processes:                                                                              |\n|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |\n|        ID   ID                                                               Usage      |\n|=========================================================================================|\n|    0   N/A  N/A          736091      G   /usr/share/code/code                     89MiB |\n|    0   N/A  N/A         1322028      G   /usr/lib/xorg/Xorg                      172MiB |\n|    0   N/A  N/A         1322196      G   /usr/bin/gnome-shell                    194MiB |\n|    0   N/A  N/A         1323607      G   /usr/bin/nautilus                        40MiB |\n|    0   N/A  N/A         1728726      G   /usr/lib/xorg/Xorg                      141MiB |\n|    0   N/A  N/A         1728935      G   /usr/bin/gnome-shell                    212MiB |\n|    0   N/A  N/A         1768651      G   /usr/bin/nautilus                        43MiB |\n|    0   N/A  N/A         2281678      G   /usr/share/code/code                    113MiB |\n|    0   N/A  N/A         3620584      C   python                                13851MiB |\n|    0   N/A  N/A         3647620      C   python                                 1485MiB |\n|    0   N/A  N/A         3675288      C   python                                12637MiB |\n|    0   N/A  N/A         3682275      C   python                                  294MiB |\n+-----------------------------------------------------------------------------------------+",
+      "stderr": ""
+    },
+    "memory": "MemTotal:       127601168 kB\nMemFree:        10484732 kB\nMemAvailable:   26829376 kB\nBuffers:          602056 kB\nCached:         13397232 kB\nSwapCached:       172840 kB\nActive:         77420648 kB\nInactive:        2661148 kB\nActive(anon):   64901592 kB\nInactive(anon):  1755176 kB\nActive(file):   12519056 kB\nInactive(file):   905972 kB\nUnevictable:       33652 kB\nMlocked:           25552 kB\nSwapTotal:      16777212 kB\nSwapFree:        7512284 kB\nZswap:                 0 kB\nZswapped:              0 kB\nDirty:              4252 kB\nWriteback:             0 kB\nAnonPages:      60185284 kB\nMapped:          2718148 kB\nShmem:            568040 kB\nKReclaimable:    4061060 kB\nSlab:            5495612 kB\nSReclaimable:    4061060 kB\nSUnreclaim:      1434552 kB\nKernelStack:       57408 kB\nShadowCallStack:   14436 kB\nPageTables:       306492 kB\nSecPageTables:     82580 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:    80577796 kB\nCommitted_AS:   74714620 kB\nVmallocTotal:   135288315904 kB\nVmallocUsed:      195704 kB\nVmallocChunk:          0 kB\nPercpu:            50800 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:  15714304 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:    716800 kB\nFilePmdMapped:     10240 kB\nCmaTotal:         131072 kB\nCmaFree:           69320 kB\nBalloon:               0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\n",
+    "disk": {
+      "returncode": 0,
+      "stdout": "文件系统              1B的块         已用          可用 已用% 挂载点\n/dev/nvme0n1p2 4031871553536 779228594176 3047802175488   21% /\n/dev/nvme0n1p2 4031871553536 779228594176 3047802175488   21% /\ntmpfs            65331798016    315056128   65016741888    1% /dev/shm",
+      "stderr": ""
+    },
+    "os_release": "PRETTY_NAME=\"Ubuntu 24.04.4 LTS\"\nNAME=\"Ubuntu\"\nVERSION_ID=\"24.04\"\nVERSION=\"24.04.4 LTS (Noble Numbat)\"\nVERSION_CODENAME=noble\nID=ubuntu\nID_LIKE=debian\nHOME_URL=\"https://www.ubuntu.com/\"\nSUPPORT_URL=\"https://help.ubuntu.com/\"\nBUG_REPORT_URL=\"https://bugs.launchpad.net/ubuntu/\"\nPRIVACY_POLICY_URL=\"https://www.ubuntu.com/legal/terms-and-policies/privacy-policy\"\nUBUNTU_CODENAME=noble\nLOGO=ubuntu-logo\n"
+  },
+  "compute_processes": [
+    {
+      "pid": 3620584,
+      "process_name": "python",
+      "nvidia_reported_memory_mib": "13851",
+      "uid": "1001\t1001\t1001\t1001",
+      "ppid": "3618189",
+      "rss": "1059284 kB",
+      "cwd": "/home/jnu/zz/gaussian-splatting-main",
+      "exe": "/home/jnu/miniconda3/envs/gs/bin/python3.10"
+    },
+    {
+      "pid": 3647620,
+      "process_name": "python",
+      "nvidia_reported_memory_mib": "1485",
+      "uid": "1001\t1001\t1001\t1001",
+      "ppid": "3531125",
+      "rss": "10573276 kB",
+      "cwd": "/home/jnu/zz/2d-gaussian-splatting-main",
+      "exe": "/home/jnu/miniconda3/envs/2dgs/bin/python3.10"
+    },
+    {
+      "pid": 3675288,
+      "process_name": "python",
+      "nvidia_reported_memory_mib": "12637",
+      "uid": "1001\t1001\t1001\t1001",
+      "ppid": "3674736",
+      "rss": "1027096 kB",
+      "cwd": "/home/jnu/zz/gaussian-splatting-main",
+      "exe": "/home/jnu/miniconda3/envs/gs/bin/python3.10"
+    },
+    {
+      "pid": 3682275,
+      "process_name": "python",
+      "nvidia_reported_memory_mib": "294",
+      "uid": "1001\t1001\t1001\t1001",
+      "ppid": "3675402",
+      "rss": "42766660 kB",
+      "cwd": "/home/jnu/zz/2d-gaussian-splatting-main",
+      "exe": "/home/jnu/miniconda3/envs/2dgs/bin/python3.10"
+    }
+  ],
+  "directories": [
+    {
+      "path": "/home/jnu/models",
+      "allocated_bytes": 28494147584
+    },
+    {
+      "path": "/home/jnu/src/ComfyUI/models",
+      "allocated_bytes": 76468944896
+    },
+    {
+      "path": "/home/jnu/src/ComfyUI-qwen21/models",
+      "allocated_bytes": 25466818560
+    },
+    {
+      "path": "/home/jnu/src/ComfyUI-music3/models",
+      "allocated_bytes": 14327541760
+    },
+    {
+      "path": "/home/jnu/.cache/huggingface/hub",
+      "allocated_bytes": 77824
+    },
+    {
+      "path": "/home/jnu/.cache/openpi",
+      "allocated_bytes": 36462628864
+    },
+    {
+      "path": "/home/jnu/.ollama/models",
+      "allocated_bytes": 24576
+    },
+    {
+      "path": "/home/jnu/venvs/comfyui-ltx23",
+      "allocated_bytes": 6463983616
+    },
+    {
+      "path": "/home/jnu/venvs/gree-layout-hf-gpu",
+      "allocated_bytes": 5659705344
+    },
+    {
+      "path": "/home/jnu/venvs/vllm",
+      "allocated_bytes": 10027384832
+    },
+    {
+      "path": "/home/jnu/venvs/comfyui-qwen21",
+      "allocated_bytes": 6529970176
+    },
+    {
+      "path": "/home/jnu/venvs/gree-ocr-trt",
+      "allocated_bytes": 3661049856
+    },
+    {
+      "path": "/home/jnu/venvs/comfyui-music3",
+      "allocated_bytes": 6530162688
+    },
+    {
+      "path": "/home/jnu/venvs/ppocrv6-transformers",
+      "allocated_bytes": 98304
+    },
+    {
+      "path": "/home/jnu/venvs/voxcpm2-aigc",
+      "allocated_bytes": 7424704512
+    },
+    {
+      "path": "/home/jnu/.cache/pip",
+      "allocated_bytes": 17382309888
+    },
+    {
+      "path": "/home/jnu/.cache/uv",
+      "allocated_bytes": 52408094720
+    },
+    {
+      "path": "/home/jnu/.cache/vllm",
+      "allocated_bytes": 9880686592
+    },
+    {
+      "path": "/home/jnu/.cache/flashinfer",
+      "allocated_bytes": 50798592
+    }
+  ],
+  "model_files": [
+    {
+      "path": "/home/jnu/models/Qwen3.8-27B-NVFP4/model-00001-of-00003.safetensors",
+      "resolved_path": "/home/jnu/models/Qwen3.8-27B-NVFP4/model-00001-of-00003.safetensors",
+      "size_bytes": 9972777720,
+      "allocated_bytes": 9972785152,
+      "device": 66306,
+      "inode": 5639127,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-08-30T08:14:42.234291+00:00",
+      "safetensors": {
+        "tensor_count_by_dtype": {
+          "F32": 380,
+          "BF16": 552,
+          "F8_E4M3": 190,
+          "U8": 190
+        }
+      }
+    },
+    {
+      "path": "/home/jnu/models/Qwen3.8-27B-NVFP4/model-00002-of-00003.safetensors",
+      "resolved_path": "/home/jnu/models/Qwen3.8-27B-NVFP4/model-00002-of-00003.safetensors",
+      "size_bytes": 9875839416,
+      "allocated_bytes": 9875845120,
+      "device": 66306,
+      "inode": 5639136,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-08-30T08:14:32.198137+00:00",
+      "safetensors": {
+        "tensor_count_by_dtype": {
+          "F32": 420,
+          "BF16": 234,
+          "F8_E4M3": 210,
+          "U8": 210
+        }
+      }
+    },
+    {
+      "path": "/home/jnu/models/Qwen3.8-27B-NVFP4/model-00003-of-00003.safetensors",
+      "resolved_path": "/home/jnu/models/Qwen3.8-27B-NVFP4/model-00003-of-00003.safetensors",
+      "size_bytes": 744532384,
+      "allocated_bytes": 744538112,
+      "device": 66306,
+      "inode": 5639144,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-08-30T08:09:50.350631+00:00",
+      "safetensors": {
+        "tensor_count_by_dtype": {
+          "BF16": 13
+        }
+      }
+    },
+    {
+      "path": "/home/jnu/models/aigc/VoxCPM2/audiovae.pth",
+      "resolved_path": "/home/jnu/models/aigc/VoxCPM2/audiovae.pth",
+      "size_bytes": 376951122,
+      "allocated_bytes": 376958976,
+      "device": 66306,
+      "inode": 4752602,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-10-16T03:56:09.626825+00:00"
+    },
+    {
+      "path": "/home/jnu/models/aigc/VoxCPM2/model.safetensors",
+      "resolved_path": "/home/jnu/models/aigc/VoxCPM2/model.safetensors",
+      "size_bytes": 4580080592,
+      "allocated_bytes": 4580085760,
+      "device": 66306,
+      "inode": 4752609,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-10-16T04:02:30.281076+00:00",
+      "safetensors": {
+        "tensor_count_by_dtype": {
+          "BF16": 577
+        }
+      }
+    },
+    {
+      "path": "/home/jnu/models/clip/ViT-L-14-336px.pt",
+      "resolved_path": "/home/jnu/models/clip/ViT-L-14-336px.pt",
+      "size_bytes": 934088680,
+      "allocated_bytes": 934092800,
+      "device": 66306,
+      "inode": 5641850,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-07-10T11:38:03.961238+00:00"
+    },
+    {
+      "path": "/home/jnu/models/dinov2/dinov2_vitl14_pretrain.pth",
+      "resolved_path": "/home/jnu/models/dinov2/dinov2_vitl14_pretrain.pth",
+      "size_bytes": 1217586395,
+      "allocated_bytes": 1217593344,
+      "device": 66306,
+      "inode": 6193924,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-07-13T14:23:27.442837+00:00"
+    },
+    {
+      "path": "/home/jnu/models/hf-cache/hub/models--timm--vit_base_patch32_clip_224.openai/blobs/e6d1bd7789aa45192b3bf90570a789b478bae1b74ebcce7eddd908e83a2b7c31",
+      "resolved_path": "/home/jnu/models/hf-cache/hub/models--timm--vit_base_patch32_clip_224.openai/blobs/e6d1bd7789aa45192b3bf90570a789b478bae1b74ebcce7eddd908e83a2b7c31",
+      "size_bytes": 605143284,
+      "allocated_bytes": 605151232,
+      "device": 66306,
+      "inode": 18644640,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-07-09T08:14:27.087592+00:00"
+    },
+    {
+      "path": "/home/jnu/models/hf-cache/hub/models--timm--vit_base_patch32_clip_224.openai/snapshots/a6f597a30f7b82c51704746581f9a4e41421e878/open_clip_model.safetensors",
+      "resolved_path": "/home/jnu/models/hf-cache/hub/models--timm--vit_base_patch32_clip_224.openai/blobs/e6d1bd7789aa45192b3bf90570a789b478bae1b74ebcce7eddd908e83a2b7c31",
+      "size_bytes": 605143284,
+      "allocated_bytes": 605151232,
+      "device": 66306,
+      "inode": 18644640,
+      "hardlink_count": 1,
+      "is_symlink": true,
+      "modified_at_utc": "2026-07-09T08:14:27.087592+00:00",
+      "safetensors": {
+        "tensor_count_by_dtype": {
+          "F32": 302
+        }
+      }
+    },
+    {
+      "path": "/home/jnu/models/layout/hf_home/hub/models--PaddlePaddle--PP-DocLayoutV3_safetensors/blobs/5ea422c6cc5fe759a47e1357c35639b58173508e025a3131cbe4b6ac59e2b85e",
+      "resolved_path": "/home/jnu/models/layout/hf_home/hub/models--PaddlePaddle--PP-DocLayoutV3_safetensors/blobs/5ea422c6cc5fe759a47e1357c35639b58173508e025a3131cbe4b6ac59e2b85e",
+      "size_bytes": 133270468,
+      "allocated_bytes": 133271552,
+      "device": 66306,
+      "inode": 5377840,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-04-30T07:25:03.103024+00:00"
+    },
+    {
+      "path": "/home/jnu/models/layout/hf_home/hub/models--PaddlePaddle--PP-DocLayoutV3_safetensors/snapshots/3ec586e86ed9245a567bb13395a3db64d5c077cc/model.safetensors",
+      "resolved_path": "/home/jnu/models/layout/hf_home/hub/models--PaddlePaddle--PP-DocLayoutV3_safetensors/blobs/5ea422c6cc5fe759a47e1357c35639b58173508e025a3131cbe4b6ac59e2b85e",
+      "size_bytes": 133270468,
+      "allocated_bytes": 133271552,
+      "device": 66306,
+      "inode": 5377840,
+      "hardlink_count": 1,
+      "is_symlink": true,
+      "modified_at_utc": "2026-04-30T07:25:03.103024+00:00",
+      "safetensors": {
+        "tensor_count_by_dtype": {
+          "F32": 858
+        }
+      }
+    },
+    {
+      "path": "/home/jnu/models/ocr/tensorrt-engines/gb10/ch_PP-OCRv5_det_mobile_sm121_fp16.engine",
+      "resolved_path": "/home/jnu/models/ocr/tensorrt-engines/gb10/ch_PP-OCRv5_det_mobile_sm121_fp16.engine",
+      "size_bytes": 10295132,
+      "allocated_bytes": 10297344,
+      "device": 66306,
+      "inode": 4590933,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-04-29T14:51:56.963906+00:00"
+    },
+    {
+      "path": "/home/jnu/models/ocr/tensorrt-engines/gb10/ch_PP-OCRv5_rec_mobile_sm121_fp16.engine",
+      "resolved_path": "/home/jnu/models/ocr/tensorrt-engines/gb10/ch_PP-OCRv5_rec_mobile_sm121_fp16.engine",
+      "size_bytes": 11227316,
+      "allocated_bytes": 11231232,
+      "device": 66306,
+      "inode": 4590962,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-04-29T14:52:51.704356+00:00"
+    },
+    {
+      "path": "/home/jnu/src/ComfyUI/models/checkpoints/sdpose_wholebody_fp16.safetensors",
+      "resolved_path": "/home/jnu/src/ComfyUI/models/checkpoints/sdpose_wholebody_fp16.safetensors",
+      "size_bytes": 1916645792,
+      "allocated_bytes": 1916653568,
+      "device": 66306,
+      "inode": 24271589,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-09-19T12:53:50.432422+00:00",
+      "safetensors": {
+        "tensor_count_by_dtype": {
+          "F16": 943
+        }
+      }
+    },
+    {
+      "path": "/home/jnu/src/ComfyUI/models/diffusion_models/minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "resolved_path": "/home/jnu/src/ComfyUI/models/diffusion_models/minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "size_bytes": 20970379616,
+      "allocated_bytes": 20970385408,
+      "device": 66306,
+      "inode": 24271542,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-09-18T13:19:00.047002+00:00",
+      "safetensors": {
+        "tensor_count_by_dtype": {
+          "F32": 210,
+          "BF16": 220,
+          "F16": 102,
+          "I8": 200,
+          "U8": 200
+        }
+      }
+    },
+    {
+      "path": "/home/jnu/src/ComfyUI/models/diffusion_models/minimax_h3_ref2va_pruned_int8_convrot.safetensors",
+      "resolved_path": "/home/jnu/src/ComfyUI/models/diffusion_models/minimax_h3_ref2va_pruned_int8_convrot.safetensors",
+      "size_bytes": 20970379616,
+      "allocated_bytes": 20970385408,
+      "device": 66306,
+      "inode": 24271582,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-09-19T09:13:10.117074+00:00",
+      "safetensors": {
+        "tensor_count_by_dtype": {
+          "F32": 210,
+          "BF16": 220,
+          "F16": 102,
+          "I8": 200,
+          "U8": 200
+        }
+      }
+    },
+    {
+      "path": "/home/jnu/src/ComfyUI/models/diffusion_models/rt_detr_v4-x-hgnet_fp16.safetensors",
+      "resolved_path": "/home/jnu/src/ComfyUI/models/diffusion_models/rt_detr_v4-x-hgnet_fp16.safetensors",
+      "size_bytes": 123968978,
+      "allocated_bytes": 123969536,
+      "device": 66306,
+      "inode": 24271591,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-09-19T12:53:19.500126+00:00",
+      "safetensors": {
+        "tensor_count_by_dtype": {
+          "I64": 132,
+          "F16": 1050,
+          "BOOL": 1
+        }
+      }
+    },
+    {
+      "path": "/home/jnu/src/ComfyUI/models/embeddings/minimaxh3_art_is_explosion.safetensors",
+      "resolved_path": "/home/jnu/src/ComfyUI/models/embeddings/minimaxh3_art_is_explosion.safetensors",
+      "size_bytes": 512120,
+      "allocated_bytes": 516096,
+      "device": 66306,
+      "inode": 23879211,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-09-18T12:01:21.486694+00:00",
+      "safetensors": {
+        "tensor_count_by_dtype": {
+          "BF16": 1
+        }
+      }
+    },
+    {
+      "path": "/home/jnu/src/ComfyUI/models/embeddings/minimaxh3_blooming_flowers.safetensors",
+      "resolved_path": "/home/jnu/src/ComfyUI/models/embeddings/minimaxh3_blooming_flowers.safetensors",
+      "size_bytes": 1259640,
+      "allocated_bytes": 1261568,
+      "device": 66306,
+      "inode": 23879209,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-09-18T12:01:21.243721+00:00",
+      "safetensors": {
+        "tensor_count_by_dtype": {
+          "BF16": 1
+        }
+      }
+    },
+    {
+      "path": "/home/jnu/src/ComfyUI/models/embeddings/minimaxh3_bullet_time.safetensors",
+      "resolved_path": "/home/jnu/src/ComfyUI/models/embeddings/minimaxh3_bullet_time.safetensors",
+      "size_bytes": 962680,
+      "allocated_bytes": 966656,
+      "device": 66306,
+      "inode": 23879213,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-09-18T12:01:21.569684+00:00",
+      "safetensors": {
+        "tensor_count_by_dtype": {
+          "BF16": 1
+        }
+      }
+    },
+    {
+      "path": "/home/jnu/src/ComfyUI/models/embeddings/minimaxh3_dark_magic.safetensors",
+      "resolved_path": "/home/jnu/src/ComfyUI/models/embeddings/minimaxh3_dark_magic.safetensors",
+      "size_bytes": 604280,
+      "allocated_bytes": 606208,
+      "device": 66306,
+      "inode": 23879241,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-09-18T12:01:22.155618+00:00",
+      "safetensors": {
+        "tensor_count_by_dtype": {
+          "BF16": 1
+        }
+      }
+    },
+    {
+      "path": "/home/jnu/src/ComfyUI/models/embeddings/minimaxh3_fire_breath.safetensors",
+      "resolved_path": "/home/jnu/src/ComfyUI/models/embeddings/minimaxh3_fire_breath.safetensors",
+      "size_bytes": 1208440,
+      "allocated_bytes": 1212416,
+      "device": 66306,
+      "inode": 23879216,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-09-18T12:01:22.023633+00:00",
+      "safetensors": {
+        "tensor_count_by_dtype": {
+          "BF16": 1
+        }
+      }
+    },
+    {
+      "path": "/home/jnu/src/ComfyUI/models/embeddings/minimaxh3_four_seasons.safetensors",
+      "resolved_path": "/home/jnu/src/ComfyUI/models/embeddings/minimaxh3_four_seasons.safetensors",
+      "size_bytes": 1454200,
+      "allocated_bytes": 1458176,
+      "device": 66306,
+      "inode": 23879239,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-09-18T12:01:22.329598+00:00",
+      "safetensors": {
+        "tensor_count_by_dtype": {
+          "BF16": 1
+        }
+      }
+    },
+    {
+      "path": "/home/jnu/src/ComfyUI/models/embeddings/minimaxh3_kiss_camera.safetensors",
+      "resolved_path": "/home/jnu/src/ComfyUI/models/embeddings/minimaxh3_kiss_camera.safetensors",
+      "size_bytes": 993400,
+      "allocated_bytes": 995328,
+      "device": 66306,
+      "inode": 23879243,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-09-18T12:01:22.480581+00:00",
+      "safetensors": {
+        "tensor_count_by_dtype": {
+          "BF16": 1
+        }
+      }
+    },
+    {
+      "path": "/home/jnu/src/ComfyUI/models/embeddings/minimaxh3_spiral_ascent.safetensors",
+      "resolved_path": "/home/jnu/src/ComfyUI/models/embeddings/minimaxh3_spiral_ascent.safetensors",
+      "size_bytes": 1341560,
+      "allocated_bytes": 1343488,
+      "device": 66306,
+      "inode": 23879208,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-09-18T12:01:22.557572+00:00",
+      "safetensors": {
+        "tensor_count_by_dtype": {
+          "BF16": 1
+        }
+      }
+    },
+    {
+      "path": "/home/jnu/src/ComfyUI/models/embeddings/minimaxh3_storm_magic.safetensors",
+      "resolved_path": "/home/jnu/src/ComfyUI/models/embeddings/minimaxh3_storm_magic.safetensors",
+      "size_bytes": 1403000,
+      "allocated_bytes": 1404928,
+      "device": 66306,
+      "inode": 23879353,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-09-18T12:01:23.708442+00:00",
+      "safetensors": {
+        "tensor_count_by_dtype": {
+          "BF16": 1
+        }
+      }
+    },
+    {
+      "path": "/home/jnu/src/ComfyUI/models/embeddings/minimaxh3_truman_show.safetensors",
+      "resolved_path": "/home/jnu/src/ComfyUI/models/embeddings/minimaxh3_truman_show.safetensors",
+      "size_bytes": 921720,
+      "allocated_bytes": 925696,
+      "device": 66306,
+      "inode": 23879271,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-09-18T12:01:23.235496+00:00",
+      "safetensors": {
+        "tensor_count_by_dtype": {
+          "BF16": 1
+        }
+      }
+    },
+    {
+      "path": "/home/jnu/src/ComfyUI/models/loras/minimax_h3_fl2v_turbo_4step_v1.0_768p_comfyui_bf16.safetensors",
+      "resolved_path": "/home/jnu/src/ComfyUI/models/loras/minimax_h3_fl2v_turbo_4step_v1.0_768p_comfyui_bf16.safetensors",
+      "size_bytes": 1956192992,
+      "allocated_bytes": 1956200448,
+      "device": 66306,
+      "inode": 23879349,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-09-18T12:11:56.954167+00:00",
+      "safetensors": {
+        "tensor_count_by_dtype": {
+          "F32": 208,
+          "BF16": 416
+        }
+      }
+    },
+    {
+      "path": "/home/jnu/src/ComfyUI/models/loras/minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16.safetensors",
+      "resolved_path": "/home/jnu/src/ComfyUI/models/loras/minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16.safetensors",
+      "size_bytes": 1956193000,
+      "allocated_bytes": 1956200448,
+      "device": 66306,
+      "inode": 23888757,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-09-18T12:23:08.265254+00:00",
+      "safetensors": {
+        "tensor_count_by_dtype": {
+          "F32": 208,
+          "BF16": 416
+        }
+      }
+    },
+    {
+      "path": "/home/jnu/src/ComfyUI/models/loras/minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors",
+      "resolved_path": "/home/jnu/src/ComfyUI/models/loras/minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors",
+      "size_bytes": 1956193000,
+      "allocated_bytes": 1956200448,
+      "device": 66306,
+      "inode": 23888759,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-09-19T11:24:49.988434+00:00",
+      "safetensors": {
+        "tensor_count_by_dtype": {
+          "F32": 208,
+          "BF16": 416
+        }
+      }
+    },
+    {
+      "path": "/home/jnu/src/ComfyUI/models/model_patches/minimax_h3_fun_controlnet_union_pruned_int8_convrot.safetensors",
+      "resolved_path": "/home/jnu/src/ComfyUI/models/model_patches/minimax_h3_fun_controlnet_union_pruned_int8_convrot.safetensors",
+      "size_bytes": 2296635360,
+      "allocated_bytes": 2296639488,
+      "device": 66306,
+      "inode": 24271586,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-09-19T12:53:11.516963+00:00",
+      "safetensors": {
+        "tensor_count_by_dtype": {
+          "F32": 32,
+          "BF16": 32,
+          "I8": 20,
+          "U8": 20
+        }
+      }
+    },
+    {
+      "path": "/home/jnu/src/ComfyUI/models/text_encoders/qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "resolved_path": "/home/jnu/src/ComfyUI/models/text_encoders/qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "size_bytes": 15687142551,
+      "allocated_bytes": 15687147520,
+      "device": 66306,
+      "inode": 23879351,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-09-18T12:44:49.751233+00:00",
+      "safetensors": {
+        "tensor_count_by_dtype": {
+          "F32": 351,
+          "BF16": 651,
+          "F8_E4M3": 350,
+          "I8": 1,
+          "U8": 701
+        }
+      }
+    },
+    {
+      "path": "/home/jnu/src/ComfyUI/models/vae/minimax_h3_audio_vae_fp32.safetensors",
+      "resolved_path": "/home/jnu/src/ComfyUI/models/vae/minimax_h3_audio_vae_fp32.safetensors",
+      "size_bytes": 605254808,
+      "allocated_bytes": 605261824,
+      "device": 66306,
+      "inode": 23879356,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-09-18T12:06:13.123291+00:00",
+      "safetensors": {
+        "tensor_count_by_dtype": {
+          "F32": 917
+        }
+      }
+    },
+    {
+      "path": "/home/jnu/src/ComfyUI/models/vae/minimax_h3_video_vae_fp16.safetensors",
+      "resolved_path": "/home/jnu/src/ComfyUI/models/vae/minimax_h3_video_vae_fp16.safetensors",
+      "size_bytes": 5207808496,
+      "allocated_bytes": 5207814144,
+      "device": 66306,
+      "inode": 23888754,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-09-18T12:32:38.587654+00:00",
+      "safetensors": {
+        "tensor_count_by_dtype": {
+          "F16": 562
+        }
+      }
+    },
+    {
+      "path": "/home/jnu/src/ComfyUI/models/vae/minimax_h3_video_vae_int8_convrot.safetensors",
+      "resolved_path": "/home/jnu/src/ComfyUI/models/vae/minimax_h3_video_vae_int8_convrot.safetensors",
+      "size_bytes": 2811065184,
+      "allocated_bytes": 2811072512,
+      "device": 66306,
+      "inode": 23879358,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-09-18T12:14:56.403309+00:00",
+      "safetensors": {
+        "tensor_count_by_dtype": {
+          "F32": 527,
+          "F16": 35,
+          "I8": 144,
+          "U8": 144
+        }
+      }
+    },
+    {
+      "path": "/home/jnu/src/ComfyUI-qwen21/models/diffusion_models/qwen-image-2.1-UC-int8_convrot.safetensors",
+      "resolved_path": "/home/jnu/src/ComfyUI-qwen21/models/diffusion_models/qwen-image-2.1-UC-int8_convrot.safetensors",
+      "size_bytes": 7256796840,
+      "allocated_bytes": 7256801280,
+      "device": 66306,
+      "inode": 7374606,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-10-14T04:03:54.472973+00:00",
+      "safetensors": {
+        "tensor_count_by_dtype": {
+          "F32": 224,
+          "BF16": 73,
+          "I8": 224,
+          "U8": 224
+        }
+      }
+    },
+    {
+      "path": "/home/jnu/src/ComfyUI-qwen21/models/text_encoders/qwen3vl_8b_bf16.safetensors",
+      "resolved_path": "/home/jnu/src/ComfyUI-qwen21/models/text_encoders/qwen3vl_8b_bf16.safetensors",
+      "size_bytes": 17534334616,
+      "allocated_bytes": 17534341120,
+      "device": 66306,
+      "inode": 7374608,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-10-14T04:12:20.703911+00:00",
+      "safetensors": {
+        "tensor_count_by_dtype": {
+          "BF16": 750
+        }
+      }
+    },
+    {
+      "path": "/home/jnu/src/ComfyUI-qwen21/models/vae/qwen_image_2.1_vae_bf16.safetensors",
+      "resolved_path": "/home/jnu/src/ComfyUI-qwen21/models/vae/qwen_image_2.1_vae_bf16.safetensors",
+      "size_bytes": 675509688,
+      "allocated_bytes": 675516416,
+      "device": 66306,
+      "inode": 7374607,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-10-14T03:53:31.871042+00:00",
+      "safetensors": {
+        "tensor_count_by_dtype": {
+          "BF16": 238
+        }
+      }
+    },
+    {
+      "path": "/home/jnu/src/ComfyUI-music3/models/diffusion_models/minimax_music3_dit_fp16.safetensors",
+      "resolved_path": "/home/jnu/src/ComfyUI-music3/models/diffusion_models/minimax_music3_dit_fp16.safetensors",
+      "size_bytes": 4914197682,
+      "allocated_bytes": 4914204672,
+      "device": 66306,
+      "inode": 8140080,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-10-16T04:01:22.634505+00:00",
+      "safetensors": {
+        "tensor_count_by_dtype": {
+          "F16": 374
+        }
+      }
+    },
+    {
+      "path": "/home/jnu/src/ComfyUI-music3/models/text_encoders/minimax_music3_text_encoder_pruned_int8_convrot.safetensors",
+      "resolved_path": "/home/jnu/src/ComfyUI-music3/models/text_encoders/minimax_music3_text_encoder_pruned_int8_convrot.safetensors",
+      "size_bytes": 9196611886,
+      "allocated_bytes": 9196617728,
+      "device": 66306,
+      "inode": 8139392,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-10-16T04:03:10.518858+00:00",
+      "safetensors": {
+        "tensor_count_by_dtype": {
+          "F32": 160,
+          "BF16": 167,
+          "I8": 160,
+          "U8": 161
+        }
+      }
+    },
+    {
+      "path": "/home/jnu/src/ComfyUI-music3/models/vae/minimax_music3_dav.safetensors",
+      "resolved_path": "/home/jnu/src/ComfyUI-music3/models/vae/minimax_music3_dav.safetensors",
+      "size_bytes": 216696128,
+      "allocated_bytes": 216698880,
+      "device": 66306,
+      "inode": 8280869,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-10-16T03:56:04.277907+00:00",
+      "safetensors": {
+        "tensor_count_by_dtype": {
+          "F32": 121
+        }
+      }
+    },
+    {
+      "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi05_droid/params/ocdbt.process_0/d/213a5648ef56840990e3a9d6fca5eb89",
+      "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi05_droid/params/ocdbt.process_0/d/213a5648ef56840990e3a9d6fca5eb89",
+      "size_bytes": 2238010952,
+      "allocated_bytes": 2238017536,
+      "device": 66306,
+      "inode": 22675484,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-09-23T13:57:03.289758+00:00"
+    },
+    {
+      "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi05_droid/params/ocdbt.process_0/d/3d66a3d641ef2a488f1a3dad19dcc9fa",
+      "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi05_droid/params/ocdbt.process_0/d/3d66a3d641ef2a488f1a3dad19dcc9fa",
+      "size_bytes": 2254235960,
+      "allocated_bytes": 2254241792,
+      "device": 66306,
+      "inode": 22675469,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-09-23T13:52:36.923609+00:00"
+    },
+    {
+      "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi05_droid/params/ocdbt.process_0/d/413535d55493c7cbed0b50498ab7bbed",
+      "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi05_droid/params/ocdbt.process_0/d/413535d55493c7cbed0b50498ab7bbed",
+      "size_bytes": 811530994,
+      "allocated_bytes": 811536384,
+      "device": 66306,
+      "inode": 22675483,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-09-23T13:55:55.603656+00:00"
+    },
+    {
+      "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi05_droid/params/ocdbt.process_0/d/8fac3a77c4f18f0ef5ebc8208373833a",
+      "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi05_droid/params/ocdbt.process_0/d/8fac3a77c4f18f0ef5ebc8208373833a",
+      "size_bytes": 2237971599,
+      "allocated_bytes": 2237976576,
+      "device": 66306,
+      "inode": 22675464,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-09-23T13:52:13.119609+00:00"
+    },
+    {
+      "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi05_droid/params/ocdbt.process_0/d/a0c170c234922db4ca080df944165efe",
+      "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi05_droid/params/ocdbt.process_0/d/a0c170c234922db4ca080df944165efe",
+      "size_bytes": 1954680867,
+      "allocated_bytes": 1954689024,
+      "device": 66306,
+      "inode": 22675485,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-09-23T13:56:55.057978+00:00"
+    },
+    {
+      "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi05_droid/params/ocdbt.process_0/d/b862fdd01b4477d01ea1f43ddb38b88f",
+      "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi05_droid/params/ocdbt.process_0/d/b862fdd01b4477d01ea1f43ddb38b88f",
+      "size_bytes": 2797559229,
+      "allocated_bytes": 2797563904,
+      "device": 66306,
+      "inode": 22675468,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-09-23T13:58:30.670587+00:00"
+    },
+    {
+      "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi05_droid/params/ocdbt.process_0/d/bc8c706bafc394cde9dc5c45bc6fcc41",
+      "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi05_droid/params/ocdbt.process_0/d/bc8c706bafc394cde9dc5c45bc6fcc41",
+      "size_bytes": 70003953,
+      "allocated_bytes": 70008832,
+      "device": 66306,
+      "inode": 22675472,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-09-23T13:56:59.821850+00:00"
+    },
+    {
+      "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_sim/params/ocdbt.process_0/d/04e1abe7d7bee0b72bc2ccc4acd51e6d",
+      "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_sim/params/ocdbt.process_0/d/04e1abe7d7bee0b72bc2ccc4acd51e6d",
+      "size_bytes": 615863781,
+      "allocated_bytes": 615870464,
+      "device": 66306,
+      "inode": 6718484,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-09-20T09:02:51.255358+00:00"
+    },
+    {
+      "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_sim/params/ocdbt.process_0/d/3454ef21b44daf9a80117d2205930dfc",
+      "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_sim/params/ocdbt.process_0/d/3454ef21b44daf9a80117d2205930dfc",
+      "size_bytes": 2240218352,
+      "allocated_bytes": 2240225280,
+      "device": 66306,
+      "inode": 6718486,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-09-20T09:05:37.818817+00:00"
+    },
+    {
+      "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_sim/params/ocdbt.process_0/d/3492325ff87f75fe731e3f0e1568a284",
+      "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_sim/params/ocdbt.process_0/d/3492325ff87f75fe731e3f0e1568a284",
+      "size_bytes": 132968002,
+      "allocated_bytes": 132972544,
+      "device": 66306,
+      "inode": 6718491,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-09-20T09:02:59.470971+00:00"
+    },
+    {
+      "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_sim/params/ocdbt.process_0/d/38f5f89a89ba4de6f36dae38afb812df",
+      "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_sim/params/ocdbt.process_0/d/38f5f89a89ba4de6f36dae38afb812df",
+      "size_bytes": 972323640,
+      "allocated_bytes": 972328960,
+      "device": 66306,
+      "inode": 6718490,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-09-20T09:06:50.033702+00:00"
+    },
+    {
+      "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_sim/params/ocdbt.process_0/d/5a69fee77c2cf84d3a2b35d9ea1d024b",
+      "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_sim/params/ocdbt.process_0/d/5a69fee77c2cf84d3a2b35d9ea1d024b",
+      "size_bytes": 1120115856,
+      "allocated_bytes": 1120120832,
+      "device": 66306,
+      "inode": 6718499,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-09-20T09:11:11.175022+00:00"
+    },
+    {
+      "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_sim/params/ocdbt.process_0/d/89c4de373fec21a170a2c1e8260887d1",
+      "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_sim/params/ocdbt.process_0/d/89c4de373fec21a170a2c1e8260887d1",
+      "size_bytes": 1120131777,
+      "allocated_bytes": 1120137216,
+      "device": 66306,
+      "inode": 6718483,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-09-20T09:04:00.335156+00:00"
+    },
+    {
+      "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_sim/params/ocdbt.process_0/d/a0854df81ac9825231de7438b7f190e0",
+      "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_sim/params/ocdbt.process_0/d/a0854df81ac9825231de7438b7f190e0",
+      "size_bytes": 1553485960,
+      "allocated_bytes": 1553494016,
+      "device": 66306,
+      "inode": 6718493,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-09-20T09:06:16.434142+00:00"
+    },
+    {
+      "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_sim/params/ocdbt.process_0/d/a2581300d76d041a128b3655b355e2e0",
+      "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_sim/params/ocdbt.process_0/d/a2581300d76d041a128b3655b355e2e0",
+      "size_bytes": 2240241927,
+      "allocated_bytes": 2240249856,
+      "device": 66306,
+      "inode": 6718496,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-09-20T09:13:24.264383+00:00"
+    },
+    {
+      "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_sim/params/ocdbt.process_0/d/b7ffa1e5fe2c4d883c7630d8eab57645",
+      "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_sim/params/ocdbt.process_0/d/b7ffa1e5fe2c4d883c7630d8eab57645",
+      "size_bytes": 1957442524,
+      "allocated_bytes": 1957449728,
+      "device": 66306,
+      "inode": 6718481,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-09-20T09:04:26.364979+00:00"
+    },
+    {
+      "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_towel/params/ocdbt.process_0/d/46b3801afc37acf63f78bb26747cf39c",
+      "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_towel/params/ocdbt.process_0/d/46b3801afc37acf63f78bb26747cf39c",
+      "size_bytes": 2240240907,
+      "allocated_bytes": 2240245760,
+      "device": 66306,
+      "inode": 7242855,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-09-23T13:02:42.606832+00:00"
+    },
+    {
+      "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_towel/params/ocdbt.process_0/d/584d40b18bc706a0c758814d77349902",
+      "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_towel/params/ocdbt.process_0/d/584d40b18bc706a0c758814d77349902",
+      "size_bytes": 1120121576,
+      "allocated_bytes": 1120129024,
+      "device": 66306,
+      "inode": 7242856,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-09-23T13:03:42.153993+00:00"
+    },
+    {
+      "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_towel/params/ocdbt.process_0/d/827f1b0d7d4e139c9c04d798043f35ed",
+      "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_towel/params/ocdbt.process_0/d/827f1b0d7d4e139c9c04d798043f35ed",
+      "size_bytes": 158451815,
+      "allocated_bytes": 158453760,
+      "device": 66306,
+      "inode": 7242860,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-09-23T13:03:56.984270+00:00"
+    },
+    {
+      "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_towel/params/ocdbt.process_0/d/8d2b01f4d5c5b20ad52409df44a3f4ed",
+      "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_towel/params/ocdbt.process_0/d/8d2b01f4d5c5b20ad52409df44a3f4ed",
+      "size_bytes": 405722836,
+      "allocated_bytes": 405725184,
+      "device": 66306,
+      "inode": 7242861,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-09-23T13:04:18.910672+00:00"
+    },
+    {
+      "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_towel/params/ocdbt.process_0/d/91a52ca00496821c20b9c79b542e7443",
+      "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_towel/params/ocdbt.process_0/d/91a52ca00496821c20b9c79b542e7443",
+      "size_bytes": 420007062,
+      "allocated_bytes": 420007936,
+      "device": 66306,
+      "inode": 7242862,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-09-23T13:04:43.481112+00:00"
+    },
+    {
+      "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_towel/params/ocdbt.process_0/d/bbeb2a7a79e60081f5e34ee4f63ab347",
+      "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_towel/params/ocdbt.process_0/d/bbeb2a7a79e60081f5e34ee4f63ab347",
+      "size_bytes": 203025734,
+      "allocated_bytes": 203026432,
+      "device": 66306,
+      "inode": 7242864,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-09-23T13:05:00.270407+00:00"
+    },
+    {
+      "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_towel/params/ocdbt.process_0/d/c527bd7af59966032a3e3fdf65b6ff3c",
+      "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_towel/params/ocdbt.process_0/d/c527bd7af59966032a3e3fdf65b6ff3c",
+      "size_bytes": 1056457357,
+      "allocated_bytes": 1056464896,
+      "device": 66306,
+      "inode": 7242865,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-09-23T13:05:55.554349+00:00"
+    },
+    {
+      "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_towel/params/ocdbt.process_0/d/c5cf092c1564692650d16bdeae305d59",
+      "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_towel/params/ocdbt.process_0/d/c5cf092c1564692650d16bdeae305d59",
+      "size_bytes": 1056489350,
+      "allocated_bytes": 1056493568,
+      "device": 66306,
+      "inode": 7242866,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-09-23T13:06:51.277261+00:00"
+    },
+    {
+      "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_towel/params/ocdbt.process_0/d/dd8f513f2a47b6b566c175c520e1442d",
+      "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_towel/params/ocdbt.process_0/d/dd8f513f2a47b6b566c175c520e1442d",
+      "size_bytes": 2240239216,
+      "allocated_bytes": 2240245760,
+      "device": 66306,
+      "inode": 7242868,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-09-23T13:08:49.861108+00:00"
+    },
+    {
+      "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_towel/params/ocdbt.process_0/d/e92e7122506fe99edd52ca43f5334c5c",
+      "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_towel/params/ocdbt.process_0/d/e92e7122506fe99edd52ca43f5334c5c",
+      "size_bytes": 3077543767,
+      "allocated_bytes": 3077550080,
+      "device": 66306,
+      "inode": 7242869,
+      "hardlink_count": 1,
+      "is_symlink": false,
+      "modified_at_utc": "2026-09-23T13:12:11.112354+00:00"
+    }
+  ],
+  "unique_model_file_count": 65,
+  "unique_model_file_size_bytes": 181019544775,
+  "unique_model_file_allocated_bytes": 181019877376,
+  "environments": [
+    {
+      "path": "/home/jnu/venvs/comfyui-ltx23",
+      "versions": {
+        "returncode": 0,
+        "stdout": "{\"python\": \"3.12.3\", \"packages\": {\"torch\": \"2.11.0\", \"torchaudio\": \"2.11.0\", \"transformers\": \"5.8.0\", \"comfyui-frontend-package\": \"1.52.7\", \"comfy-kitchen\": \"0.2.35\"}}",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "/home/jnu/venvs/comfyui-qwen21",
+      "versions": {
+        "returncode": 0,
+        "stdout": "{\"python\": \"3.12.3\", \"packages\": {\"torch\": \"2.11.0\", \"torchaudio\": \"2.11.0\", \"transformers\": \"5.8.0\", \"comfyui-frontend-package\": \"1.55.17\", \"comfy-kitchen\": \"0.2.37\"}}",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "/home/jnu/venvs/comfyui-music3",
+      "versions": {
+        "returncode": 0,
+        "stdout": "{\"python\": \"3.12.3\", \"packages\": {\"torch\": \"2.11.0\", \"torchaudio\": \"2.11.0\", \"transformers\": \"5.8.0\", \"comfyui-frontend-package\": \"1.55.17\", \"comfy-kitchen\": \"0.2.37\"}}",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "/home/jnu/venvs/voxcpm2-aigc",
+      "versions": {
+        "returncode": 0,
+        "stdout": "{\"python\": \"3.12.3\", \"packages\": {\"torch\": \"2.11.0\", \"torchaudio\": \"2.11.0\", \"transformers\": \"5.8.0\", \"comfyui-frontend-package\": \"1.55.17\", \"comfy-kitchen\": \"0.2.37\"}}",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "/home/jnu/venvs/vllm",
+      "versions": {
+        "returncode": 0,
+        "stdout": "{\"python\": \"3.12.3\", \"packages\": {\"torch\": \"2.13.0\", \"torchaudio\": \"2.11.0\", \"transformers\": \"5.8.0\", \"vllm\": \"0.28.0\"}}",
+        "stderr": ""
+      }
+    }
+  ],
+  "sources": [
+    {
+      "path": "/home/jnu/src/ComfyUI",
+      "commit": {
+        "returncode": 0,
+        "stdout": "a8686f2b33fc540f137df50c0f0719953830a5e7",
+        "stderr": ""
+      },
+      "custom_node_directories": [
+        "ComfyUI-KJNodes",
+        "ComfyUI-LTXVideo",
+        "__pycache__"
+      ]
+    },
+    {
+      "path": "/home/jnu/src/ComfyUI-qwen21",
+      "commit": {
+        "returncode": 128,
+        "stdout": "",
+        "stderr": "fatal: 不是 git 仓库（或者任何父目录）：.git"
+      },
+      "custom_node_directories": []
+    },
+    {
+      "path": "/home/jnu/src/ComfyUI-music3",
+      "commit": {
+        "returncode": 128,
+        "stdout": "",
+        "stderr": "fatal: 不是 git 仓库（或者任何父目录）：.git"
+      },
+      "custom_node_directories": []
+    },
+    {
+      "path": "/home/jnu/src/llama.cpp",
+      "commit": {
+        "returncode": 0,
+        "stdout": "db44417b027cff147f7de85e7da22bc6a3a804fb",
+        "stderr": ""
+      },
+      "custom_node_directories": []
+    }
+  ],
+  "errors": []
+}

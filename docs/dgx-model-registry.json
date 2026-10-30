@@ -1,0 +1,1689 @@
+{
+  "schema_version": 1,
+  "reviewed_at_local_date": "2026-10-27",
+  "timezone": "Asia/Shanghai",
+  "inventory_file": "dgx-resource-inventory-2026-10-27.json",
+  "status_definitions": {
+    "active_project_reference": "Referenced by current project code; not necessarily running now.",
+    "trial_candidate_installed": "Installed, outside current simplified workflow, no finding of obsolescence.",
+    "needs_project_owner_confirmation": "Other project resources; owner/usage unknown.",
+    "not_installed_candidate": "Public manifest inspected; not installed by this investigation."
+  },
+  "limitations": [
+    "Owner, last verified use and runtime peak remain unknown unless evidence is recorded.",
+    "Review dates are proposed, not scheduled automations.",
+    "Shared dependencies and hard links must not be summed blindly.",
+    "Selected candidate weight totals exclude small configs/tokenizers and optional stages.",
+    "No deletion or service changes authorized by the registry."
+  ],
+  "installed_groups": [
+    {
+      "resource_id": "h3_fl2va",
+      "name": "H3 FL2VA INT8 + Turbo 8",
+      "status": "active_project_reference",
+      "capabilities": [
+        "image/first-last-frame to audiovisual video"
+      ],
+      "owner": null,
+      "source_repository": "Comfy-Org/MiniMax-H3",
+      "source_revision": null,
+      "files": [
+        {
+          "path": "/home/jnu/src/ComfyUI/models/diffusion_models/minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "resolved_path": "/home/jnu/src/ComfyUI/models/diffusion_models/minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "size_bytes": 20970379616,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 24271542,
+          "expected_source_manifest": {
+            "repository": "Comfy-Org/MiniMax-H3",
+            "manifest_revision": "e5eb578a89295337b8ff433a035929ce0279e0b6",
+            "source_file": "diffusion_models/minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+            "lfs_sha256": "e889202c41dafb67b10d67b97f0d8541508036a6090af23425a5c2615d03c47a"
+          },
+          "validation_in_this_audit": "file stat; safetensors header when applicable; not full-file SHA256"
+        },
+        {
+          "path": "/home/jnu/src/ComfyUI/models/loras/minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16.safetensors",
+          "resolved_path": "/home/jnu/src/ComfyUI/models/loras/minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16.safetensors",
+          "size_bytes": 1956193000,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 23888757,
+          "expected_source_manifest": {
+            "repository": "Comfy-Org/MiniMax-H3",
+            "manifest_revision": "e5eb578a89295337b8ff433a035929ce0279e0b6",
+            "source_file": "loras/minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16.safetensors",
+            "lfs_sha256": "2339acdf19bfe123f46b971ea35d367a84adb85de43627e1eceafa5a5b2b111e"
+          },
+          "validation_in_this_audit": "file stat; safetensors header when applicable; not full-file SHA256"
+        }
+      ],
+      "unique_file_size_bytes": 22926572616,
+      "workflow_references": [
+        "aigc/workflows.py: build_workflow"
+      ],
+      "last_verified_use": null,
+      "peak_runtime_memory_bytes": null,
+      "runtime_measurement": "not measured in this investigation",
+      "next_review_local_date": "2026-11-27",
+      "review_date_is_proposal": true,
+      "notes": [
+        "Depends on h3_shared_condition_vae."
+      ]
+    },
+    {
+      "resource_id": "h3_ref2va",
+      "name": "H3 Ref2VA INT8 + Turbo 4",
+      "status": "active_project_reference",
+      "capabilities": [
+        "reference image to audiovisual video; native reference extensions"
+      ],
+      "owner": null,
+      "source_repository": "Comfy-Org/MiniMax-H3",
+      "source_revision": null,
+      "files": [
+        {
+          "path": "/home/jnu/src/ComfyUI/models/diffusion_models/minimax_h3_ref2va_pruned_int8_convrot.safetensors",
+          "resolved_path": "/home/jnu/src/ComfyUI/models/diffusion_models/minimax_h3_ref2va_pruned_int8_convrot.safetensors",
+          "size_bytes": 20970379616,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 24271582,
+          "expected_source_manifest": {
+            "repository": "Comfy-Org/MiniMax-H3",
+            "manifest_revision": "e5eb578a89295337b8ff433a035929ce0279e0b6",
+            "source_file": "diffusion_models/minimax_h3_ref2va_pruned_int8_convrot.safetensors",
+            "lfs_sha256": "9255f52b6677845ad238f20dfaafa94727053694127ab7f255c048f0f9365779"
+          },
+          "validation_in_this_audit": "file stat; safetensors header when applicable; not full-file SHA256"
+        },
+        {
+          "path": "/home/jnu/src/ComfyUI/models/loras/minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors",
+          "resolved_path": "/home/jnu/src/ComfyUI/models/loras/minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors",
+          "size_bytes": 1956193000,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 23888759,
+          "expected_source_manifest": {
+            "repository": "Comfy-Org/MiniMax-H3",
+            "manifest_revision": "e5eb578a89295337b8ff433a035929ce0279e0b6",
+            "source_file": "loras/minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors",
+            "lfs_sha256": "5b9ab5ade15d0775676d01a907268a69a1468dc6033b3b0d3ded5502f3ebb84c"
+          },
+          "validation_in_this_audit": "file stat; safetensors header when applicable; not full-file SHA256"
+        }
+      ],
+      "unique_file_size_bytes": 22926572616,
+      "workflow_references": [
+        "aigc/workflows.py: build_workflow"
+      ],
+      "last_verified_use": null,
+      "peak_runtime_memory_bytes": null,
+      "runtime_measurement": "not measured in this investigation",
+      "next_review_local_date": "2026-11-27",
+      "review_date_is_proposal": true,
+      "notes": [
+        "Depends on h3_shared_condition_vae."
+      ]
+    },
+    {
+      "resource_id": "h3_shared_condition_vae",
+      "name": "H3 shared encoder and current AV VAEs",
+      "status": "active_project_reference",
+      "capabilities": [
+        "H3 condition encoding",
+        "H3 video/audio decoding"
+      ],
+      "owner": null,
+      "source_repository": "Comfy-Org/MiniMax-H3",
+      "source_revision": null,
+      "files": [
+        {
+          "path": "/home/jnu/src/ComfyUI/models/text_encoders/qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "resolved_path": "/home/jnu/src/ComfyUI/models/text_encoders/qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "size_bytes": 15687142551,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 23879351,
+          "expected_source_manifest": {
+            "repository": "Comfy-Org/MiniMax-H3",
+            "manifest_revision": "e5eb578a89295337b8ff433a035929ce0279e0b6",
+            "source_file": "text_encoders/qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+            "lfs_sha256": "35a88d51044231fe332301d7a62aa81e3f2cba62febeb446e2c1e3e0ef76f2c6"
+          },
+          "validation_in_this_audit": "file stat; safetensors header when applicable; not full-file SHA256"
+        },
+        {
+          "path": "/home/jnu/src/ComfyUI/models/vae/minimax_h3_audio_vae_fp32.safetensors",
+          "resolved_path": "/home/jnu/src/ComfyUI/models/vae/minimax_h3_audio_vae_fp32.safetensors",
+          "size_bytes": 605254808,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 23879356,
+          "expected_source_manifest": {
+            "repository": "Comfy-Org/MiniMax-H3",
+            "manifest_revision": "e5eb578a89295337b8ff433a035929ce0279e0b6",
+            "source_file": "vae/minimax_h3_audio_vae_fp32.safetensors",
+            "lfs_sha256": "8e505d95dd1561d47abd43d4238fd40d9bb1ae9e147ed0a4cba778d76ae4db48"
+          },
+          "validation_in_this_audit": "file stat; safetensors header when applicable; not full-file SHA256"
+        },
+        {
+          "path": "/home/jnu/src/ComfyUI/models/vae/minimax_h3_video_vae_fp16.safetensors",
+          "resolved_path": "/home/jnu/src/ComfyUI/models/vae/minimax_h3_video_vae_fp16.safetensors",
+          "size_bytes": 5207808496,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 23888754,
+          "expected_source_manifest": {
+            "repository": "Comfy-Org/MiniMax-H3",
+            "manifest_revision": "e5eb578a89295337b8ff433a035929ce0279e0b6",
+            "source_file": "vae/minimax_h3_video_vae_fp16.safetensors",
+            "lfs_sha256": "7c1f131492e7eddacaac9069a61b81bdd39de5cc96561e677c5eab1cdce5e522"
+          },
+          "validation_in_this_audit": "file stat; safetensors header when applicable; not full-file SHA256"
+        }
+      ],
+      "unique_file_size_bytes": 21500205855,
+      "workflow_references": [
+        "h3_fl2va",
+        "h3_ref2va"
+      ],
+      "last_verified_use": null,
+      "peak_runtime_memory_bytes": null,
+      "runtime_measurement": "not measured in this investigation",
+      "next_review_local_date": "2026-11-27",
+      "review_date_is_proposal": true,
+      "notes": [
+        "Encoder is not a standalone general-purpose chat server."
+      ]
+    },
+    {
+      "resource_id": "h3_vae_int8",
+      "name": "H3 alternate INT8 video VAE",
+      "status": "trial_candidate_installed",
+      "capabilities": [
+        "video decoding with smaller serialized weights"
+      ],
+      "owner": null,
+      "source_repository": "Comfy-Org/MiniMax-H3",
+      "source_revision": null,
+      "files": [
+        {
+          "path": "/home/jnu/src/ComfyUI/models/vae/minimax_h3_video_vae_int8_convrot.safetensors",
+          "resolved_path": "/home/jnu/src/ComfyUI/models/vae/minimax_h3_video_vae_int8_convrot.safetensors",
+          "size_bytes": 2811065184,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 23879358,
+          "expected_source_manifest": {
+            "repository": "Comfy-Org/MiniMax-H3",
+            "manifest_revision": "e5eb578a89295337b8ff433a035929ce0279e0b6",
+            "source_file": "vae/minimax_h3_video_vae_int8_convrot.safetensors",
+            "lfs_sha256": "52a2c8c73583c86e4f41cdcce3a6ad0ea562987bc0bf3d60a0cef5f5c8e60c0e"
+          },
+          "validation_in_this_audit": "file stat; safetensors header when applicable; not full-file SHA256"
+        }
+      ],
+      "unique_file_size_bytes": 2811065184,
+      "workflow_references": [],
+      "last_verified_use": null,
+      "peak_runtime_memory_bytes": null,
+      "runtime_measurement": "not measured in this investigation",
+      "next_review_local_date": "2026-11-10",
+      "review_date_is_proposal": true,
+      "notes": [
+        "Not referenced by current simplified workflow; official downloaded templates reference this file."
+      ]
+    },
+    {
+      "resource_id": "h3_turbo768_4",
+      "name": "H3 FL2VA Turbo 4-step 768p",
+      "status": "trial_candidate_installed",
+      "capabilities": [
+        "alternate resolution/acceleration specification"
+      ],
+      "owner": null,
+      "source_repository": "Comfy-Org/MiniMax-H3",
+      "source_revision": null,
+      "files": [
+        {
+          "path": "/home/jnu/src/ComfyUI/models/loras/minimax_h3_fl2v_turbo_4step_v1.0_768p_comfyui_bf16.safetensors",
+          "resolved_path": "/home/jnu/src/ComfyUI/models/loras/minimax_h3_fl2v_turbo_4step_v1.0_768p_comfyui_bf16.safetensors",
+          "size_bytes": 1956192992,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 23879349,
+          "expected_source_manifest": {
+            "repository": "Comfy-Org/MiniMax-H3",
+            "manifest_revision": "e5eb578a89295337b8ff433a035929ce0279e0b6",
+            "source_file": "loras/minimax_h3_fl2v_turbo_4step_v1.0_768p_comfyui_bf16.safetensors",
+            "lfs_sha256": "c396a9a06f58399e9df9754b18299818d84a2ddd371724ba48fe4a41221437dc"
+          },
+          "validation_in_this_audit": "file stat; safetensors header when applicable; not full-file SHA256"
+        }
+      ],
+      "unique_file_size_bytes": 1956192992,
+      "workflow_references": [],
+      "last_verified_use": null,
+      "peak_runtime_memory_bytes": null,
+      "runtime_measurement": "not measured in this investigation",
+      "next_review_local_date": "2026-11-10",
+      "review_date_is_proposal": true,
+      "notes": [
+        "Confirm exact scheduler/shift before use; do not reuse legacy Turbo parameters unchecked."
+      ]
+    },
+    {
+      "resource_id": "h3_control",
+      "name": "H3 Fun ControlNet Union + SDPose + detector",
+      "status": "trial_candidate_installed",
+      "capabilities": [
+        "pose/control preprocessing",
+        "motion/spatial video control"
+      ],
+      "owner": null,
+      "source_repository": "Comfy-Org/MiniMax-H3; Comfy-Org/SDPose",
+      "source_revision": null,
+      "files": [
+        {
+          "path": "/home/jnu/src/ComfyUI/models/checkpoints/sdpose_wholebody_fp16.safetensors",
+          "resolved_path": "/home/jnu/src/ComfyUI/models/checkpoints/sdpose_wholebody_fp16.safetensors",
+          "size_bytes": 1916645792,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 24271589
+        },
+        {
+          "path": "/home/jnu/src/ComfyUI/models/diffusion_models/rt_detr_v4-x-hgnet_fp16.safetensors",
+          "resolved_path": "/home/jnu/src/ComfyUI/models/diffusion_models/rt_detr_v4-x-hgnet_fp16.safetensors",
+          "size_bytes": 123968978,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 24271591
+        },
+        {
+          "path": "/home/jnu/src/ComfyUI/models/model_patches/minimax_h3_fun_controlnet_union_pruned_int8_convrot.safetensors",
+          "resolved_path": "/home/jnu/src/ComfyUI/models/model_patches/minimax_h3_fun_controlnet_union_pruned_int8_convrot.safetensors",
+          "size_bytes": 2296635360,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 24271586,
+          "expected_source_manifest": {
+            "repository": "Comfy-Org/MiniMax-H3",
+            "manifest_revision": "e5eb578a89295337b8ff433a035929ce0279e0b6",
+            "source_file": "model_patches/minimax_h3_fun_controlnet_union_pruned_int8_convrot.safetensors",
+            "lfs_sha256": "9c645c0a308c8af361efd43b409710f6f8fec0db297c29503e141a84991fed0c"
+          },
+          "validation_in_this_audit": "file stat; safetensors header when applicable; not full-file SHA256"
+        }
+      ],
+      "unique_file_size_bytes": 4337250130,
+      "workflow_references": [],
+      "last_verified_use": null,
+      "peak_runtime_memory_bytes": null,
+      "runtime_measurement": "not measured in this investigation",
+      "next_review_local_date": "2026-11-10",
+      "review_date_is_proposal": true,
+      "notes": [
+        "Original Union version, not Union 2.0; dependent files belong to one functional set."
+      ]
+    },
+    {
+      "resource_id": "h3_embeddings",
+      "name": "H3 preset effect embeddings",
+      "status": "trial_candidate_installed",
+      "capabilities": [
+        "preset conditioning effects"
+      ],
+      "owner": null,
+      "source_repository": "Comfy-Org/MiniMax-H3",
+      "source_revision": null,
+      "files": [
+        {
+          "path": "/home/jnu/src/ComfyUI/models/embeddings/minimaxh3_art_is_explosion.safetensors",
+          "resolved_path": "/home/jnu/src/ComfyUI/models/embeddings/minimaxh3_art_is_explosion.safetensors",
+          "size_bytes": 512120,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 23879211,
+          "expected_source_manifest": {
+            "repository": "Comfy-Org/MiniMax-H3",
+            "manifest_revision": "e5eb578a89295337b8ff433a035929ce0279e0b6",
+            "source_file": "embeddings/minimaxh3_art_is_explosion.safetensors",
+            "lfs_sha256": "00e8679c77ce1fc3fd3accb67bc4db56d626b6b27609797504ab00e2b997145f"
+          },
+          "validation_in_this_audit": "file stat; safetensors header when applicable; not full-file SHA256"
+        },
+        {
+          "path": "/home/jnu/src/ComfyUI/models/embeddings/minimaxh3_blooming_flowers.safetensors",
+          "resolved_path": "/home/jnu/src/ComfyUI/models/embeddings/minimaxh3_blooming_flowers.safetensors",
+          "size_bytes": 1259640,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 23879209,
+          "expected_source_manifest": {
+            "repository": "Comfy-Org/MiniMax-H3",
+            "manifest_revision": "e5eb578a89295337b8ff433a035929ce0279e0b6",
+            "source_file": "embeddings/minimaxh3_blooming_flowers.safetensors",
+            "lfs_sha256": "934d1d2c50bf27cd0b3785b0f44b0b62119a90b2901f9193782d86ff7191cbe9"
+          },
+          "validation_in_this_audit": "file stat; safetensors header when applicable; not full-file SHA256"
+        },
+        {
+          "path": "/home/jnu/src/ComfyUI/models/embeddings/minimaxh3_bullet_time.safetensors",
+          "resolved_path": "/home/jnu/src/ComfyUI/models/embeddings/minimaxh3_bullet_time.safetensors",
+          "size_bytes": 962680,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 23879213,
+          "expected_source_manifest": {
+            "repository": "Comfy-Org/MiniMax-H3",
+            "manifest_revision": "e5eb578a89295337b8ff433a035929ce0279e0b6",
+            "source_file": "embeddings/minimaxh3_bullet_time.safetensors",
+            "lfs_sha256": "e318b200d28c22fcf41d9b25ce481dd5a766f0ac50561663e33401975ea1bcae"
+          },
+          "validation_in_this_audit": "file stat; safetensors header when applicable; not full-file SHA256"
+        },
+        {
+          "path": "/home/jnu/src/ComfyUI/models/embeddings/minimaxh3_dark_magic.safetensors",
+          "resolved_path": "/home/jnu/src/ComfyUI/models/embeddings/minimaxh3_dark_magic.safetensors",
+          "size_bytes": 604280,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 23879241,
+          "expected_source_manifest": {
+            "repository": "Comfy-Org/MiniMax-H3",
+            "manifest_revision": "e5eb578a89295337b8ff433a035929ce0279e0b6",
+            "source_file": "embeddings/minimaxh3_dark_magic.safetensors",
+            "lfs_sha256": "71df9fe76f9cbb34a7508fc49d46bf35ee51744aaa17789c6406e1bec49f5866"
+          },
+          "validation_in_this_audit": "file stat; safetensors header when applicable; not full-file SHA256"
+        },
+        {
+          "path": "/home/jnu/src/ComfyUI/models/embeddings/minimaxh3_fire_breath.safetensors",
+          "resolved_path": "/home/jnu/src/ComfyUI/models/embeddings/minimaxh3_fire_breath.safetensors",
+          "size_bytes": 1208440,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 23879216,
+          "expected_source_manifest": {
+            "repository": "Comfy-Org/MiniMax-H3",
+            "manifest_revision": "e5eb578a89295337b8ff433a035929ce0279e0b6",
+            "source_file": "embeddings/minimaxh3_fire_breath.safetensors",
+            "lfs_sha256": "ed048cf52802774a819e916bbf6ad6eaa047027abc6cd0decc63daccbb93c9f1"
+          },
+          "validation_in_this_audit": "file stat; safetensors header when applicable; not full-file SHA256"
+        },
+        {
+          "path": "/home/jnu/src/ComfyUI/models/embeddings/minimaxh3_four_seasons.safetensors",
+          "resolved_path": "/home/jnu/src/ComfyUI/models/embeddings/minimaxh3_four_seasons.safetensors",
+          "size_bytes": 1454200,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 23879239,
+          "expected_source_manifest": {
+            "repository": "Comfy-Org/MiniMax-H3",
+            "manifest_revision": "e5eb578a89295337b8ff433a035929ce0279e0b6",
+            "source_file": "embeddings/minimaxh3_four_seasons.safetensors",
+            "lfs_sha256": "9a432e89afc942d1ea27055372a6fb81c4dc0f4c0498a49b9f5eff1a015f1034"
+          },
+          "validation_in_this_audit": "file stat; safetensors header when applicable; not full-file SHA256"
+        },
+        {
+          "path": "/home/jnu/src/ComfyUI/models/embeddings/minimaxh3_kiss_camera.safetensors",
+          "resolved_path": "/home/jnu/src/ComfyUI/models/embeddings/minimaxh3_kiss_camera.safetensors",
+          "size_bytes": 993400,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 23879243,
+          "expected_source_manifest": {
+            "repository": "Comfy-Org/MiniMax-H3",
+            "manifest_revision": "e5eb578a89295337b8ff433a035929ce0279e0b6",
+            "source_file": "embeddings/minimaxh3_kiss_camera.safetensors",
+            "lfs_sha256": "9da82f56c26f2a81b80803a31486d31036c122112203b62d4991759a90ddf4b8"
+          },
+          "validation_in_this_audit": "file stat; safetensors header when applicable; not full-file SHA256"
+        },
+        {
+          "path": "/home/jnu/src/ComfyUI/models/embeddings/minimaxh3_spiral_ascent.safetensors",
+          "resolved_path": "/home/jnu/src/ComfyUI/models/embeddings/minimaxh3_spiral_ascent.safetensors",
+          "size_bytes": 1341560,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 23879208,
+          "expected_source_manifest": {
+            "repository": "Comfy-Org/MiniMax-H3",
+            "manifest_revision": "e5eb578a89295337b8ff433a035929ce0279e0b6",
+            "source_file": "embeddings/minimaxh3_spiral_ascent.safetensors",
+            "lfs_sha256": "767b6bdccee4c41805802a07bf3c04ba9582fbb8e7bc4bd416ff8e000e3e29b9"
+          },
+          "validation_in_this_audit": "file stat; safetensors header when applicable; not full-file SHA256"
+        },
+        {
+          "path": "/home/jnu/src/ComfyUI/models/embeddings/minimaxh3_storm_magic.safetensors",
+          "resolved_path": "/home/jnu/src/ComfyUI/models/embeddings/minimaxh3_storm_magic.safetensors",
+          "size_bytes": 1403000,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 23879353,
+          "expected_source_manifest": {
+            "repository": "Comfy-Org/MiniMax-H3",
+            "manifest_revision": "e5eb578a89295337b8ff433a035929ce0279e0b6",
+            "source_file": "embeddings/minimaxh3_storm_magic.safetensors",
+            "lfs_sha256": "5047cd4499207ef20d62872c7153a476e216e7edabd12b595802f567666d7425"
+          },
+          "validation_in_this_audit": "file stat; safetensors header when applicable; not full-file SHA256"
+        },
+        {
+          "path": "/home/jnu/src/ComfyUI/models/embeddings/minimaxh3_truman_show.safetensors",
+          "resolved_path": "/home/jnu/src/ComfyUI/models/embeddings/minimaxh3_truman_show.safetensors",
+          "size_bytes": 921720,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 23879271,
+          "expected_source_manifest": {
+            "repository": "Comfy-Org/MiniMax-H3",
+            "manifest_revision": "e5eb578a89295337b8ff433a035929ce0279e0b6",
+            "source_file": "embeddings/minimaxh3_truman_show.safetensors",
+            "lfs_sha256": "3830e6ab9d7b95965f5497a6691bd92e33f8bf7a62bafb7b2331b268ff98aa00"
+          },
+          "validation_in_this_audit": "file stat; safetensors header when applicable; not full-file SHA256"
+        }
+      ],
+      "unique_file_size_bytes": 10661040,
+      "workflow_references": [],
+      "last_verified_use": null,
+      "peak_runtime_memory_bytes": null,
+      "runtime_measurement": "not measured in this investigation",
+      "next_review_local_date": "2026-11-10",
+      "review_date_is_proposal": true,
+      "notes": []
+    },
+    {
+      "resource_id": "qwen_image",
+      "name": "Qwen Image 2.1 UC INT8 + BF16 encoder/VAE",
+      "status": "active_project_reference",
+      "capabilities": [
+        "text to image",
+        "reference image editing",
+        "storyboard images"
+      ],
+      "owner": null,
+      "source_repository": "abenzerps/Qwen-Image-2.1-Uncensored-Quantized",
+      "source_revision": "7959e658915f52274897fb573ffeda49de8dc16b",
+      "files": [
+        {
+          "path": "/home/jnu/src/ComfyUI-qwen21/models/diffusion_models/qwen-image-2.1-UC-int8_convrot.safetensors",
+          "resolved_path": "/home/jnu/src/ComfyUI-qwen21/models/diffusion_models/qwen-image-2.1-UC-int8_convrot.safetensors",
+          "size_bytes": 7256796840,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 7374606,
+          "expected_source_manifest": {
+            "repository": "abenzerps/Qwen-Image-2.1-Uncensored-Quantized",
+            "manifest_revision": "7959e658915f52274897fb573ffeda49de8dc16b",
+            "source_file": "qwen-image-2.1-UC-int8_convrot.safetensors",
+            "lfs_sha256": "5bc5a6c007eff1e0d4004344a24c4af966b9d2c83d142e613b0d456ccceb19ae"
+          },
+          "validation_in_this_audit": "file stat; safetensors header when applicable; not full-file SHA256"
+        },
+        {
+          "path": "/home/jnu/src/ComfyUI-qwen21/models/text_encoders/qwen3vl_8b_bf16.safetensors",
+          "resolved_path": "/home/jnu/src/ComfyUI-qwen21/models/text_encoders/qwen3vl_8b_bf16.safetensors",
+          "size_bytes": 17534334616,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 7374608,
+          "expected_source_manifest": {
+            "repository": "abenzerps/Qwen-Image-2.1-Uncensored-Quantized",
+            "manifest_revision": "7959e658915f52274897fb573ffeda49de8dc16b",
+            "source_file": "text_encoders/qwen3vl_8b_bf16.safetensors",
+            "lfs_sha256": "68bdc82bc1b66851162ae656225e7e2068166b603db19bd5d5a3b90eb12669a9"
+          },
+          "validation_in_this_audit": "file stat; safetensors header when applicable; not full-file SHA256"
+        },
+        {
+          "path": "/home/jnu/src/ComfyUI-qwen21/models/vae/qwen_image_2.1_vae_bf16.safetensors",
+          "resolved_path": "/home/jnu/src/ComfyUI-qwen21/models/vae/qwen_image_2.1_vae_bf16.safetensors",
+          "size_bytes": 675509688,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 7374607,
+          "expected_source_manifest": {
+            "repository": "abenzerps/Qwen-Image-2.1-Uncensored-Quantized",
+            "manifest_revision": "7959e658915f52274897fb573ffeda49de8dc16b",
+            "source_file": "vae/qwen_image_2.1_vae_bf16.safetensors",
+            "lfs_sha256": "bb21f7473051e1ac368515dd3f2e15cd44d7a11748ee8823e1ddca3e4876b7c9"
+          },
+          "validation_in_this_audit": "file stat; safetensors header when applicable; not full-file SHA256"
+        }
+      ],
+      "unique_file_size_bytes": 25466641144,
+      "workflow_references": [
+        "aigc/workflows.py: build_qwen_workflow"
+      ],
+      "last_verified_use": null,
+      "peak_runtime_memory_bytes": null,
+      "runtime_measurement": "not measured in this investigation",
+      "next_review_local_date": "2026-11-27",
+      "review_date_is_proposal": true,
+      "notes": [
+        "Historical inference evidence: docs/qwen21/deployment.md."
+      ]
+    },
+    {
+      "resource_id": "music3",
+      "name": "MiniMax Music 3",
+      "status": "active_project_reference",
+      "capabilities": [
+        "music from description and optional lyrics"
+      ],
+      "owner": null,
+      "source_repository": "Comfy-Org/MiniMax-Music-3",
+      "source_revision": "9e364ccd290a401561091fb441ed19cd7de92550",
+      "files": [
+        {
+          "path": "/home/jnu/src/ComfyUI-music3/models/diffusion_models/minimax_music3_dit_fp16.safetensors",
+          "resolved_path": "/home/jnu/src/ComfyUI-music3/models/diffusion_models/minimax_music3_dit_fp16.safetensors",
+          "size_bytes": 4914197682,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 8140080
+        },
+        {
+          "path": "/home/jnu/src/ComfyUI-music3/models/text_encoders/minimax_music3_text_encoder_pruned_int8_convrot.safetensors",
+          "resolved_path": "/home/jnu/src/ComfyUI-music3/models/text_encoders/minimax_music3_text_encoder_pruned_int8_convrot.safetensors",
+          "size_bytes": 9196611886,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 8139392
+        },
+        {
+          "path": "/home/jnu/src/ComfyUI-music3/models/vae/minimax_music3_dav.safetensors",
+          "resolved_path": "/home/jnu/src/ComfyUI-music3/models/vae/minimax_music3_dav.safetensors",
+          "size_bytes": 216696128,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 8280869
+        }
+      ],
+      "unique_file_size_bytes": 14327505696,
+      "workflow_references": [
+        "aigc/workflows.py: build_music_workflow"
+      ],
+      "last_verified_use": null,
+      "peak_runtime_memory_bytes": null,
+      "runtime_measurement": "not measured in this investigation",
+      "next_review_local_date": "2026-11-27",
+      "review_date_is_proposal": true,
+      "notes": [
+        "Historical short-audio inference evidence: docs/audio/deployment.md; 300-second tasks not validated."
+      ]
+    },
+    {
+      "resource_id": "voxcpm2",
+      "name": "VoxCPM2",
+      "status": "active_project_reference",
+      "capabilities": [
+        "text to speech",
+        "reference voice cloning"
+      ],
+      "owner": null,
+      "source_repository": "openbmb/VoxCPM2",
+      "source_revision": "32279effe8c19989596f05d353d1447f51d9e915",
+      "files": [
+        {
+          "path": "/home/jnu/models/aigc/VoxCPM2/audiovae.pth",
+          "resolved_path": "/home/jnu/models/aigc/VoxCPM2/audiovae.pth",
+          "size_bytes": 376951122,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 4752602
+        },
+        {
+          "path": "/home/jnu/models/aigc/VoxCPM2/model.safetensors",
+          "resolved_path": "/home/jnu/models/aigc/VoxCPM2/model.safetensors",
+          "size_bytes": 4580080592,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 4752609
+        }
+      ],
+      "unique_file_size_bytes": 4957031714,
+      "workflow_references": [
+        "aigc/remote_tts_service.py"
+      ],
+      "last_verified_use": null,
+      "peak_runtime_memory_bytes": null,
+      "runtime_measurement": "not measured in this investigation",
+      "next_review_local_date": "2026-11-27",
+      "review_date_is_proposal": true,
+      "notes": [
+        "Historical short-audio inference evidence: docs/audio/deployment.md."
+      ]
+    },
+    {
+      "resource_id": "qwen38_vlm",
+      "name": "Qwen3.8-27B local ModelOpt NVFP4",
+      "status": "needs_project_owner_confirmation",
+      "capabilities": [
+        "native vision-language model according to local model README/config",
+        "candidate script/storyboard planning"
+      ],
+      "owner": null,
+      "source_repository": "Local conversion of Qwen/Qwen3.8-27B",
+      "source_revision": null,
+      "files": [
+        {
+          "path": "/home/jnu/models/Qwen3.8-27B-NVFP4/model-00001-of-00003.safetensors",
+          "resolved_path": "/home/jnu/models/Qwen3.8-27B-NVFP4/model-00001-of-00003.safetensors",
+          "size_bytes": 9972777720,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 5639127
+        },
+        {
+          "path": "/home/jnu/models/Qwen3.8-27B-NVFP4/model-00002-of-00003.safetensors",
+          "resolved_path": "/home/jnu/models/Qwen3.8-27B-NVFP4/model-00002-of-00003.safetensors",
+          "size_bytes": 9875839416,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 5639136
+        },
+        {
+          "path": "/home/jnu/models/Qwen3.8-27B-NVFP4/model-00003-of-00003.safetensors",
+          "resolved_path": "/home/jnu/models/Qwen3.8-27B-NVFP4/model-00003-of-00003.safetensors",
+          "size_bytes": 744532384,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 5639144
+        }
+      ],
+      "unique_file_size_bytes": 20593149520,
+      "workflow_references": [],
+      "last_verified_use": null,
+      "peak_runtime_memory_bytes": null,
+      "runtime_measurement": "not measured in this investigation",
+      "next_review_local_date": "2026-11-27",
+      "review_date_is_proposal": true,
+      "notes": [
+        "Runtime and quantization quality not verified; config architecture is Qwen3_5ForConditionalGeneration; no source revision inferred from directory name."
+      ]
+    },
+    {
+      "resource_id": "clip_l14",
+      "name": "CLIP ViT-L/14 336px",
+      "status": "needs_project_owner_confirmation",
+      "capabilities": [
+        "image-text features"
+      ],
+      "owner": null,
+      "source_repository": null,
+      "source_revision": null,
+      "files": [
+        {
+          "path": "/home/jnu/models/clip/ViT-L-14-336px.pt",
+          "resolved_path": "/home/jnu/models/clip/ViT-L-14-336px.pt",
+          "size_bytes": 934088680,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 5641850
+        }
+      ],
+      "unique_file_size_bytes": 934088680,
+      "workflow_references": [],
+      "last_verified_use": null,
+      "peak_runtime_memory_bytes": null,
+      "runtime_measurement": "not measured in this investigation",
+      "next_review_local_date": "2026-11-27",
+      "review_date_is_proposal": true,
+      "notes": []
+    },
+    {
+      "resource_id": "dinov2",
+      "name": "DINOv2 ViT-L/14",
+      "status": "needs_project_owner_confirmation",
+      "capabilities": [
+        "visual features"
+      ],
+      "owner": null,
+      "source_repository": null,
+      "source_revision": null,
+      "files": [
+        {
+          "path": "/home/jnu/models/dinov2/dinov2_vitl14_pretrain.pth",
+          "resolved_path": "/home/jnu/models/dinov2/dinov2_vitl14_pretrain.pth",
+          "size_bytes": 1217586395,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 6193924
+        }
+      ],
+      "unique_file_size_bytes": 1217586395,
+      "workflow_references": [],
+      "last_verified_use": null,
+      "peak_runtime_memory_bytes": null,
+      "runtime_measurement": "not measured in this investigation",
+      "next_review_local_date": "2026-11-27",
+      "review_date_is_proposal": true,
+      "notes": []
+    },
+    {
+      "resource_id": "clip_b32",
+      "name": "timm CLIP ViT-B/32 OpenAI",
+      "status": "needs_project_owner_confirmation",
+      "capabilities": [
+        "image-text features"
+      ],
+      "owner": null,
+      "source_repository": "timm/vit_base_patch32_clip_224.openai",
+      "source_revision": "a6f597a30f7b82c51704746581f9a4e41421e878",
+      "files": [
+        {
+          "path": "/home/jnu/models/hf-cache/hub/models--timm--vit_base_patch32_clip_224.openai/blobs/e6d1bd7789aa45192b3bf90570a789b478bae1b74ebcce7eddd908e83a2b7c31",
+          "resolved_path": "/home/jnu/models/hf-cache/hub/models--timm--vit_base_patch32_clip_224.openai/blobs/e6d1bd7789aa45192b3bf90570a789b478bae1b74ebcce7eddd908e83a2b7c31",
+          "size_bytes": 605143284,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 18644640
+        },
+        {
+          "path": "/home/jnu/models/hf-cache/hub/models--timm--vit_base_patch32_clip_224.openai/snapshots/a6f597a30f7b82c51704746581f9a4e41421e878/open_clip_model.safetensors",
+          "resolved_path": "/home/jnu/models/hf-cache/hub/models--timm--vit_base_patch32_clip_224.openai/blobs/e6d1bd7789aa45192b3bf90570a789b478bae1b74ebcce7eddd908e83a2b7c31",
+          "size_bytes": 605143284,
+          "is_symlink": true,
+          "device": 66306,
+          "inode": 18644640
+        }
+      ],
+      "unique_file_size_bytes": 605143284,
+      "workflow_references": [],
+      "last_verified_use": null,
+      "peak_runtime_memory_bytes": null,
+      "runtime_measurement": "not measured in this investigation",
+      "next_review_local_date": "2026-11-27",
+      "review_date_is_proposal": true,
+      "notes": [
+        "HF snapshot is a symlink to the blob; count physical inode once."
+      ]
+    },
+    {
+      "resource_id": "doclayout",
+      "name": "PP-DocLayoutV3",
+      "status": "needs_project_owner_confirmation",
+      "capabilities": [
+        "document layout analysis"
+      ],
+      "owner": null,
+      "source_repository": "PaddlePaddle/PP-DocLayoutV3_safetensors",
+      "source_revision": null,
+      "files": [
+        {
+          "path": "/home/jnu/models/layout/hf_home/hub/models--PaddlePaddle--PP-DocLayoutV3_safetensors/blobs/5ea422c6cc5fe759a47e1357c35639b58173508e025a3131cbe4b6ac59e2b85e",
+          "resolved_path": "/home/jnu/models/layout/hf_home/hub/models--PaddlePaddle--PP-DocLayoutV3_safetensors/blobs/5ea422c6cc5fe759a47e1357c35639b58173508e025a3131cbe4b6ac59e2b85e",
+          "size_bytes": 133270468,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 5377840
+        },
+        {
+          "path": "/home/jnu/models/layout/hf_home/hub/models--PaddlePaddle--PP-DocLayoutV3_safetensors/snapshots/3ec586e86ed9245a567bb13395a3db64d5c077cc/model.safetensors",
+          "resolved_path": "/home/jnu/models/layout/hf_home/hub/models--PaddlePaddle--PP-DocLayoutV3_safetensors/blobs/5ea422c6cc5fe759a47e1357c35639b58173508e025a3131cbe4b6ac59e2b85e",
+          "size_bytes": 133270468,
+          "is_symlink": true,
+          "device": 66306,
+          "inode": 5377840
+        }
+      ],
+      "unique_file_size_bytes": 133270468,
+      "workflow_references": [],
+      "last_verified_use": null,
+      "peak_runtime_memory_bytes": null,
+      "runtime_measurement": "not measured in this investigation",
+      "next_review_local_date": "2026-11-27",
+      "review_date_is_proposal": true,
+      "notes": []
+    },
+    {
+      "resource_id": "ocr",
+      "name": "PP-OCRv5 mobile GB10 TensorRT engines",
+      "status": "needs_project_owner_confirmation",
+      "capabilities": [
+        "OCR detection and recognition"
+      ],
+      "owner": null,
+      "source_repository": null,
+      "source_revision": null,
+      "files": [
+        {
+          "path": "/home/jnu/models/ocr/tensorrt-engines/gb10/ch_PP-OCRv5_det_mobile_sm121_fp16.engine",
+          "resolved_path": "/home/jnu/models/ocr/tensorrt-engines/gb10/ch_PP-OCRv5_det_mobile_sm121_fp16.engine",
+          "size_bytes": 10295132,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 4590933
+        },
+        {
+          "path": "/home/jnu/models/ocr/tensorrt-engines/gb10/ch_PP-OCRv5_rec_mobile_sm121_fp16.engine",
+          "resolved_path": "/home/jnu/models/ocr/tensorrt-engines/gb10/ch_PP-OCRv5_rec_mobile_sm121_fp16.engine",
+          "size_bytes": 11227316,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 4590962
+        }
+      ],
+      "unique_file_size_bytes": 21522448,
+      "workflow_references": [],
+      "last_verified_use": null,
+      "peak_runtime_memory_bytes": null,
+      "runtime_measurement": "not measured in this investigation",
+      "next_review_local_date": "2026-11-27",
+      "review_date_is_proposal": true,
+      "notes": [
+        "Derived sm121 FP16 engines; retain reconstruction environment/version."
+      ]
+    },
+    {
+      "resource_id": "openpi_pi05_droid",
+      "name": "OpenPI pi05_droid",
+      "status": "needs_project_owner_confirmation",
+      "capabilities": [
+        "robot policy checkpoint"
+      ],
+      "owner": null,
+      "source_repository": "Physical-Intelligence/openpi",
+      "source_revision": null,
+      "files": [
+        {
+          "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi05_droid/params/ocdbt.process_0/d/213a5648ef56840990e3a9d6fca5eb89",
+          "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi05_droid/params/ocdbt.process_0/d/213a5648ef56840990e3a9d6fca5eb89",
+          "size_bytes": 2238010952,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 22675484
+        },
+        {
+          "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi05_droid/params/ocdbt.process_0/d/3d66a3d641ef2a488f1a3dad19dcc9fa",
+          "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi05_droid/params/ocdbt.process_0/d/3d66a3d641ef2a488f1a3dad19dcc9fa",
+          "size_bytes": 2254235960,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 22675469
+        },
+        {
+          "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi05_droid/params/ocdbt.process_0/d/413535d55493c7cbed0b50498ab7bbed",
+          "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi05_droid/params/ocdbt.process_0/d/413535d55493c7cbed0b50498ab7bbed",
+          "size_bytes": 811530994,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 22675483
+        },
+        {
+          "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi05_droid/params/ocdbt.process_0/d/8fac3a77c4f18f0ef5ebc8208373833a",
+          "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi05_droid/params/ocdbt.process_0/d/8fac3a77c4f18f0ef5ebc8208373833a",
+          "size_bytes": 2237971599,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 22675464
+        },
+        {
+          "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi05_droid/params/ocdbt.process_0/d/a0c170c234922db4ca080df944165efe",
+          "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi05_droid/params/ocdbt.process_0/d/a0c170c234922db4ca080df944165efe",
+          "size_bytes": 1954680867,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 22675485
+        },
+        {
+          "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi05_droid/params/ocdbt.process_0/d/b862fdd01b4477d01ea1f43ddb38b88f",
+          "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi05_droid/params/ocdbt.process_0/d/b862fdd01b4477d01ea1f43ddb38b88f",
+          "size_bytes": 2797559229,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 22675468
+        },
+        {
+          "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi05_droid/params/ocdbt.process_0/d/bc8c706bafc394cde9dc5c45bc6fcc41",
+          "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi05_droid/params/ocdbt.process_0/d/bc8c706bafc394cde9dc5c45bc6fcc41",
+          "size_bytes": 70003953,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 22675472
+        }
+      ],
+      "unique_file_size_bytes": 12363993554,
+      "workflow_references": [],
+      "last_verified_use": null,
+      "peak_runtime_memory_bytes": null,
+      "runtime_measurement": "not measured in this investigation",
+      "next_review_local_date": "2026-11-27",
+      "review_date_is_proposal": true,
+      "notes": [
+        "Selected large checkpoint blobs are not the entire checkpoint directory; review does not authorize deletion."
+      ],
+      "directory_allocated_bytes": 12429598720
+    },
+    {
+      "resource_id": "openpi_pi0_aloha_sim",
+      "name": "OpenPI pi0_aloha_sim",
+      "status": "needs_project_owner_confirmation",
+      "capabilities": [
+        "robot policy checkpoint"
+      ],
+      "owner": null,
+      "source_repository": "Physical-Intelligence/openpi",
+      "source_revision": null,
+      "files": [
+        {
+          "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_sim/params/ocdbt.process_0/d/04e1abe7d7bee0b72bc2ccc4acd51e6d",
+          "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_sim/params/ocdbt.process_0/d/04e1abe7d7bee0b72bc2ccc4acd51e6d",
+          "size_bytes": 615863781,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 6718484
+        },
+        {
+          "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_sim/params/ocdbt.process_0/d/3454ef21b44daf9a80117d2205930dfc",
+          "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_sim/params/ocdbt.process_0/d/3454ef21b44daf9a80117d2205930dfc",
+          "size_bytes": 2240218352,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 6718486
+        },
+        {
+          "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_sim/params/ocdbt.process_0/d/3492325ff87f75fe731e3f0e1568a284",
+          "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_sim/params/ocdbt.process_0/d/3492325ff87f75fe731e3f0e1568a284",
+          "size_bytes": 132968002,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 6718491
+        },
+        {
+          "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_sim/params/ocdbt.process_0/d/38f5f89a89ba4de6f36dae38afb812df",
+          "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_sim/params/ocdbt.process_0/d/38f5f89a89ba4de6f36dae38afb812df",
+          "size_bytes": 972323640,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 6718490
+        },
+        {
+          "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_sim/params/ocdbt.process_0/d/5a69fee77c2cf84d3a2b35d9ea1d024b",
+          "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_sim/params/ocdbt.process_0/d/5a69fee77c2cf84d3a2b35d9ea1d024b",
+          "size_bytes": 1120115856,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 6718499
+        },
+        {
+          "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_sim/params/ocdbt.process_0/d/89c4de373fec21a170a2c1e8260887d1",
+          "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_sim/params/ocdbt.process_0/d/89c4de373fec21a170a2c1e8260887d1",
+          "size_bytes": 1120131777,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 6718483
+        },
+        {
+          "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_sim/params/ocdbt.process_0/d/a0854df81ac9825231de7438b7f190e0",
+          "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_sim/params/ocdbt.process_0/d/a0854df81ac9825231de7438b7f190e0",
+          "size_bytes": 1553485960,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 6718493
+        },
+        {
+          "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_sim/params/ocdbt.process_0/d/a2581300d76d041a128b3655b355e2e0",
+          "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_sim/params/ocdbt.process_0/d/a2581300d76d041a128b3655b355e2e0",
+          "size_bytes": 2240241927,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 6718496
+        },
+        {
+          "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_sim/params/ocdbt.process_0/d/b7ffa1e5fe2c4d883c7630d8eab57645",
+          "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_sim/params/ocdbt.process_0/d/b7ffa1e5fe2c4d883c7630d8eab57645",
+          "size_bytes": 1957442524,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 6718481
+        }
+      ],
+      "unique_file_size_bytes": 11952791819,
+      "workflow_references": [],
+      "last_verified_use": null,
+      "peak_runtime_memory_bytes": null,
+      "runtime_measurement": "not measured in this investigation",
+      "next_review_local_date": "2026-11-27",
+      "review_date_is_proposal": true,
+      "notes": [
+        "Selected large checkpoint blobs are not the entire checkpoint directory; review does not authorize deletion."
+      ],
+      "directory_allocated_bytes": 12014239744
+    },
+    {
+      "resource_id": "openpi_pi0_aloha_towel",
+      "name": "OpenPI pi0_aloha_towel",
+      "status": "needs_project_owner_confirmation",
+      "capabilities": [
+        "robot policy checkpoint"
+      ],
+      "owner": null,
+      "source_repository": "Physical-Intelligence/openpi",
+      "source_revision": null,
+      "files": [
+        {
+          "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_towel/params/ocdbt.process_0/d/46b3801afc37acf63f78bb26747cf39c",
+          "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_towel/params/ocdbt.process_0/d/46b3801afc37acf63f78bb26747cf39c",
+          "size_bytes": 2240240907,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 7242855
+        },
+        {
+          "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_towel/params/ocdbt.process_0/d/584d40b18bc706a0c758814d77349902",
+          "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_towel/params/ocdbt.process_0/d/584d40b18bc706a0c758814d77349902",
+          "size_bytes": 1120121576,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 7242856
+        },
+        {
+          "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_towel/params/ocdbt.process_0/d/827f1b0d7d4e139c9c04d798043f35ed",
+          "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_towel/params/ocdbt.process_0/d/827f1b0d7d4e139c9c04d798043f35ed",
+          "size_bytes": 158451815,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 7242860
+        },
+        {
+          "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_towel/params/ocdbt.process_0/d/8d2b01f4d5c5b20ad52409df44a3f4ed",
+          "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_towel/params/ocdbt.process_0/d/8d2b01f4d5c5b20ad52409df44a3f4ed",
+          "size_bytes": 405722836,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 7242861
+        },
+        {
+          "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_towel/params/ocdbt.process_0/d/91a52ca00496821c20b9c79b542e7443",
+          "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_towel/params/ocdbt.process_0/d/91a52ca00496821c20b9c79b542e7443",
+          "size_bytes": 420007062,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 7242862
+        },
+        {
+          "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_towel/params/ocdbt.process_0/d/bbeb2a7a79e60081f5e34ee4f63ab347",
+          "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_towel/params/ocdbt.process_0/d/bbeb2a7a79e60081f5e34ee4f63ab347",
+          "size_bytes": 203025734,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 7242864
+        },
+        {
+          "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_towel/params/ocdbt.process_0/d/c527bd7af59966032a3e3fdf65b6ff3c",
+          "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_towel/params/ocdbt.process_0/d/c527bd7af59966032a3e3fdf65b6ff3c",
+          "size_bytes": 1056457357,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 7242865
+        },
+        {
+          "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_towel/params/ocdbt.process_0/d/c5cf092c1564692650d16bdeae305d59",
+          "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_towel/params/ocdbt.process_0/d/c5cf092c1564692650d16bdeae305d59",
+          "size_bytes": 1056489350,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 7242866
+        },
+        {
+          "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_towel/params/ocdbt.process_0/d/dd8f513f2a47b6b566c175c520e1442d",
+          "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_towel/params/ocdbt.process_0/d/dd8f513f2a47b6b566c175c520e1442d",
+          "size_bytes": 2240239216,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 7242868
+        },
+        {
+          "path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_towel/params/ocdbt.process_0/d/e92e7122506fe99edd52ca43f5334c5c",
+          "resolved_path": "/home/jnu/.cache/openpi/openpi-assets/checkpoints/pi0_aloha_towel/params/ocdbt.process_0/d/e92e7122506fe99edd52ca43f5334c5c",
+          "size_bytes": 3077543767,
+          "is_symlink": false,
+          "device": 66306,
+          "inode": 7242869
+        }
+      ],
+      "unique_file_size_bytes": 11978299620,
+      "workflow_references": [],
+      "last_verified_use": null,
+      "peak_runtime_memory_bytes": null,
+      "runtime_measurement": "not measured in this investigation",
+      "next_review_local_date": "2026-11-27",
+      "review_date_is_proposal": true,
+      "notes": [
+        "Selected large checkpoint blobs are not the entire checkpoint directory; review does not authorize deletion."
+      ],
+      "directory_allocated_bytes": 12014235648
+    }
+  ],
+  "candidate_groups": [
+    {
+      "resource_id": "qwen_image_smaller",
+      "status": "not_installed_candidate",
+      "files": [
+        {
+          "repository": "abenzerps/Qwen-Image-2.1-Uncensored-Quantized",
+          "revision": "7959e658915f52274897fb573ffeda49de8dc16b",
+          "filename": "qwen-image-2.1-UC-NVFP4.safetensors",
+          "size_bytes": 4197574696,
+          "lfs_sha256": "7cdf87660e84aecf740b5b0f65c848549ba8a74d88ac201976931ca4c780d121"
+        },
+        {
+          "repository": "abenzerps/Qwen-Image-2.1-Uncensored-Quantized",
+          "revision": "7959e658915f52274897fb573ffeda49de8dc16b",
+          "filename": "text_encoders/qwen3vl_8b_int8_convrot.safetensors",
+          "size_bytes": 9350798360,
+          "lfs_sha256": "8bfd0f6e12abf2d2d697ecc888e5e90b0d6741d6708f05799f53afa560452e8f"
+        },
+        {
+          "repository": "abenzerps/Qwen-Image-2.1-Uncensored-Quantized",
+          "revision": "7959e658915f52274897fb573ffeda49de8dc16b",
+          "filename": "vae/qwen_image_2.1_vae_bf16.safetensors",
+          "size_bytes": 675509688,
+          "lfs_sha256": "bb21f7473051e1ac368515dd3f2e15cd44d7a11748ee8823e1ddca3e4876b7c9"
+        }
+      ],
+      "selected_file_size_bytes": 14223882744,
+      "capabilities": [
+        "smaller serialization of existing image model set"
+      ],
+      "peak_runtime_memory_bytes": null,
+      "gb10_inference_verified": false,
+      "notes": [
+        "VAE already installed; test model and encoder separately before combining."
+      ]
+    },
+    {
+      "resource_id": "h3_w6a8_fl",
+      "status": "not_installed_candidate",
+      "files": [
+        {
+          "repository": "Comfy-Org/MiniMax-H3",
+          "revision": "e5eb578a89295337b8ff433a035929ce0279e0b6",
+          "filename": "diffusion_models/minimax_h3_fl2va_pruned_w6a8.safetensors",
+          "size_bytes": 15983746636,
+          "lfs_sha256": "ac746a2e41628ab25afd44d2b22a7fab8d7e66cd07a01bf89ed9d74b0d3f0c35"
+        }
+      ],
+      "selected_file_size_bytes": 15983746636,
+      "capabilities": [
+        "alternate quantization of FL2VA"
+      ],
+      "peak_runtime_memory_bytes": null,
+      "gb10_inference_verified": false,
+      "notes": [
+        "Depends on existing H3 encoder/VAE; local kernel support unverified."
+      ]
+    },
+    {
+      "resource_id": "h3_bf16_fl",
+      "status": "not_installed_candidate",
+      "files": [
+        {
+          "repository": "Comfy-Org/MiniMax-H3",
+          "revision": "e5eb578a89295337b8ff433a035929ce0279e0b6",
+          "filename": "diffusion_models/minimax_h3_fl2va_pruned_bf16.safetensors",
+          "size_bytes": 40225724176,
+          "lfs_sha256": "a32572fb90b5508b201ec7c2eddcc184b13ddfd3c6f6d2cf06a0b46535d541b4"
+        }
+      ],
+      "selected_file_size_bytes": 40225724176,
+      "capabilities": [
+        "higher precision FL2VA comparison"
+      ],
+      "peak_runtime_memory_bytes": null,
+      "gb10_inference_verified": false,
+      "notes": [
+        "Depends on existing H3 encoder/VAE; more memory and loading overhead."
+      ]
+    },
+    {
+      "resource_id": "h3_union2",
+      "status": "not_installed_candidate",
+      "files": [
+        {
+          "repository": "Comfy-Org/MiniMax-H3",
+          "revision": "e5eb578a89295337b8ff433a035929ce0279e0b6",
+          "filename": "model_patches/minimax_h3_fun_controlnet_union_2.0_pruned_int8_convrot.safetensors",
+          "size_bytes": 4531220608,
+          "lfs_sha256": "890af58bb350f0c2f6c409b1c67ea8f4196654297d037769b72de1e6f504c612"
+        }
+      ],
+      "selected_file_size_bytes": 4531220608,
+      "capabilities": [
+        "newer video control patch"
+      ],
+      "peak_runtime_memory_bytes": null,
+      "gb10_inference_verified": false,
+      "notes": [
+        "Validate existing original Union first."
+      ]
+    },
+    {
+      "resource_id": "wan5_comfy",
+      "status": "not_installed_candidate",
+      "files": [
+        {
+          "repository": "Comfy-Org/Wan-2.2",
+          "revision": "ee6f4a40737a995bf5818954cfce6d59443b0f04",
+          "filename": "split_files/diffusion_models/wan2.2_ti2v_5B_fp16.safetensors",
+          "size_bytes": 9999658848,
+          "lfs_sha256": "456f901338bd9eadbded3828b819109a9b68e8a525ca5cf8d0049a69fcfeca1e"
+        },
+        {
+          "repository": "Comfy-Org/Wan-2.2",
+          "revision": "ee6f4a40737a995bf5818954cfce6d59443b0f04",
+          "filename": "split_files/text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+          "size_bytes": 6735906897,
+          "lfs_sha256": "c3355d30191f1f066b26d93fba017ae9809dce6c627dda5f6a66eaa651204f68"
+        },
+        {
+          "repository": "Comfy-Org/Wan-2.2",
+          "revision": "ee6f4a40737a995bf5818954cfce6d59443b0f04",
+          "filename": "split_files/vae/wan2.2_vae.safetensors",
+          "size_bytes": 1409400960,
+          "lfs_sha256": "e40321bd36b9709991dae2530eb4ac303dd168276980d3e9bc4b6e2b75fed156"
+        }
+      ],
+      "selected_file_size_bytes": 18144966705,
+      "capabilities": [
+        "text/image to video"
+      ],
+      "peak_runtime_memory_bytes": null,
+      "gb10_inference_verified": false,
+      "notes": [
+        "No native audio in this selected route; use existing TTS/music."
+      ]
+    },
+    {
+      "resource_id": "wan14_comfy",
+      "status": "not_installed_candidate",
+      "files": [
+        {
+          "repository": "Comfy-Org/Wan-2.2",
+          "revision": "ee6f4a40737a995bf5818954cfce6d59443b0f04",
+          "filename": "split_files/diffusion_models/wan2.2_i2v_high_noise_14B_fp8_scaled.safetensors",
+          "size_bytes": 14294742832,
+          "lfs_sha256": "6122e79d55e0f235698d11d657f3b196c5273c830da00b2b013c5a048d5e6a42"
+        },
+        {
+          "repository": "Comfy-Org/Wan-2.2",
+          "revision": "ee6f4a40737a995bf5818954cfce6d59443b0f04",
+          "filename": "split_files/diffusion_models/wan2.2_i2v_low_noise_14B_fp8_scaled.safetensors",
+          "size_bytes": 14294742832,
+          "lfs_sha256": "5471a457b6ac404202a5fbe6c11595a3d5641fc766b00f38763f72303fffc21e"
+        },
+        {
+          "repository": "Comfy-Org/Wan-2.2",
+          "revision": "ee6f4a40737a995bf5818954cfce6d59443b0f04",
+          "filename": "split_files/text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+          "size_bytes": 6735906897,
+          "lfs_sha256": "c3355d30191f1f066b26d93fba017ae9809dce6c627dda5f6a66eaa651204f68"
+        },
+        {
+          "repository": "Comfy-Org/Wan-2.2",
+          "revision": "ee6f4a40737a995bf5818954cfce6d59443b0f04",
+          "filename": "split_files/vae/wan_2.1_vae.safetensors",
+          "size_bytes": 253815318,
+          "lfs_sha256": "2fc39d31359a4b0a64f55876d8ff7fa8d780956ae2cb13463b0223e15148976b"
+        }
+      ],
+      "selected_file_size_bytes": 35579207879,
+      "capabilities": [
+        "image to video, high/low noise experts"
+      ],
+      "peak_runtime_memory_bytes": null,
+      "gb10_inference_verified": false,
+      "notes": [
+        "Two experts required; UMT5 can be shared with Wan5 but VAE version differs."
+      ]
+    },
+    {
+      "resource_id": "ltx23_distilled_fp8_hf_gemma",
+      "status": "not_installed_candidate",
+      "files": [
+        {
+          "repository": "Lightricks/LTX-2.3-fp8",
+          "revision": "91eda216f820e5ecb3d17dc9fe3b7cdaf56b587d",
+          "filename": "ltx-2.3-22b-distilled-fp8.safetensors",
+          "size_bytes": 29531884062,
+          "lfs_sha256": "d9646b6f2d5c42d337b23671634c43bfeece6989644f51b4a3aa088465ccd3b2"
+        },
+        {
+          "repository": "google/gemma-3-12b-it-qat-q4_0-unquantized",
+          "revision": "68f7ee4fbd59087436ada77ed2d62f373fdd4482",
+          "filename": "model-00001-of-00005.safetensors",
+          "size_bytes": 4979902192,
+          "lfs_sha256": "e6fb899db428481aafb45a20130457df6e247e7cb03b7d9f01ee4bc2a9a08138"
+        },
+        {
+          "repository": "google/gemma-3-12b-it-qat-q4_0-unquantized",
+          "revision": "68f7ee4fbd59087436ada77ed2d62f373fdd4482",
+          "filename": "model-00002-of-00005.safetensors",
+          "size_bytes": 4931296592,
+          "lfs_sha256": "d251e7fe9799d529405ddb61705a44cd700bd30a8b66a8d44ae26ddf8365dbc6"
+        },
+        {
+          "repository": "google/gemma-3-12b-it-qat-q4_0-unquantized",
+          "revision": "68f7ee4fbd59087436ada77ed2d62f373fdd4482",
+          "filename": "model-00003-of-00005.safetensors",
+          "size_bytes": 4931296656,
+          "lfs_sha256": "0684ef801385f0669a0b3e4ab160c50877efdbfa40eb97788595985de2743e78"
+        },
+        {
+          "repository": "google/gemma-3-12b-it-qat-q4_0-unquantized",
+          "revision": "68f7ee4fbd59087436ada77ed2d62f373fdd4482",
+          "filename": "model-00004-of-00005.safetensors",
+          "size_bytes": 4931296656,
+          "lfs_sha256": "b4b964e6526f81ccfa625c900b72ce92d5e0fd2debb75998763038ad06b9c541"
+        },
+        {
+          "repository": "google/gemma-3-12b-it-qat-q4_0-unquantized",
+          "revision": "68f7ee4fbd59087436ada77ed2d62f373fdd4482",
+          "filename": "model-00005-of-00005.safetensors",
+          "size_bytes": 4601000928,
+          "lfs_sha256": "4ef2de8f93e165b4e02425769fc566000b0674256ef0c3a27b23a0d45eb12088"
+        }
+      ],
+      "selected_file_size_bytes": 53906677086,
+      "capabilities": [
+        "text/image to audiovisual video"
+      ],
+      "peak_runtime_memory_bytes": null,
+      "gb10_inference_verified": false,
+      "notes": [
+        "Full video checkpoint includes VAEs/projection; tokenizer/config also needed.",
+        "HF Gemma encoder requires matching HF loader; upstream copied JSON selects a different single-file encoder and dev+LoRA route."
+      ]
+    },
+    {
+      "resource_id": "ltx23_distilled_bf16_hf_gemma",
+      "status": "not_installed_candidate",
+      "files": [
+        {
+          "repository": "Lightricks/LTX-2.3",
+          "revision": "c1521179de480464f366a98a9d9b2acc4cc097b9",
+          "filename": "ltx-2.3-22b-distilled-1.1.safetensors",
+          "size_bytes": 46149345334,
+          "lfs_sha256": "b33b7fe4bbfe084f484be4aaf90b0f1d95dca20d403ac4c0e037eb8c4f0af7cc"
+        },
+        {
+          "repository": "google/gemma-3-12b-it-qat-q4_0-unquantized",
+          "revision": "68f7ee4fbd59087436ada77ed2d62f373fdd4482",
+          "filename": "model-00001-of-00005.safetensors",
+          "size_bytes": 4979902192,
+          "lfs_sha256": "e6fb899db428481aafb45a20130457df6e247e7cb03b7d9f01ee4bc2a9a08138"
+        },
+        {
+          "repository": "google/gemma-3-12b-it-qat-q4_0-unquantized",
+          "revision": "68f7ee4fbd59087436ada77ed2d62f373fdd4482",
+          "filename": "model-00002-of-00005.safetensors",
+          "size_bytes": 4931296592,
+          "lfs_sha256": "d251e7fe9799d529405ddb61705a44cd700bd30a8b66a8d44ae26ddf8365dbc6"
+        },
+        {
+          "repository": "google/gemma-3-12b-it-qat-q4_0-unquantized",
+          "revision": "68f7ee4fbd59087436ada77ed2d62f373fdd4482",
+          "filename": "model-00003-of-00005.safetensors",
+          "size_bytes": 4931296656,
+          "lfs_sha256": "0684ef801385f0669a0b3e4ab160c50877efdbfa40eb97788595985de2743e78"
+        },
+        {
+          "repository": "google/gemma-3-12b-it-qat-q4_0-unquantized",
+          "revision": "68f7ee4fbd59087436ada77ed2d62f373fdd4482",
+          "filename": "model-00004-of-00005.safetensors",
+          "size_bytes": 4931296656,
+          "lfs_sha256": "b4b964e6526f81ccfa625c900b72ce92d5e0fd2debb75998763038ad06b9c541"
+        },
+        {
+          "repository": "google/gemma-3-12b-it-qat-q4_0-unquantized",
+          "revision": "68f7ee4fbd59087436ada77ed2d62f373fdd4482",
+          "filename": "model-00005-of-00005.safetensors",
+          "size_bytes": 4601000928,
+          "lfs_sha256": "4ef2de8f93e165b4e02425769fc566000b0674256ef0c3a27b23a0d45eb12088"
+        }
+      ],
+      "selected_file_size_bytes": 70524138358,
+      "capabilities": [
+        "text/image to audiovisual video"
+      ],
+      "peak_runtime_memory_bytes": null,
+      "gb10_inference_verified": false,
+      "notes": [
+        "Higher precision comparison; tokenizer/config also needed."
+      ]
+    },
+    {
+      "resource_id": "ltx25_distilled_int8",
+      "status": "not_installed_candidate",
+      "files": [
+        {
+          "repository": "Lightricks/LTX-2.5",
+          "revision": "49b093a39c19169a8a81721dcc541e07e945232f",
+          "filename": "diffusion_models/ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
+          "size_bytes": 21504034224,
+          "lfs_sha256": "c4279eeff115cbeaca494bd2183e7d768c38fe85a184dc6afbb7159157c44334"
+        },
+        {
+          "repository": "Lightricks/LTX-2.5",
+          "revision": "49b093a39c19169a8a81721dcc541e07e945232f",
+          "filename": "text_encoders/gemma4-12b-with-proj-ltx-2.5-comfy-int8-convrot.safetensors",
+          "size_bytes": 15372969374,
+          "lfs_sha256": "6ce688a0aa98a5fa36a9f1e6c3f42152a498cc2b53ee8c15674c64244f91487f"
+        },
+        {
+          "repository": "Lightricks/LTX-2.5",
+          "revision": "49b093a39c19169a8a81721dcc541e07e945232f",
+          "filename": "vae/ltx-2.5-audio-vae-bf16.safetensors",
+          "size_bytes": 364866540,
+          "lfs_sha256": "c52733d37f6a7fb7949c3dc0fb468c6cb2169e4d836983a73babb9f0d54837a5"
+        },
+        {
+          "repository": "Lightricks/LTX-2.5",
+          "revision": "49b093a39c19169a8a81721dcc541e07e945232f",
+          "filename": "vae/ltx-2.5-video-vae-bf16.safetensors",
+          "size_bytes": 1472223346,
+          "lfs_sha256": "847e14ca7f3355debca0cea4eaa24ac0fbcdf0061da054ac89ca638a869ddba3"
+        },
+        {
+          "repository": "Lightricks/LTX-2.5",
+          "revision": "49b093a39c19169a8a81721dcc541e07e945232f",
+          "filename": "latent_upscale_models/ltx-2.5-latent-spatial-upscaler-x2-bf16-1.0.safetensors",
+          "size_bytes": 995778752,
+          "lfs_sha256": "eb5a71fe4068ee87ccdb1c3aa635e547ca76bd2d30ae20ae889f2c325c0677e8"
+        }
+      ],
+      "selected_file_size_bytes": 39709872236,
+      "capabilities": [
+        "new audiovisual generation; editing/DFR available in official pipelines with additional dependencies"
+      ],
+      "peak_runtime_memory_bytes": null,
+      "gb10_inference_verified": false,
+      "notes": [
+        "Specialized Gemma4 projection; current ComfyUI compatibility unverified.",
+        "Includes spatial upscaler for the standard two-stage route; no distilled LoRA needed for the distilled-transformer route. Comfy quantized packs require compatible loaders and cannot be substituted into BF16 CLI examples unchecked."
+      ]
+    },
+    {
+      "resource_id": "ltx25_distilled_nvfp4",
+      "status": "not_installed_candidate",
+      "files": [
+        {
+          "repository": "Lightricks/LTX-2.5",
+          "revision": "49b093a39c19169a8a81721dcc541e07e945232f",
+          "filename": "diffusion_models/ltx-2.5-22b-distilled-transformer-nvfp4.safetensors",
+          "size_bytes": 18721548408,
+          "lfs_sha256": "4b94231e734c1950f8f6826cb8bd8715d94be5b3e04f8256ee060c5bc3886c30"
+        },
+        {
+          "repository": "Lightricks/LTX-2.5",
+          "revision": "49b093a39c19169a8a81721dcc541e07e945232f",
+          "filename": "text_encoders/gemma4-12b-with-proj-ltx-2.5-comfy-int8-convrot.safetensors",
+          "size_bytes": 15372969374,
+          "lfs_sha256": "6ce688a0aa98a5fa36a9f1e6c3f42152a498cc2b53ee8c15674c64244f91487f"
+        },
+        {
+          "repository": "Lightricks/LTX-2.5",
+          "revision": "49b093a39c19169a8a81721dcc541e07e945232f",
+          "filename": "vae/ltx-2.5-audio-vae-bf16.safetensors",
+          "size_bytes": 364866540,
+          "lfs_sha256": "c52733d37f6a7fb7949c3dc0fb468c6cb2169e4d836983a73babb9f0d54837a5"
+        },
+        {
+          "repository": "Lightricks/LTX-2.5",
+          "revision": "49b093a39c19169a8a81721dcc541e07e945232f",
+          "filename": "vae/ltx-2.5-video-vae-bf16.safetensors",
+          "size_bytes": 1472223346,
+          "lfs_sha256": "847e14ca7f3355debca0cea4eaa24ac0fbcdf0061da054ac89ca638a869ddba3"
+        },
+        {
+          "repository": "Lightricks/LTX-2.5",
+          "revision": "49b093a39c19169a8a81721dcc541e07e945232f",
+          "filename": "latent_upscale_models/ltx-2.5-latent-spatial-upscaler-x2-bf16-1.0.safetensors",
+          "size_bytes": 995778752,
+          "lfs_sha256": "eb5a71fe4068ee87ccdb1c3aa635e547ca76bd2d30ae20ae889f2c325c0677e8"
+        }
+      ],
+      "selected_file_size_bytes": 36927386420,
+      "capabilities": [
+        "smaller serialization of LTX2.5 video model"
+      ],
+      "peak_runtime_memory_bytes": null,
+      "gb10_inference_verified": false,
+      "notes": [
+        "NVFP4 kernel/loader on ARM64 GB10 must be verified.",
+        "Includes spatial upscaler for the standard two-stage route; no distilled LoRA needed for the distilled-transformer route. Comfy quantized packs require compatible loaders and cannot be substituted into BF16 CLI examples unchecked."
+      ]
+    }
+  ],
+  "directory_allocations": [
+    {
+      "path": "/home/jnu/models",
+      "allocated_bytes": 28494147584
+    },
+    {
+      "path": "/home/jnu/src/ComfyUI/models",
+      "allocated_bytes": 76468944896
+    },
+    {
+      "path": "/home/jnu/src/ComfyUI-qwen21/models",
+      "allocated_bytes": 25466818560
+    },
+    {
+      "path": "/home/jnu/src/ComfyUI-music3/models",
+      "allocated_bytes": 14327541760
+    },
+    {
+      "path": "/home/jnu/.cache/huggingface/hub",
+      "allocated_bytes": 77824
+    },
+    {
+      "path": "/home/jnu/.cache/openpi",
+      "allocated_bytes": 36462628864
+    },
+    {
+      "path": "/home/jnu/.ollama/models",
+      "allocated_bytes": 24576
+    },
+    {
+      "path": "/home/jnu/venvs/comfyui-ltx23",
+      "allocated_bytes": 6463983616
+    },
+    {
+      "path": "/home/jnu/venvs/gree-layout-hf-gpu",
+      "allocated_bytes": 5659705344
+    },
+    {
+      "path": "/home/jnu/venvs/vllm",
+      "allocated_bytes": 10027384832
+    },
+    {
+      "path": "/home/jnu/venvs/comfyui-qwen21",
+      "allocated_bytes": 6529970176
+    },
+    {
+      "path": "/home/jnu/venvs/gree-ocr-trt",
+      "allocated_bytes": 3661049856
+    },
+    {
+      "path": "/home/jnu/venvs/comfyui-music3",
+      "allocated_bytes": 6530162688
+    },
+    {
+      "path": "/home/jnu/venvs/ppocrv6-transformers",
+      "allocated_bytes": 98304
+    },
+    {
+      "path": "/home/jnu/venvs/voxcpm2-aigc",
+      "allocated_bytes": 7424704512
+    },
+    {
+      "path": "/home/jnu/.cache/pip",
+      "allocated_bytes": 17382309888
+    },
+    {
+      "path": "/home/jnu/.cache/uv",
+      "allocated_bytes": 52408094720
+    },
+    {
+      "path": "/home/jnu/.cache/vllm",
+      "allocated_bytes": 9880686592
+    },
+    {
+      "path": "/home/jnu/.cache/flashinfer",
+      "allocated_bytes": 50798592
+    }
+  ],
+  "environments": [
+    {
+      "path": "/home/jnu/venvs/comfyui-ltx23",
+      "versions": {
+        "returncode": 0,
+        "stdout": "{\"python\": \"3.12.3\", \"packages\": {\"torch\": \"2.11.0\", \"torchaudio\": \"2.11.0\", \"transformers\": \"5.8.0\", \"comfyui-frontend-package\": \"1.52.7\", \"comfy-kitchen\": \"0.2.35\"}}",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "/home/jnu/venvs/comfyui-qwen21",
+      "versions": {
+        "returncode": 0,
+        "stdout": "{\"python\": \"3.12.3\", \"packages\": {\"torch\": \"2.11.0\", \"torchaudio\": \"2.11.0\", \"transformers\": \"5.8.0\", \"comfyui-frontend-package\": \"1.55.17\", \"comfy-kitchen\": \"0.2.37\"}}",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "/home/jnu/venvs/comfyui-music3",
+      "versions": {
+        "returncode": 0,
+        "stdout": "{\"python\": \"3.12.3\", \"packages\": {\"torch\": \"2.11.0\", \"torchaudio\": \"2.11.0\", \"transformers\": \"5.8.0\", \"comfyui-frontend-package\": \"1.55.17\", \"comfy-kitchen\": \"0.2.37\"}}",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "/home/jnu/venvs/voxcpm2-aigc",
+      "versions": {
+        "returncode": 0,
+        "stdout": "{\"python\": \"3.12.3\", \"packages\": {\"torch\": \"2.11.0\", \"torchaudio\": \"2.11.0\", \"transformers\": \"5.8.0\", \"comfyui-frontend-package\": \"1.55.17\", \"comfy-kitchen\": \"0.2.37\"}}",
+        "stderr": ""
+      }
+    },
+    {
+      "path": "/home/jnu/venvs/vllm",
+      "versions": {
+        "returncode": 0,
+        "stdout": "{\"python\": \"3.12.3\", \"packages\": {\"torch\": \"2.13.0\", \"torchaudio\": \"2.11.0\", \"transformers\": \"5.8.0\", \"vllm\": \"0.28.0\"}}",
+        "stderr": ""
+      }
+    }
+  ]
+}

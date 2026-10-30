@@ -4,6 +4,8 @@
 
 Qwen 的安装记录见 [图片部署说明](docs/qwen21/deployment.md)，音乐和粤语声音克隆见 [音频部署说明](docs/audio/deployment.md)。原简化表单及历史仍可在 [原工作台](http://127.0.0.1:8765/workbench) 使用。
 
+DGX 的模型、环境和长视频方案见 [工作流与资源调查](docs/minimax-long-video-research-2026-10-26.md)、[模型资源总账](docs/dgx-model-registry.json)及[长视频资料包](docs/dgx-long-video-kit/README.md)。资料包记录上游来源与校验和，运行兼容性需按说明另行验证。
+
 **获取项目与首次配置**
 
 本地运行环境为 Windows、Python 3.12 或更新版本和 Windows OpenSSH；克隆项目需要 Git。本次验证使用 Python 3.12.10。
@@ -220,6 +222,6 @@ git commit -m "描述本次修改"
 git push
 ```
 
-Git 跟踪源码、网页资源、测试、脚本、依赖清单和部署文档。`.gitignore` 排除虚拟环境、缓存、本地 `data/`、`logs/`、`test-results/`、环境配置和本地测试图片；这些文件继续保存在本机。克隆到其他电脑后，需要重新创建 Python 环境并配置 SSH，任务历史和生成媒体不会随 Git 同步。
+Git 跟踪源码、网页资源、测试、脚本、依赖清单、部署文档和工作流资料。`.gitignore` 排除虚拟环境、缓存、本地 `data/`、`logs/`、`test-results/`、环境配置、本地测试图片和 `资源/` 中的图片与视频素材；这些文件继续保存在本机。克隆到其他电脑后，需要重新创建 Python 环境并配置 SSH，任务历史、生成媒体和本地素材不会随 Git 同步。
 
-`.gitattributes` 统一文本换行，Windows 启动脚本使用 CRLF，便于不同电脑间协作。
+`.gitattributes` 默认统一文本换行，Windows 启动脚本使用 CRLF，便于不同电脑间协作。`docs/dgx-long-video-kit/` 中的上游 JSON 和提示词文本保留原始字节，确保 `sources.json` 记录的 SHA-256 在提交和克隆后仍有效。
