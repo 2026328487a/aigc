@@ -2,7 +2,7 @@
 
 本地管理器通过 SSH 按需启动 DGX 上的独立 ComfyUI，在本机浏览器使用完整节点界面，自动下载和校验生成结果，空闲 10 分钟或手动断开时回收实例与会话文件。图片、视频和音乐分别复用已部署的 Qwen Image 2.1、MiniMax H3、MiniMax Music 3 环境；VoxCPM2 语音保留已有独立入口，后续再接入 ComfyUI 节点。
 
-Qwen 的安装记录见 [图片部署说明](docs/qwen21/deployment.md)，音乐和粤语声音克隆见 [音频部署说明](docs/audio/deployment.md)。原简化表单及历史仍可在 [原工作台](http://127.0.0.1:8765/workbench) 使用。
+Qwen 的安装记录见 [图片部署说明](docs/qwen21/deployment.md)，音乐和粤语声音克隆见 [音频部署说明](docs/audio/deployment.md)，H3 的续镜、数字人、换人、动漫与修脸见 [H3 扩展工作流](docs/h3-extended/README.md)。原简化表单及历史仍可在 [原工作台](http://127.0.0.1:8766/workbench) 使用。
 
 DGX 的模型、环境和长视频方案见 [工作流与资源调查](docs/minimax-long-video-research-2026-10-26.md)、[模型资源总账](docs/dgx-model-registry.json)及[长视频资料包](docs/dgx-long-video-kit/README.md)。资料包记录上游来源与校验和，运行兼容性需按说明另行验证。
 
@@ -21,10 +21,10 @@ python -m venv .venv
 
 **开始使用**
 
-双击项目目录中的 `start.cmd`，会打开 [本地工作台](http://127.0.0.1:8765)。首次启动时，启动器会在缺少 `.venv` 的情况下自动创建环境并安装依赖。也可以在项目目录执行：
+双击项目目录中的 `start.cmd`，会打开 [本地工作台](http://127.0.0.1:8766)。本机 8765 已由 OpenArm 使用，AIGC 使用独立端口。首次启动时，启动器会在缺少 `.venv` 的情况下自动创建环境并安装依赖。也可以在项目目录执行：
 
 ```powershell
-.\.venv\Scripts\python.exe -m aigc --open-browser
+.\.venv\Scripts\python.exe -m aigc --port 8766 --open-browser
 ```
 
 1. 在本地管理页选择图片、视频或音乐环境，点击“启动 ComfyUI”，等待“已就绪”。
@@ -36,7 +36,7 @@ python -m venv .venv
 
 原生 ComfyUI 的已归档预览可由本地代理提供；核心 `/history` 返回本地保存的任务记录。工作流及设置的 JSON/CSS 等用户文件备份到本机，启动同一模型环境时恢复。当前备份单文件上限 5 MB、总计 20 MB。
 
-不同模型环境仍按需切换，当前使用各环境已有内置节点。新增模型、第三方节点和语音 ComfyUI 节点后续按需要接入。原生前端的新资产库等功能若依赖服务器持久数据库，暂不承诺完整持久化；本地归档和核心历史是结果保存依据。
+不同模型环境按需切换。H3 已增加独立扩展环境与 15 个创作模板；Qwen、Music 3 使用各自既有环境。原生前端的新资产库等功能若依赖服务器持久数据库，暂不承诺完整持久化；本地归档和核心历史是结果保存依据。
 
 以下“清空预览”“删除历史”等表单功能说明对应保留的 `/workbench` 页面。
 
@@ -128,9 +128,9 @@ D:\aigc\
 
 ComfyUI 成品与任务资料分开保存。复制到手机时，只需进入 `data\comfy\media\images` 或 `videos` 全选文件，不会混入任务 JSON。程序启动时自动将旧任务目录里的媒体移入对应分类；文件被占用或遇到重名时保留原文件并在下次启动重试。作品库、下载与原生历史预览同时兼容两种位置。下载过程中的 `.part` 文件及不支持分类的其他输出保留在任务目录。
 
-H3 复用 `/home/jnu/src/ComfyUI`、`/home/jnu/venvs/comfyui-ltx23`；Qwen 使用 `/home/jnu/src/ComfyUI-qwen21`、`/home/jnu/venvs/comfyui-qwen21`。音乐使用独立的 `ComfyUI-music3` 源码与 `comfyui-music3` 环境；语音使用 `VoxCPM-aigc` 源码与 `voxcpm2-aigc` 环境，模型位于 `/home/jnu/models/aigc/VoxCPM2`。会话启动器通过 SSH 标准输入发送。
+H3 使用 `/home/jnu/src/ComfyUI-h3-extended`、`/home/jnu/venvs/comfyui-h3-extended`，共用旧 `ComfyUI/models` 权重并保留旧源码与环境；Qwen 使用 `/home/jnu/src/ComfyUI-qwen21`、`/home/jnu/venvs/comfyui-qwen21`。音乐使用独立的 `ComfyUI-music3` 源码与 `comfyui-music3` 环境；语音使用 `VoxCPM-aigc` 源码与 `voxcpm2-aigc` 环境，模型位于 `/home/jnu/models/aigc/VoxCPM2`。会话启动器通过 SSH 标准输入发送。
 
-每个远端会话使用权限 `0700` 的 `/dev/shm/aigc-<随机标识>`，输入、输出、用户目录、上传暂存和主要运行缓存都指向其中。数据库放内存，关闭 prompt/workflow 媒体元数据，不加载额外自定义节点或云端 API 节点。原表单每个任务下载并校验后清理对应文件和历史；原生 ComfyUI 为支持素材复用，在当前会话内保留远端任务文件，断开或空闲回收时删除整个会话目录。
+每个远端会话使用权限 `0700` 的 `/dev/shm/aigc-<随机标识>`，输入、输出、用户目录、上传暂存和主要运行缓存都指向其中。数据库放内存，关闭 prompt/workflow 媒体元数据。H3 加载指定扩展环境内的自定义节点，各环境关闭云端 API 节点。原表单每个任务下载并校验后清理对应文件和历史；原生 ComfyUI 为支持素材复用，在当前会话内保留远端任务文件，断开或空闲回收时删除整个会话目录。
 
 远端所有接口统一使用一次性会话令牌认证，令牌只保存在进程内存，通过 SSH 标准输入传递。本地网页不接触 SSH 密钥；已有 Windows OpenSSH 配置中的 `dgx` 别名负责连接。
 

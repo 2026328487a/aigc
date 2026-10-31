@@ -27,6 +27,7 @@ from .session import ROOT, Session
 from .workflows import Settings, build_workflow
 from .reference_audio import MAX_MEDIA_BYTES, extract_reference
 from .native_comfy import MEDIA_TYPES, NativeComfy
+from .h3_extended import TEMPLATES as H3_TEMPLATES
 
 
 DATA = ROOT / "data/jobs"
@@ -595,6 +596,11 @@ async def job_file(job_id: str, filename: str, download: bool = False):
 
 @app.get("/api/comfy/templates/{name}")
 async def native_template(name: str, download: bool = True):
+    if name in H3_TEMPLATES:
+        path = ROOT / "docs/h3-extended/workflows" / (name + ".api.json")
+        graph = json.loads(path.read_text(encoding="utf-8"))
+        headers = {"Content-Disposition": f'attachment; filename="{name}.api.json"'} if download else {}
+        return JSONResponse(graph, headers=headers)
     options = {
         "qwen-text": (Settings(engine="qwen21", mode="text", prompt="A small red boat on a quiet lake, soft morning light", width=512, height=512, steps=25), []),
         "qwen-edit": (Settings(engine="qwen21", mode="edit", prompt="Change the background to a quiet garden", width=512, height=512, steps=25), ["reference.png"]),

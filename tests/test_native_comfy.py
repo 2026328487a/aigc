@@ -99,13 +99,14 @@ class NativeTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(self.requests[-1].url.params["overwrite"], "true")
 
     async def test_submission_uses_isolated_output_names(self):
-        payload = {"prompt": {"1": {"class_type": "SaveImage", "inputs": {"filename_prefix": "ComfyUI"}}, "2": {"class_type": "AIGCSaveAudioWAV", "inputs": {"filename_prefix": "anything"}}}}
+        payload = {"prompt": {"1": {"class_type": "SaveImage", "inputs": {"filename_prefix": "ComfyUI"}}, "2": {"class_type": "AIGCSaveAudioWAV", "inputs": {"filename_prefix": "anything"}}, "3": {"class_type": "AIGCSaveH3Reference", "inputs": {"filename_prefix": "my_person"}}}}
         response = await self.client.post("/prompt", json=payload, headers={"Origin": "http://127.0.0.1:8765"})
         self.assertEqual(response.status_code, 200)
         sent = json.loads(self.requests[-1].content)
         record = next(iter(self.native.records.values()))
         self.assertEqual(sent["prompt"]["1"]["inputs"]["filename_prefix"], record["id"] + "/ComfyUI")
         self.assertEqual(sent["prompt"]["2"]["inputs"]["filename_prefix"], record["id"] + "/audio")
+        self.assertEqual(sent["prompt"]["3"]["inputs"]["filename_prefix"], record["id"] + "/my_person")
         self.assertTrue(self.native.pending())
 
     async def test_unsafe_output_prefix_is_rejected_before_forwarding(self):
@@ -136,15 +137,16 @@ class NativeTests(unittest.IsolatedAsyncioTestCase):
         self.completed()
         self.history["prompt-test"]["outputs"]["1"] = {"files": [
             {"filename": name, "subfolder": "example", "type": "output"}
-            for name in ("image.PNG", "clip.mp4", "song.wav", "extra.bin")
+            for name in ("image.PNG", "clip.mp4", "song.wav", "extra.bin", "reference.safetensors")
         ]}
         await self.native.collect()
         record = self.native.records["a" * 32]
         directory = self.native.directory(record["id"])
         expected = [self.native.root / "media/images", self.native.root / "media/videos",
-                    self.native.root / "media/audio", directory]
+                    self.native.root / "media/audio", directory, directory]
         for file, parent in zip(record["files"], expected):
             self.assertEqual(self.native.file_path(record["id"], file["local_name"]).parent, parent)
+        self.assertTrue(record['files'][-1]['local_name'].endswith('.safetensors'))
         self.assertFalse(list(directory.glob("*.part")))
         reloaded = NativeComfy(self.session, self.native.root)
         reloaded.load()
@@ -167,10 +169,12 @@ class NativeTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_failed_execution_with_completed_false_is_finalized(self):
         self.completed()
-        self.history["prompt-test"]["status"] = {"completed": False, "status_str": "error"}
+        self.history["prompt-test"]["status"] = {"completed": False, "status_str": "error",
+                                                "messages": [["execution_error", {"exception_message": "Missing reference"}]]}
         self.history["prompt-test"]["outputs"] = {}
         await self.native.collect()
         self.assertEqual(self.native.records["a" * 32]["state"], "failed")
+        self.assertEqual(self.native.records["a" * 32]['error'], 'Missing reference')
         self.assertFalse(self.native.pending())
 
     async def test_removed_queue_entry_does_not_block_idle_recycling(self):
@@ -178,8 +182,31 @@ class NativeTests(unittest.IsolatedAsyncioTestCase):
         self.history = {}
         self.native.records["a" * 32]["queued_at"] = time.monotonic() - 15
         await self.native.collect()
+        self.assertTrue(self.native.pending())
+        self.native.records["a" * 32]["missing_since"] -= 11
+        await self.native.collect()
         self.assertEqual(self.native.records["a" * 32]["state"], "cancelled")
         self.assertFalse(self.native.pending())
+
+    async def test_completion_between_history_and_queue_is_archived(self):
+        self.completed()
+        self.native.records["a" * 32]["queued_at"] = time.monotonic() - 15
+        request = self.session.request
+        history_reads = 0
+
+        async def finish_during_queue_check(method, path, **kwargs):
+            nonlocal history_reads
+            if path.startswith("/history"):
+                history_reads += 1
+                if history_reads == 1:
+                    return {}
+            return await request(method, path, **kwargs)
+
+        with patch.object(self.session, "request", finish_during_queue_check):
+            await self.native.collect()
+        record = self.native.records["a" * 32]
+        self.assertEqual(record["state"], "saved")
+        self.assertEqual(self.native.file_path(record["id"], record["files"][0]["local_name"]).read_bytes(), self.result)
 
     async def test_running_or_queued_native_tasks_block_idle_recycling(self):
         self.queue["queue_running"] = [[1, "running"]]

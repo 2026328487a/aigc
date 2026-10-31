@@ -1,0 +1,159 @@
+{
+  "plugins": [
+    {
+      "name": "ComfyUI-KJNodes",
+      "file_count": 67,
+      "source_digest": "652251ea74516b9fed03a93a38c64a26e03642d354e856e0371963475f0abd13",
+      "source": "user_download/ComfyUI-aki-v3.2--1028.zip"
+    },
+    {
+      "name": "ComfyUI-Easy-Use",
+      "file_count": 321,
+      "source_digest": "e5fdc1a56afa5aa1f6552076d810d01545af6a06445148193efde46ee6c47206",
+      "source": "user_download/ComfyUI-aki-v3.2--1028.zip"
+    },
+    {
+      "name": "ComfyUI-VideoHelperSuite",
+      "file_count": 45,
+      "source_digest": "bb071a83f778bf27c1760a0cc540ea933d9024e30e5912a3907babbd52919005",
+      "source": "user_download/ComfyUI-aki-v3.2--1028.zip"
+    },
+    {
+      "name": "ComfyUI-Custom-Scripts",
+      "file_count": 69,
+      "source_digest": "c1410d9c0eab490f8de23633a15e48cffd24f638dbe184010ca44282b4fa78c5",
+      "source": "user_download/ComfyUI-aki-v3.2--1028.zip"
+    },
+    {
+      "name": "comfyui-h3-facerefine",
+      "file_count": 31,
+      "source_digest": "df19e4a5f9ce0d594d6b92e220f60e04cdd573a0d5fb4c70b08fcdc8c3b5a5a4",
+      "source": "user_download/ComfyUI-aki-v3.2--1028.zip"
+    },
+    {
+      "name": "ComfyUI-MelBandRoFormer",
+      "file_count": 11,
+      "source_digest": "0c2413e55738eb316c229c49cee2a9e16a41d6bfd896acfbf981e21517260f79",
+      "source": "user_download/ComfyUI-aki-v3.2--1028.zip"
+    },
+    {
+      "name": "ComfyUI-MiniMax-Tools",
+      "file_count": 42,
+      "source_digest": "b1795479c7eb12d7587c31b0912221238294f647c64608577d3c82cc07eb42e2",
+      "source": "user_download/ComfyUI-aki-v3.2--1028.zip"
+    },
+    {
+      "name": "Comfyui_Minimax_h3_latent_Upscaler",
+      "file_count": 11,
+      "source_digest": "1c84dd8b33ec4585473d03f315ef735ccc7080ebd4241c2403b90de5d9b3e55c",
+      "source": "user_download/ComfyUI-aki-v3.2--1028.zip"
+    },
+    {
+      "name": "ComfyUI_Fictiverse",
+      "file_count": 32,
+      "source_digest": "eeb654b492356c60690e21b2bb54e8d536aeb5e183e4097e351c8860ac25cb17",
+      "source": "user_download/ComfyUI-aki-v3.2--1028.zip"
+    },
+    {
+      "name": "reservedvram",
+      "file_count": 8,
+      "source_digest": "fcdc96e44a6f0be02d3275266df81c94690bd28927abd7614539276d96a92317",
+      "source": "user_download/ComfyUI-aki-v3.2--1028.zip"
+    },
+    {
+      "name": "ComfyUI-MiniMaxH3Mod",
+      "file_count": 42,
+      "source_digest": "904a3945523c978fa6c72d676e4254ea524594c283f49aa298afd67abc3bc9fc",
+      "source": "user_download/ComfyUI-aki-v3.2--1028.zip"
+    }
+  ],
+  "weights": [
+    {
+      "original_name": "minimax_h3_ref2v_lightx2v_turbo_4step_v0.1_resized_avg_rank_20_bf16.safetensors",
+      "relative_path": "loras/minimax_h3_ref2v_lightx2v_turbo_4step_v0.1_resized_avg_rank_20_bf16.safetensors",
+      "size_bytes": 306731560,
+      "sha256": "9ea3bd3a6aac22994153e294cf1ecab0a8766fc0f8d056ace645a01d1a6a4daf"
+    },
+    {
+      "original_name": "minimax_h3_fl2v_lightx2v_turbo_4step_v0.1_comfy_resized_avg_rank_21_bf16.safetensors",
+      "relative_path": "loras/minimax_h3_fl2v_lightx2v_turbo_4step_v0.1_comfy_resized_avg_rank_21_bf16.safetensors",
+      "size_bytes": 314878200,
+      "sha256": "3a069f26fbc33f377a60dc72dd9e15f2aa42aa1d1b44915fded835716672dd36"
+    },
+    {
+      "original_name": "minimax_h3_character_swap_v1.1_ref2va_fro.safetensors",
+      "relative_path": "loras/minimax_h3_character_swap_v1.1_ref2va_fro.safetensors",
+      "size_bytes": 80673112,
+      "sha256": "ab21167bed71db99ac09527ad1f26f5f3517687ebf2e1f1bd5e91cc0bdf9b9c3"
+    },
+    {
+      "original_name": "minimax_h3_head_swap_v1.0_r32.safetensors",
+      "relative_path": "loras/minimax_h3_head_swap_v1.0_r32.safetensors",
+      "size_bytes": 310177072,
+      "sha256": "ea97bd1a8178460661055784d63b4cb560732196fd15d5d7f33bfd214b65ab00"
+    },
+    {
+      "original_name": "minimax_h3_lms_v1.0_r64.safetensors",
+      "relative_path": "loras/minimax_h3_lms_v1.0_r64.safetensors",
+      "size_bytes": 1239664536,
+      "sha256": "16f3195bc6bffa431c0598dc2031e520ba058b4fcbc9f104db9e3fdfdeacf60c"
+    },
+    {
+      "original_name": "anime_tx-真人转动漫.safetensors",
+      "relative_path": "loras/h3_anime_tx.safetensors",
+      "size_bytes": 310170064,
+      "sha256": "7e1020a1be5db3f9bdc80f95cf62974eb1e02304eed5dbbd4f9e6633ed3fcb27"
+    },
+    {
+      "original_name": "自然且更稳定的身体动作.safetensors",
+      "relative_path": "loras/h3_movement_v1.safetensors",
+      "size_bytes": 310168816,
+      "sha256": "285f9ed3fbb735c3625fca0d22166c7450ad7acb552a869fcbbd8e86e79d1f4c"
+    },
+    {
+      "original_name": "minimax_h3_DMAD_4step_full_lora_avg_rank_39_bf16.safetensors",
+      "relative_path": "loras/minimax_h3_DMAD_4step_full_lora_avg_rank_39_bf16.safetensors",
+      "size_bytes": 366647000,
+      "sha256": "ddfdd94f4c9a0f32bf3649bb8e98ca20db572e4db6bcd9cca546a5b33ea32d11"
+    },
+    {
+      "original_name": "minimax_h3_latent_upscaler_3d_fp16.safetensors",
+      "relative_path": "latent_upscale_models/minimax_h3_latent_upscaler_3d_fp16.safetensors",
+      "size_bytes": 690592672,
+      "sha256": "043e5a48e161610ef6c3ea974645220354d06fa618abca15f76d084812eb55c2"
+    },
+    {
+      "original_name": "taeh3.safetensors",
+      "relative_path": "vae_approx/taeh3.safetensors",
+      "size_bytes": 9791388,
+      "sha256": "f0f60fa072089997f817402098c2fd90777cb2660dd79cf5df42fc1e3e08e527"
+    },
+    {
+      "original_name": "MelBandRoformer_fp16.safetensors",
+      "relative_path": "diffusion_models/MelBandRoformer_fp16.safetensors",
+      "size_bytes": 456479072,
+      "sha256": "6119aef379a6c7264e0b37db65ae1e6488b8ca4a00baf56d6d244737b8488226"
+    },
+    {
+      "original_name": "minimax_h3_fun_controlnet_union_2.0_pruned_int8_convrot.safetensors",
+      "relative_path": "model_patches/minimax_h3_fun_controlnet_union_2.0_pruned_int8_convrot.safetensors",
+      "size_bytes": 4531220608,
+      "sha256": "890af58bb350f0c2f6c409b1c67ea8f4196654297d037769b72de1e6f504c612"
+    },
+    {
+      "original_name": "face_yolov8m.pt",
+      "relative_path": "ultralytics/bbox/face_yolov8m.pt",
+      "size_bytes": 51996128,
+      "sha256": "e3893a92c5c1907136b6cc75404094db767c1e0cfefe1b43e87dad72af2e4c9f"
+    },
+    {
+      "original_name": "person_yolov8m-seg.pt",
+      "relative_path": "ultralytics/segm/person_yolov8m-seg.pt",
+      "size_bytes": 54791722,
+      "sha256": "1fd7e562f240a5debd48bf737753de6fb60c63f8664121bb522f090a885d8254"
+    }
+  ],
+  "base_comfy_revision": "a8686f2b33fc540f137df50c0f0719953830a5e7",
+  "source": "User-supplied MiniMax H3 / ComfyUI-aki-v3.2--1028.zip",
+  "baseline_models": "Shared from /home/jnu/src/ComfyUI/models"
+}

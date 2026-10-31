@@ -264,10 +264,22 @@ class NativeComfy:
                         if time.monotonic() - record.get("queued_at", time.monotonic()) > 10:
                             queue = await self.session.request("GET", "/queue")
                             active = [entry[1] for key in ("queue_running", "queue_pending") for entry in queue.get(key, [])]
-                            if record["prompt_id"] not in active:
-                                record.update(state="cancelled", error="任务已从服务器队列中移除")
-                                self.save(record)
-                        continue
+                            if record["prompt_id"] in active:
+                                record.pop("missing_since", None)
+                                continue
+                            # Completion can occur between the history and queue requests.
+                            history = await self.session.request("GET", "/history/" + quote(record["prompt_id"], safe=""))
+                            item = history.get(record["prompt_id"])
+                            if not item:
+                                now = time.monotonic()
+                                missing_since = record.setdefault("missing_since", now)
+                                if now - missing_since > 10:
+                                    record.update(state="cancelled", error="任务已从服务器队列中移除")
+                                    self.save(record)
+                                continue
+                        else:
+                            continue
+                    record.pop("missing_since", None)
                     status = item.get("status", {})
                     if not status.get("completed") and status.get("status_str") not in ("success", "error"):
                         continue
@@ -280,7 +292,7 @@ class NativeComfy:
                     for index, descriptor in enumerate(unique.values()):
                         manifest = await self.session.request("POST", "/aigc/native/artifact", json=descriptor)
                         suffix = pathlib.PurePosixPath(descriptor["filename"]).suffix
-                        if not re.fullmatch(r"\.[A-Za-z0-9]{1,10}", suffix):
+                        if not re.fullmatch(r"\.[A-Za-z0-9]{1,16}", suffix):
                             suffix = ".bin"
                         name = self.output_name(record, index, suffix)
                         destination = self.output_path(record["id"], name)
@@ -300,7 +312,11 @@ class NativeComfy:
                         temporary.replace(destination)
                         saved.append({**descriptor, "local_name": name, **manifest})
                         self.view_files[(record["session_root"], *file_key(descriptor))] = destination
-                    record.update(files=saved, state="saved" if item["status"].get("status_str") == "success" else "failed", error="")
+                    success = item["status"].get("status_str") == "success"
+                    failure = next((message[1].get("exception_message", "")
+                                    for message in item.get("status", {}).get("messages", [])
+                                    if message[0] == "execution_error"), "")
+                    record.update(files=saved, state="saved" if success else "failed", error=str(failure)[:500])
                     self.save(record)
                     self.session.last_used = time.monotonic()
                 except (httpx.HTTPError, RuntimeError, ValueError, OSError) as error:
@@ -460,7 +476,8 @@ class NativeComfy:
                         prefix = inputs.get("filename_prefix")
                         if node.get("class_type") == "AIGCSaveAudioWAV":
                             inputs["filename_prefix"] = archive_id + "/audio"
-                        elif isinstance(prefix, str) and node.get("class_type", "").startswith("Save"):
+                        elif isinstance(prefix, str) and (node.get("class_type", "").startswith("Save")
+                                                         or node.get("class_type") == "AIGCSaveH3Reference"):
                             if ".." in pathlib.PurePosixPath(prefix.replace("\\", "/")).parts:
                                 raise ValueError("Invalid output prefix")
                             inputs["filename_prefix"] = archive_id + "/" + prefix

@@ -12,21 +12,32 @@ import sys
 import wave
 
 
-def main():
-    config = json.loads(sys.stdin.readline())
-    root = pathlib.Path(config["root"]).resolve()
-    source = pathlib.Path(config["comfy_dir"]).resolve()
-    sys.path.insert(0, str(source))
-    sys.argv = [str(source / "main.py"),
+def comfy_arguments(config):
+    root = pathlib.PurePosixPath(config["root"])
+    source = pathlib.PurePosixPath(config["comfy_dir"])
+    arguments = [str(source / "main.py"),
         "--listen", "127.0.0.1", "--port", str(config["port"]),
         "--input-directory", str(root / "input"),
         "--output-directory", str(root / "output"),
         "--user-directory", str(root / "user"),
         "--temp-directory", str(root / "scratch"),
         "--database-url", "sqlite:///:memory:",
-        "--disable-metadata", "--disable-api-nodes", "--disable-all-custom-nodes",
+        "--disable-metadata", "--disable-api-nodes",
         "--disable-auto-launch", "--cache-none", "--preview-method", "none",
     ]
+    if not config.get("custom_nodes"):
+        arguments.append("--disable-all-custom-nodes")
+    if config.get("model_paths"):
+        arguments.extend(["--extra-model-paths-config", config["model_paths"]])
+    return arguments
+
+
+def main():
+    config = json.loads(sys.stdin.readline())
+    root = pathlib.Path(config["root"]).resolve()
+    source = pathlib.Path(config["comfy_dir"]).resolve()
+    sys.path.insert(0, str(source))
+    sys.argv = comfy_arguments(config)
     import comfy.options
     comfy.options.enable_args_parsing()
     import cuda_malloc  # Apply the normal entry point's allocator setup before torch.

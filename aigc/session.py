@@ -17,7 +17,9 @@ SSH_OPTIONS = ["-T", "-o", "BatchMode=yes", "-o", "ConnectTimeout=10",
                "-o", "StrictHostKeyChecking=yes", "-o", "ServerAliveInterval=10",
                "-o", "ServerAliveCountMax=3"]
 PROFILES = {
-    "h3": {"python": "/home/jnu/venvs/comfyui-ltx23/bin/python", "comfy_dir": "/home/jnu/src/ComfyUI"},
+    "h3": {"python": "/home/jnu/venvs/comfyui-h3-extended/bin/python",
+           "comfy_dir": "/home/jnu/src/ComfyUI-h3-extended", "custom_nodes": True,
+           "model_paths": "/home/jnu/models/aigc/h3-extended/extra_model_paths.yaml"},
     "qwen21": {"python": "/home/jnu/venvs/comfyui-qwen21/bin/python", "comfy_dir": "/home/jnu/src/ComfyUI-qwen21"},
     "music3": {"python": "/home/jnu/venvs/comfyui-music3/bin/python", "comfy_dir": "/home/jnu/src/ComfyUI-music3"},
     "voxcpm2": {"python": "/home/jnu/venvs/voxcpm2-aigc/bin/python", "model_dir": "/home/jnu/models/aigc/VoxCPM2"},
