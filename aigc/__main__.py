@@ -14,8 +14,11 @@ from .app import app
 def main():
     parser = argparse.ArgumentParser(description="AIGC local workbench")
     parser.add_argument("--open-browser", action="store_true")
+    parser.add_argument("--port", type=int, default=8765, help="Local port for the manager")
     options = parser.parse_args()
-    url = "http://127.0.0.1:8765"
+    if not 1024 <= options.port <= 65535:
+        parser.error("--port must be between 1024 and 65535")
+    url = f"http://127.0.0.1:{options.port}"
     if options.open_browser:
         try:
             with urllib.request.urlopen(url + "/api/status", timeout=2) as response:
@@ -24,7 +27,7 @@ def main():
                     return
         except (urllib.error.URLError, TimeoutError, ValueError):
             pass
-    server = uvicorn.Server(uvicorn.Config(app, host="127.0.0.1", port=8765, access_log=False))
+    server = uvicorn.Server(uvicorn.Config(app, host="127.0.0.1", port=options.port, access_log=False))
     app.state.shutdown = lambda: setattr(server, "should_exit", True)
 
     def open_when_ready():

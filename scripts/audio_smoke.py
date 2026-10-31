@@ -13,6 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--engine', choices=['music3', 'voxcpm2'], required=True)
+    parser.add_argument('--port', type=int, default=8766)
     parser.add_argument('--seconds', type=float, default=10)
     parser.add_argument('--steps', type=int)
     parser.add_argument('--language', default='zh')
@@ -26,7 +27,7 @@ def main():
                                          if args.engine == 'music3' else '你好，欢迎来到本地声音工作台。今天我们一起试试自然的语音生成。'),
                 'lyrics': '[Instrumental]', 'seconds': args.seconds, 'steps': args.steps or (30 if args.engine == 'music3' else 10),
                 'seed': 42, 'language': args.language, 'reference_text': args.reference_text}
-    with httpx.Client(base_url='http://127.0.0.1:8765', trust_env=False, timeout=60,
+    with httpx.Client(base_url=f'http://127.0.0.1:{args.port}', trust_env=False, timeout=60,
                       headers={'X-AIGC-Client': 'local'}) as client:
         status = client.get('/api/status').json()
         if status['active_job']:
