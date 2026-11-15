@@ -21,14 +21,14 @@
     </section>
     <section class="connection" aria-label="服务器连接">
       <label for="engine">模型环境</label>
-      <select id="engine"><option value="qwen21">Qwen Image 2.1 · 图片</option><option value="h3">MiniMax H3 · 视频</option><option value="music3">MiniMax Music 3 · 音乐</option></select>
+      <select id="engine"><option value="qwen21">Qwen Image 2.1 · 图片</option><option value="h3">MiniMax H3 · 视频与扩展</option><option value="music3">MiniMax Music 3 · 音乐</option></select>
       <div class="actions"><button id="connect">启动 ComfyUI</button><a id="open-comfy" class="button" href="/comfy/" target="_blank" rel="noopener" hidden>打开 ComfyUI ↗</a><button id="disconnect" class="secondary" hidden>断开并清理</button></div>
       <p id="status" role="status">正在读取连接状态…</p>
       <p id="error" role="alert" hidden></p>
     </section>
     <section aria-label="已有模型工作流">
-      <h2>从已有工作流开始</h2>
-      <p>点击“一键打开”即可加载到 ComfyUI，再手动点击运行。图片编辑和视频模板需要先上传参考图。</p>
+      <h2 id="template-heading">从已有工作流开始</h2>
+      <p>列表随上面的模型环境切换；数字人、换头、修脸等视频扩展请选择 MiniMax H3。点击“一键打开”即可加载到 ComfyUI，再手动点击运行。</p>
       <div id="templates" class="templates"></div>
       <p class="note">服务器素材在本次会话中可重复使用。结束会话会清理输入、输出和临时文件；工作流、设置与已归档结果保留在本机。</p>
     </section>

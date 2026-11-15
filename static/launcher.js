@@ -19,8 +19,12 @@ async function api(path, options = {}) {
 }
 function error(message) {byId('error').textContent=message;byId('error').hidden=!message;}
 function renderTemplates() {
+  const selected=byId('engine').value, entries=templates[selected] || [];
+  byId('template-heading').textContent=`${environments[selected]} 工作流（${entries.length} 个）`;
+  byId('templates').dataset.engine=selected;
+  try {localStorage.setItem('aigc.workbench.engine',selected);} catch {}
   byId('templates').replaceChildren();
-  for(const [name,label] of templates[byId('engine').value] || []) {
+  for(const [name,label] of entries) {
     const card=document.createElement('div');card.className='template-card';
     const title=document.createElement('span');title.textContent=label;
     const open=document.createElement('a');open.href=`/open-workflow?template=${name}`;open.textContent='一键打开';open.target='_blank';open.rel='noopener';
@@ -47,7 +51,7 @@ async function refresh() {
     if(session.error) error(session.error);
     byId('logs').textContent=session.logs.join('\n');
     const selected=byId('engine').value;
-    if(byId('templates').dataset.engine!==selected) {renderTemplates();byId('templates').dataset.engine=selected;}
+    if(byId('templates').dataset.engine!==selected) renderTemplates();
     byId('all-jobs').textContent=`查看全部作品（${data.comfy.total ?? data.comfy.jobs.length}）→`;
     renderJobs(data.comfy.jobs);
   } catch(e) {error(e.message);}
@@ -60,4 +64,9 @@ byId('engine').onchange=renderTemplates;
 byId('connect').onclick=()=>action(`/api/connect?engine=${byId('engine').value}`);
 byId('disconnect').onclick=()=>action('/api/disconnect');
 byId('shutdown').onclick=async()=>{try {byId('shutdown').disabled=true;await api('/api/shutdown',{method:'POST'});stopped=true;byId('status').textContent='本地管理器已关闭。';byId('connect').disabled=true;byId('open-comfy').hidden=true;byId('disconnect').hidden=true;}catch(e){error(e.message);byId('shutdown').disabled=false;}};
+let savedEnvironment;
+try {savedEnvironment=localStorage.getItem('aigc.workbench.engine');} catch {}
+const requestedEnvironment=new URLSearchParams(location.search).get('engine');
+const initialEnvironment=[requestedEnvironment,savedEnvironment].find(value=>Object.hasOwn(templates,value));
+if(initialEnvironment) byId('engine').value=initialEnvironment;
 renderTemplates();refresh();setInterval(refresh,2000);
