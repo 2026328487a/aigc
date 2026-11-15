@@ -54,6 +54,72 @@ async function ensureEnvironment(engine) {
   }
   throw new Error('服务器启动超时，请查看连接管理页的诊断信息后重试。');
 }
+function workflowForFrame(frameWindow, workflow) {
+  // ComfyUI uses instanceof Array when importing API links. Recreate the JSON
+  // inside its window so those arrays belong to the same JavaScript realm.
+  return frameWindow.JSON.parse(JSON.stringify(workflow));
+}
+function isComfyReady(app, frameDocument) {
+  // setup() finishes before ComfyUI restores its previous workflow tabs.
+  // The startup spinner stays active until that restoration has completed.
+  return Boolean(app?.isGraphReady && app.vueAppReady && app.positionConversion && !app.configuringGraph &&
+    app.extensionManager?.spinner !== true && !frameDocument?.getElementById('splash-loader') &&
+    typeof app.loadApiJson === 'function' && typeof app.loadGraphData === 'function');
+}
+function restoreAutogrowLinks(app, workflow) {
+  const nodes = app.rootGraph._nodes || [...app.rootGraph.nodes];
+  const nodeMap = new Map(nodes.map(node => [String(node.id),node]));
+  for(const [id, expected] of Object.entries(workflow)) {
+    const node = nodeMap.get(id);
+    if(node?.type !== expected.class_type) continue;
+    for(const [name, value] of Object.entries(expected.inputs || {})) {
+      if(!Array.isArray(value) || value.length !== 2 || !Number.isInteger(value[1])) continue;
+      if(node.inputs?.some(input => input.name === name)) continue;
+      const separator = name.lastIndexOf('.');
+      const group = node.comfyDynamic?.autogrow?.[name.slice(0,separator)];
+      // Legacy API prompts can start at ref_image_1, while the frontend only
+      // creates ref_image_0 until it is connected. Restore that declared socket.
+      if(separator < 0 || group?.inputSpecs?.length !== 1) continue;
+      const leaf = name.slice(separator+1);
+      const suffix = leaf.startsWith(group.prefix || '') ? leaf.slice((group.prefix || '').length) : '';
+      const ordinal = group.names ? group.names.indexOf(leaf) : (/^\d+$/.test(suffix) ? Number(suffix) : -1);
+      if(!Number.isInteger(ordinal) || ordinal < 0 || ordinal >= group.max) continue;
+      const source = nodeMap.get(String(value[0]));
+      if(!source) continue;
+      const spec = group.inputSpecs[0];
+      node.addInput(name,spec.type,{localized_name:leaf});
+      const index = node.inputs.findIndex(input => input.name === name);
+      source.connect(value[1],node,index);
+    }
+  }
+}
+function verifyApiGraph(app, workflow) {
+  const graph = app.rootGraph;
+  const nodes = graph._nodes || [...graph.nodes];
+  const nodeMap = new Map(nodes.map(node => [String(node.id),node]));
+  if(nodes.length !== Object.keys(workflow).length) {
+    throw new Error(`画布节点数量与模板不一致（应有 ${Object.keys(workflow).length} 个，实际 ${nodes.length} 个），请重试加载。`);
+  }
+  let links = 0;
+  for(const [id, expected] of Object.entries(workflow)) {
+    const node = nodeMap.get(id);
+    if(node?.type !== expected.class_type) {
+      throw new Error(`节点 ${id} 应为 ${expected.class_type}，实际为 ${node?.type || '未加载'}。请重试加载。`);
+    }
+    for(const [name, value] of Object.entries(expected.inputs || {})) {
+      if(!Array.isArray(value) || value.length !== 2 || !Number.isInteger(value[1]) || !Object.hasOwn(workflow,String(value[0]))) continue;
+      const inputIndex = node.inputs?.findIndex(input => input.name === name) ?? -1;
+      const input = node.inputs?.[inputIndex];
+      const link = input?.link == null ? null : (graph.links.get?.(input.link) || graph.links[input.link]);
+      if(!link || String(link.origin_id) !== String(value[0]) || link.origin_slot !== value[1] ||
+         String(link.target_id) !== id || link.target_slot !== inputIndex) {
+        throw new Error(`节点 ${id} 的 ${name} 输入未正确连接，请重试加载。`);
+      }
+      links++;
+    }
+  }
+  return {nodes:nodes.length,links};
+}
 function arrangeApiGraph(app, workflow) {
   const graph = app.rootGraph;
   const nodes = graph._nodes || [...graph.nodes];
@@ -89,7 +155,15 @@ function arrangeApiGraph(app, workflow) {
     for(const node of nodes) {node.pos = [x,y];y += Math.max(150,node.size?.[1] || 150) + 60;}
     x += Math.max(340,...nodes.map(node => node.size?.[0] || 340)) + 100;
   }
-  app.graph.setDirtyCanvas(true,true);
+  // Importing an API prompt does not restore a viewport. Fit the new layout
+  // instead of retaining the previous workflow's zoom and scroll position.
+  const left = Math.min(...nodes.map(node => node.pos[0]));
+  const top = Math.min(...nodes.map(node => node.pos[1])) - 40;
+  const right = Math.max(...nodes.map(node => node.pos[0] + (node.size?.[0] || 340)));
+  const bottom = Math.max(...nodes.map(node => node.pos[1] + (node.size?.[1] || 150)));
+  app.canvas.ds.fitToBounds?.([left,top,right-left,bottom-top]);
+  graph.change();
+  graph.setDirtyCanvas(true,true);
 }
 async function openWorkflow() {
   const frame = workflowById('comfy-frame');
@@ -104,21 +178,22 @@ async function openWorkflow() {
     let app;
     while(Date.now() < deadline) {
       const candidate = frame.contentWindow?.app;
-      if(candidate?.isGraphReady && candidate.vueAppReady && candidate.positionConversion && !candidate.configuringGraph &&
-         typeof candidate.loadApiJson === 'function' && typeof candidate.loadGraphData === 'function') {app = candidate;break;}
+      if(isComfyReady(candidate,frame.contentDocument)) {app = candidate;break;}
       await workflowSleep(250);
     }
     if(!app) throw new Error('ComfyUI 画布加载超时，请检查连接后重试。');
-    if(data.format === 'native') await app.loadGraphData(data.workflow,true,true,data.filename);
+    const importedWorkflow = workflowForFrame(frame.contentWindow,data.workflow);
+    let details = '';
+    if(data.format === 'native') await app.loadGraphData(importedWorkflow,true,true,data.filename);
     else {
-      await app.loadApiJson(data.workflow,data.filename);
-      const expected = Object.values(data.workflow).map(node => node.class_type).sort();
-      const actual = (app.rootGraph._nodes || [...app.rootGraph.nodes]).map(node => node.type).sort();
-      if(JSON.stringify(expected) !== JSON.stringify(actual)) throw new Error('画布节点与模板不一致，请重试加载。');
+      await app.loadApiJson(importedWorkflow,data.filename);
+      restoreAutogrowLinks(app,data.workflow);
+      const checked = verifyApiGraph(app,data.workflow);
+      details = ` · ${checked.nodes} 个节点、${checked.links} 条连线已核对`;
       arrangeApiGraph(app,data.workflow);
     }
     frame.contentWindow.dispatchEvent(new Event('resize'));
-    workflowById('workflow-status').textContent = `${data.label}已加载 · 请检查提示词和输入素材，再手动点击运行。`;
+    workflowById('workflow-status').textContent = `${data.label}已加载${details} · 请检查提示词和输入素材，再手动点击运行。`;
     document.title = `${data.label} · AIGC`;
   } catch(error) {
     workflowById('workflow-status').textContent = '工作流尚未加载。';

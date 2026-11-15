@@ -152,7 +152,7 @@ def build_h3_extended(name, info=None, *, width=512, height=320, length=124, see
             extracted=add(40,'MiniMaxH3RefModExtract',name='my_person',mode='Full Reference',concept_type='identity',
                       background_retention=0.0,ref_resolution=256,pool_h=4,pool_w=4,latent_frames=1,identity=0,
                       merge=False,motion_only=False,multiplier=1,max_tokens=5120,description='Reusable character reference',
-                          save=False,vae=['4',0],**{'refs_image.ref_image_1':['20',0]})
+                          save=False,vae=['4',0],**{'refs_image.ref_image_0':['20',0]})
             add(42,'AIGCSaveH3Reference',mods=extracted,filename_prefix='my_person')
         else:
             extracted=add(40,'AIGCLoadH3Reference',reference='my_person.safetensors',strength=1.0)
