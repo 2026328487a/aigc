@@ -1,6 +1,10 @@
-# AIGC · ComfyUI 本地管理器
+# AIGC · 创作工作台
 
 本地管理器通过 SSH 按需启动 DGX 上的独立 ComfyUI，在本机浏览器使用完整节点界面，自动下载和校验生成结果，空闲 10 分钟或手动断开时回收实例与会话文件。图片、视频和音乐分别复用已部署的 Qwen Image 2.1、MiniMax H3、MiniMax Music 3 环境；VoxCPM2 语音保留已有独立入口，后续再接入 ComfyUI 节点。
+
+首页的 [Qwen 聊天](http://127.0.0.1:8766/chat) 直接使用已部署的 llama.cpp 原生聊天界面，模型为 Qwen3.8-27B Uncensored Q6_K。工作台只提供连接、独立打开和断开释放；对话、设置、历史及原生停止按钮均由原 UI 管理。进入后点击“连接并打开”，闲置 15 分钟会回收 Qwen 模型、API 入口和 SSH 连接。页面状态、模型列表以及模型状态 SSE 不续期，原 UI 长时间开着也会回收；回收后重新连接继续使用原界面。
+
+聊天与图片、视频、音频服务按需切换，正在执行的任务会阻止切换；空闲时先回收当前环境再启动下一个。正常退出、SSH 输入关闭或心跳超时 120 秒都会停止该工作台启动的 Qwen 服务。原生 HTTP/SSE 经本机代理和 SSH 转发，连接关闭的清理过程受到重复取消保护。首次加载需要等待。详细生命周期、验证记录及独立 Qwen 入口与工作台的切换方式见 [聊天部署说明](docs/qwen38-gguf-deployment.md)。
 
 Qwen 的安装记录见 [图片部署说明](docs/qwen21/deployment.md)，音乐和粤语声音克隆见 [音频部署说明](docs/audio/deployment.md)，H3 的续镜、数字人、换人、动漫与修脸见 [H3 扩展工作流](docs/h3-extended/README.md)。原简化表单及历史仍可在 [原工作台](http://127.0.0.1:8766/workbench) 使用。
 
@@ -52,6 +56,7 @@ python -m venv .venv
 
 - 图生视频：一张首帧图片，可加一张尾帧图片；使用现有 8 步 Turbo LoRA。
 - Qwen 文生图：无需上传图片，默认 1024×1024、25 步，保存 PNG。
+- Qwen 聊天：复用 llama.cpp 原生 UI，工作台负责连接、入口和闲置回收。
 - Qwen 图片编辑：1–9 张参考图，输出比例跟随首张参考图，所选尺寸控制大致像素总量。
 - 参考图生视频：1–9 张参考图；用 `<Picture 1>`、`<Picture 2>` 在提示词中引用；默认 4 步 Turbo LoRA。
 - 音乐生成：输入曲风、乐器、人声描述和可选歌词；默认最长 30 秒、30 步，支持设置到 300 秒上限。长时长尚未压测，建议先试短片段；模型可能提前结束。
@@ -142,6 +147,7 @@ H3 使用 `/home/jnu/src/ComfyUI-h3-extended`、`/home/jnu/venvs/comfyui-h3-exte
 | --- | --- |
 | `aigc/app.py` | 本地 API、上传、任务状态、下载校验与清理协调 |
 | `aigc/session.py` | SSH 生命周期、认证、隧道、心跳和诊断 |
+| `aigc/chat.py`、`aigc/remote_chat_supervisor.py` | 聊天流式 API、空闲计时、SSH 心跳与 Qwen 完整回收 |
 | `aigc/native_comfy.py` | 原生 ComfyUI HTTP／WebSocket 代理、队列检查、本地归档与预览 |
 | `aigc/remote_supervisor.py` | 远端临时目录、进程管理、超时回收 |
 | `aigc/remote_service.py` | ComfyUI 启动适配、统一鉴权、限定目录内的清理接口 |
@@ -149,6 +155,7 @@ H3 使用 `/home/jnu/src/ComfyUI-h3-extended`、`/home/jnu/venvs/comfyui-h3-exte
 | `aigc/remote_tts_worker.py` | 单任务 VoxCPM2 推理与 WAV 输出 |
 | `aigc/workflows.py` | H3 与 Qwen 参数、文生图、编辑和视频工作流 |
 | `static/launcher.*` | ComfyUI 启动、环境选择、模板和本地归档入口 |
+| `static/chat.*` | 原生聊天页面的连接条与嵌入入口 |
 | `static/archive.js` | 首页与作品库共用的作品卡片、媒体预览和弹窗 |
 | `static/library.*` | 本地作品库：分页、筛选、查找 |
 | `static/open-workflow.*` | 一键打开：按需启动环境，把模板或历史工作流加载到 ComfyUI 画布 |
@@ -191,6 +198,10 @@ H3 使用 `/home/jnu/src/ComfyUI-h3-extended`、`/home/jnu/venvs/comfyui-h3-exte
 
 # 需 SSH；清理监督器测试使用独立 CPU 测试进程，不加载模型
 .\.venv\Scripts\python.exe scripts\check_remote_cleanup.py
+
+# 真实 Qwen 聊天与回收检查：独立测试端口 8767，临时 5 秒阈值，结束后恢复 900 秒并停止服务
+# 需先断开工作台聊天与独立 Qwen 入口
+.\.venv\Scripts\python.exe -X utf8 scripts\chat_smoke.py
 
 # 音频真实推理检查
 .\.venv\Scripts\python.exe -X utf8 scripts\audio_smoke.py --engine music3 --seconds 10

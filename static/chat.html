@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>AIGC · Qwen 原生聊天</title>
+  <link rel="icon" href="/static/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/launcher.css">
+  <script src="/static/chat.js" defer></script>
+</head>
+<body class="workflow-page">
+  <header><a class="brand" href="/">AIGC <span>Qwen 原生聊天</span></a><nav><a href="/">返回工作台</a><button id="chat-connect">连接并打开</button><a id="chat-open" href="/qwen/" target="_blank" rel="noopener" hidden>独立打开 ↗</a><button id="chat-disconnect" class="secondary" hidden>断开并释放</button></nav></header>
+  <div class="workflow-status"><p id="chat-status" role="status">正在读取连接状态…</p><p class="note">使用 llama.cpp 原有聊天界面。闲置 15 分钟自动释放；模型列表和状态查询不续期。</p><p id="chat-error" role="alert" hidden></p></div>
+  <iframe id="chat-frame" title="llama.cpp 原生聊天界面" src="about:blank" hidden></iframe>
+</body>
+</html>

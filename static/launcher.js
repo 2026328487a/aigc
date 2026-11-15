@@ -35,10 +35,11 @@ async function refresh() {
   if(stopped) return;
   try {
     const data=await api('/api/status'), session=data.session;
+    byId('chat-summary').textContent=data.chat.busy ? 'Qwen 正在回复，完成后可切换到图片、视频或音乐。' : data.chat.state==='ready' ? '聊天已连接 · 闲置 15 分钟后自动释放。' : '进入后点击“连接并打开”。';
     const ready=session.state==='ready', changing=['starting','stopping'].includes(session.state);
     if((ready || changing) && templates[session.engine]) byId('engine').value=session.engine;
     byId('engine').disabled=acting || changing || ready || data.comfy.pending;
-    byId('connect').disabled=acting || changing || ready || !!data.active_job || data.comfy.pending;
+    byId('connect').disabled=acting || changing || ready || !!data.active_job || data.comfy.pending || data.chat.busy;
     byId('connect').hidden=ready;
     byId('open-comfy').hidden=!ready || session.engine==='voxcpm2';
     byId('disconnect').hidden=!ready;byId('disconnect').disabled=acting;

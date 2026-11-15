@@ -15,7 +15,7 @@ import wave
 import av
 import httpx
 from fastapi import FastAPI, File, Form, HTTPException, Query, Request, UploadFile
-from fastapi.responses import FileResponse, JSONResponse, Response
+from fastapi.responses import FileResponse, JSONResponse, Response, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from PIL import Image, ImageOps, UnidentifiedImageError
 from pydantic import ValidationError
@@ -28,11 +28,13 @@ from .workflows import Settings, build_workflow
 from .reference_audio import MAX_MEDIA_BYTES, extract_reference
 from .native_comfy import MEDIA_TYPES, NativeComfy
 from .h3_extended import TEMPLATES as H3_TEMPLATES
+from .chat import ChatSession
 
 
 DATA = ROOT / "data/jobs"
 session = Session()
 native = NativeComfy(session)
+chat = ChatSession()
 active_task = None
 active_job = None
 submission_lock = asyncio.Lock()
@@ -283,6 +285,7 @@ async def maintenance():
     while True:
         await asyncio.sleep(2)
         async with submission_lock:
+            await chat.maintain()
             if session.state == "ready" and active_job is None:
                 if session.remote.returncode is not None or session.tunnel.returncode is not None:
                     native.ended()
@@ -338,6 +341,7 @@ async def lifespan(app):
         session.logs.append("退出前归档未完成：" + str(error)[:300])
     native.ended()
     await session.stop()
+    await chat.stop()
 
 
 app = FastAPI(title="AIGC 本地工作台", lifespan=lifespan, docs_url=None, redoc_url=None, openapi_url=None)
@@ -358,13 +362,21 @@ async def local_only(request: Request, call_next):
     expected = f"http://{request.headers.get('host')}"
     if (origin and origin != expected) or request.headers.get("sec-fetch-site") == "cross-site":
         return JSONResponse({"detail": "仅接受本地同源请求"}, status_code=403)
-    if request.method not in ("GET", "HEAD") and request.headers.get("x-aigc-client") != "local":
+    native_chat = request.url.path.startswith("/qwen/")
+    identified = request.headers.get("x-aigc-client") == "local" or (native_chat and (
+        origin == expected or request.headers.get("sec-fetch-site") == "same-origin"))
+    if request.method not in ("GET", "HEAD") and not identified:
         return JSONResponse({"detail": "缺少本地请求标识"}, status_code=403)
     response = await call_next(request)
     response.headers["Cache-Control"] = "no-store"
     response.headers["X-Content-Type-Options"] = "nosniff"
     response.headers["Referrer-Policy"] = "no-referrer"
-    response.headers["Content-Security-Policy"] = "default-src 'self'; img-src 'self' blob: data:; media-src 'self' blob:; style-src 'self'; script-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'"
+    response.headers["Content-Security-Policy"] = (
+        "default-src 'self'; img-src 'self' blob: data:; media-src 'self' blob:; "
+        "style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'; "
+        "worker-src 'self' blob:; font-src 'self' data:; connect-src 'self'; frame-ancestors 'self'; base-uri 'self'"
+        if native_chat else
+        "default-src 'self'; img-src 'self' blob: data:; media-src 'self' blob:; style-src 'self'; script-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'")
     return response
 
 
@@ -376,6 +388,11 @@ async def index():
 @app.get("/workbench")
 async def existing_workbench():
     return FileResponse(ROOT / "static/index.html")
+
+
+@app.get("/chat")
+async def chat_page():
+    return FileResponse(ROOT / "static/chat.html")
 
 
 @app.get("/library")
@@ -390,7 +407,68 @@ async def open_workflow():
 
 @app.get("/api/status")
 async def status():
-    return {"session": session.public(), "active_job": active_job, "comfy": native.public()}
+    return {"session": session.public(), "active_job": active_job, "comfy": native.public(), "chat": chat.public()}
+
+
+async def prepare_chat():
+    if active_job or session.state in ("starting", "stopping") or (session.connect_task and not session.connect_task.done()):
+        raise HTTPException(409, "图片、视频或音频服务正在工作，请完成或断开后再聊天")
+    if session.state == "ready":
+        if await native.busy():
+            raise HTTPException(409, "ComfyUI 正在运行或归档任务，请等待完成后再聊天")
+        try:
+            await native.before_stop()
+        except (RuntimeError, httpx.HTTPError, OSError) as error:
+            raise HTTPException(409, str(error))
+        await session.stop()
+    try:
+        await chat.connect()
+    except (RuntimeError, OSError, TimeoutError) as error:
+        raise HTTPException(503, str(error) or "Qwen 启动超时，请重试")
+
+
+@app.post("/api/chat/connect")
+async def connect_chat():
+    async with submission_lock:
+        await prepare_chat()
+        return chat.public()
+
+
+@app.api_route("/qwen/{path:path}", methods=["GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"])
+async def native_chat_proxy(path: str, request: Request):
+    endpoint = "/" + path
+    if request.method not in ("GET", "HEAD", "OPTIONS") and endpoint == "/models":
+        raise HTTPException(403, "工作台只连接已部署的 Qwen，不提供模型下载或删除")
+    inference = request.method == "POST" and endpoint in (
+        "/v1/chat/completions", "/chat/completions", "/v1/completions", "/completion",
+        "/completions", "/v1/responses", "/v1/stream", "/models/load")
+    body = await request.body()
+    if len(body) > 64 * 1024 * 1024:
+        raise HTTPException(413, "请求内容过大")
+    async with submission_lock:
+        if chat.state != "ready":
+            raise HTTPException(503, "聊天已释放，请在工作台重新连接")
+        if inference and chat.busy:
+            raise HTTPException(409, "当前模型正在回复，请等待完成或停止回复")
+        headers = {key: value for key, value in request.headers.items()
+                   if key.lower() in ("accept", "accept-encoding", "content-type", "range", "last-event-id") or key.lower().startswith("x-")}
+        ready, stream = chat.begin_proxy(request.method, endpoint, headers=headers, body=body,
+                                         query=request.query_params.multi_items(), inference=inference)
+    try:
+        response = await ready
+    except (RuntimeError, httpx.HTTPError, OSError, asyncio.CancelledError) as error:
+        await stream.aclose()
+        raise HTTPException(503, str(error) or "聊天请求已停止")
+    hop = {"connection", "keep-alive", "transfer-encoding", "upgrade", "proxy-authenticate", "proxy-authorization", "te", "trailer"}
+    response_headers = {key: value for key, value in response.headers.items() if key.lower() not in hop}
+    return StreamingResponse(stream, status_code=response.status_code, headers=response_headers)
+
+
+@app.post("/api/chat/disconnect")
+async def disconnect_chat():
+    async with submission_lock:
+        await chat.stop()
+        return chat.public()
 
 
 @app.get("/api/diagnostics")
@@ -403,6 +481,12 @@ async def diagnostics():
 @app.post("/api/connect", status_code=202)
 async def connect(engine: Literal["h3", "qwen21", "music3", "voxcpm2"] = "h3"):
     async with submission_lock:
+        if chat.busy:
+            raise HTTPException(409, "聊天正在回复，请先停止回复或断开聊天")
+        if chat.state in ("ready", "error"):
+            await chat.stop()
+            if chat.state == "error":
+                raise HTTPException(409, chat.error)
         if session.state == "stopping":
             raise HTTPException(409, "正在回收会话，请稍后")
         if active_job:
@@ -450,6 +534,7 @@ async def shutdown():
         except (RuntimeError, httpx.HTTPError, OSError) as error:
             raise HTTPException(409, str(error))
         await session.stop()
+        await chat.stop()
     return JSONResponse({"stopped": True, "remote_cleaned": session.cleaned}, background=BackgroundTask(callback))
 
 

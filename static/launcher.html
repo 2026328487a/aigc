@@ -3,18 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>AIGC · ComfyUI</title>
+  <title>AIGC · 创作工作台</title>
   <link rel="icon" href="/static/icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/static/launcher.css">
   <script src="/static/archive.js" defer></script>
   <script src="/static/launcher.js" defer></script>
 </head>
 <body>
-  <header><a class="brand" href="/">AIGC <span>ComfyUI</span></a><nav><a href="/library">本地作品库</a><a href="/workbench?engine=voxcpm2">语音与声音克隆</a></nav></header>
+  <header><a class="brand" href="/">AIGC <span>创作工作台</span></a><nav><a href="/chat">Qwen 聊天</a><a href="/library">本地作品库</a><a href="/workbench?engine=voxcpm2">语音与声音克隆</a></nav></header>
   <main>
     <p class="eyebrow">DGX · 本地连接与作品管理</p>
     <h1>在 ComfyUI 中创作</h1>
     <p class="intro">使用完整节点界面。生成结果自动保存到本机；断开或空闲 10 分钟后，回收服务器实例与会话文件。</p>
+    <section class="connection chat-entry" aria-label="Qwen 聊天">
+      <h2>Qwen 原生聊天</h2><p class="intro">使用已有 llama.cpp 聊天界面。工作台管理连接与释放；闲置 15 分钟回收，后台状态查询不续期。</p>
+      <a class="button" href="/chat">打开聊天 →</a><p id="chat-summary" class="note">进入后点击“连接并打开”。</p>
+    </section>
     <section class="connection" aria-label="服务器连接">
       <label for="engine">模型环境</label>
       <select id="engine"><option value="qwen21">Qwen Image 2.1 · 图片</option><option value="h3">MiniMax H3 · 视频</option><option value="music3">MiniMax Music 3 · 音乐</option></select>

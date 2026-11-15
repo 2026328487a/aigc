@@ -8,6 +8,7 @@ __pycache__/
 /data/
 /logs/
 /test-results/
+/.cache/qwen38-transfer/
 *.log
 
 # Local configuration and credentials
