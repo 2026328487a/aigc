@@ -477,7 +477,7 @@ class NativeComfy:
                         if node.get("class_type") == "AIGCSaveAudioWAV":
                             inputs["filename_prefix"] = archive_id + "/audio"
                         elif isinstance(prefix, str) and (node.get("class_type", "").startswith("Save")
-                                                         or node.get("class_type") == "AIGCSaveH3Reference"):
+                                                         or node.get("class_type") in {"AIGCSaveH3Reference", "AIGCSaveClothingVideo"}):
                             if ".." in pathlib.PurePosixPath(prefix.replace("\\", "/")).parts:
                                 raise ValueError("Invalid output prefix")
                             inputs["filename_prefix"] = archive_id + "/" + prefix

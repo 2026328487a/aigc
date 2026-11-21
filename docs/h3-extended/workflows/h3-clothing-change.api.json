@@ -1,0 +1,219 @@
+{
+  "101": {
+    "class_type": "LoadVideo",
+    "inputs": {
+      "file": "test.mp4"
+    }
+  },
+  "102": {
+    "class_type": "AIGCClothingPrompt",
+    "inputs": {
+      "outfit": "an ivory cable-knit sweater with loose long sleeves and matching ivory knit shorts of the original length, matte fabric, no logos or lettering"
+    }
+  },
+  "103": {
+    "class_type": "AIGCClothingPrepare",
+    "inputs": {
+      "video": [
+        "101",
+        0
+      ],
+      "work_long_edge": 1024
+    }
+  },
+  "104": {
+    "class_type": "CheckpointLoaderSimple",
+    "inputs": {
+      "ckpt_name": "sdpose_wholebody_fp16.safetensors"
+    }
+  },
+  "105": {
+    "class_type": "SDPoseKeypointExtractor",
+    "inputs": {
+      "model": [
+        "104",
+        0
+      ],
+      "vae": [
+        "104",
+        2
+      ],
+      "image": [
+        "103",
+        1
+      ],
+      "batch_size": 8
+    }
+  },
+  "106": {
+    "class_type": "SDPoseDrawKeypoints",
+    "inputs": {
+      "keypoints": [
+        "105",
+        0
+      ],
+      "draw_body": true,
+      "draw_hands": true,
+      "draw_face": true,
+      "draw_feet": false,
+      "stick_width": 3,
+      "face_point_size": 1,
+      "score_threshold": 0.2,
+      "draw_head": true
+    }
+  },
+  "107": {
+    "class_type": "AIGCClothingMasks",
+    "inputs": {
+      "clip": [
+        "103",
+        0
+      ],
+      "keypoints": [
+        "105",
+        0
+      ],
+      "pose_images": [
+        "106",
+        0
+      ],
+      "mode": "blue outfit (tested)"
+    }
+  },
+  "108": {
+    "class_type": "PreviewImage",
+    "inputs": {
+      "images": [
+        "107",
+        1
+      ]
+    }
+  },
+  "109": {
+    "class_type": "AIGCClothingReference",
+    "inputs": {
+      "clip": [
+        "107",
+        0
+      ],
+      "outfit": [
+        "102",
+        0
+      ],
+      "steps": 25,
+      "seed": 42
+    }
+  },
+  "110": {
+    "class_type": "PreviewImage",
+    "inputs": {
+      "images": [
+        "109",
+        1
+      ]
+    }
+  },
+  "111": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_ref2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "112": {
+    "class_type": "LoraLoaderModelOnly",
+    "inputs": {
+      "model": [
+        "111",
+        0
+      ],
+      "lora_name": "minimax_h3_ref2v_lightx2v_turbo_4step_v0.1_resized_avg_rank_20_bf16.safetensors",
+      "strength_model": 1.0
+    }
+  },
+  "113": {
+    "class_type": "LoraLoaderModelOnly",
+    "inputs": {
+      "model": [
+        "112",
+        0
+      ],
+      "lora_name": "minimax_h3_character_swap_v1.1_ref2va_fro.safetensors",
+      "strength_model": 1.0
+    }
+  },
+  "114": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "115": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "116": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+    }
+  },
+  "117": {
+    "class_type": "ModelPatchLoader",
+    "inputs": {
+      "name": "minimax_h3_fun_controlnet_union_2.0_pruned_int8_convrot.safetensors"
+    }
+  },
+  "118": {
+    "class_type": "AIGCClothingGenerate",
+    "inputs": {
+      "clip": [
+        "109",
+        0
+      ],
+      "model": [
+        "113",
+        0
+      ],
+      "text_encoder": [
+        "114",
+        0
+      ],
+      "video_vae": [
+        "115",
+        0
+      ],
+      "audio_vae": [
+        "116",
+        0
+      ],
+      "controlnet": [
+        "117",
+        0
+      ],
+      "steps": 4,
+      "chunk_frames": 124,
+      "overlap_frames": 22,
+      "reference_scale": 0.5,
+      "pose_strength": 0.65
+    }
+  },
+  "119": {
+    "class_type": "AIGCSaveClothingVideo",
+    "inputs": {
+      "video": [
+        "118",
+        0
+      ],
+      "validation": [
+        "118",
+        1
+      ],
+      "filename_prefix": "clothing-change/video"
+    }
+  }
+}

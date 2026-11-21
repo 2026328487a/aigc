@@ -1,0 +1,2 @@
+# Install after the base requirements; this is only needed for the video clothing CLI.
+opencv-python-headless==4.11.0.86

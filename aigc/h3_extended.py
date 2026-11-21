@@ -9,6 +9,7 @@ TEMPLATES = {
     'h3-digital-human': '录音驱动数字人',
     'h3-vocal-human': '提取人声并驱动数字人',
     'h3-character-swap': '动作迁移与人物替换',
+    'h3-clothing-change': '视频服装替换 · 完整流程',
     'h3-head-swap': '视频换头',
     'h3-anime': '真人转动漫',
     'h3-motion': '稳定身体动作',
@@ -35,6 +36,11 @@ def default_inputs(info, kind):
 
 def build_h3_extended(name, info=None, *, width=512, height=320, length=124, seed=42):
     if name not in TEMPLATES:raise KeyError(name)
+    if name=='h3-clothing-change':
+        from .clothing_workflow import build_clothing_workflow
+        graph=build_clothing_workflow()
+        graph['109']['inputs']['seed']=seed
+        return graph
     info=info or {}
     image_mode=name in {'h3-lightx','h3-latent-upscale','h3-union-control','h3-effects'}
     prompt=('A calm cinematic shot of the adult person in the reference picture. '

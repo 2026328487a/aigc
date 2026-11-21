@@ -99,7 +99,7 @@ class NativeTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(self.requests[-1].url.params["overwrite"], "true")
 
     async def test_submission_uses_isolated_output_names(self):
-        payload = {"prompt": {"1": {"class_type": "SaveImage", "inputs": {"filename_prefix": "ComfyUI"}}, "2": {"class_type": "AIGCSaveAudioWAV", "inputs": {"filename_prefix": "anything"}}, "3": {"class_type": "AIGCSaveH3Reference", "inputs": {"filename_prefix": "my_person"}}}}
+        payload = {"prompt": {"1": {"class_type": "SaveImage", "inputs": {"filename_prefix": "ComfyUI"}}, "2": {"class_type": "AIGCSaveAudioWAV", "inputs": {"filename_prefix": "anything"}}, "3": {"class_type": "AIGCSaveH3Reference", "inputs": {"filename_prefix": "my_person"}}, "4": {"class_type": "AIGCSaveClothingVideo", "inputs": {"filename_prefix": "clothing-change/video"}}}}
         response = await self.client.post("/prompt", json=payload, headers={"Origin": "http://127.0.0.1:8765"})
         self.assertEqual(response.status_code, 200)
         sent = json.loads(self.requests[-1].content)
@@ -107,6 +107,7 @@ class NativeTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(sent["prompt"]["1"]["inputs"]["filename_prefix"], record["id"] + "/ComfyUI")
         self.assertEqual(sent["prompt"]["2"]["inputs"]["filename_prefix"], record["id"] + "/audio")
         self.assertEqual(sent["prompt"]["3"]["inputs"]["filename_prefix"], record["id"] + "/my_person")
+        self.assertEqual(sent["prompt"]["4"]["inputs"]["filename_prefix"], record["id"] + "/clothing-change/video")
         self.assertTrue(self.native.pending())
 
     async def test_unsafe_output_prefix_is_rejected_before_forwarding(self):

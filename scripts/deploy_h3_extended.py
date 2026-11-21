@@ -50,7 +50,7 @@ def main():
     # Shared baseline weights and distinct addon paths; never overwrite a baseline weight.
     paths={'h3_baseline':{'base_path':str(BASE/'models'),'is_default':False},
            'h3_extended':{'base_path':str(MODELS/'models'),'is_default':False}}
-    for category in ['diffusion_models','text_encoders','vae','vae_approx','loras','embeddings','model_patches',
+    for category in ['checkpoints','diffusion_models','text_encoders','vae','vae_approx','loras','embeddings','model_patches',
                      'latent_upscale_models','ultralytics','sams','audio_encoders']:
         paths['h3_baseline'][category]=category;paths['h3_extended'][category]=category
         (MODELS/'models'/category).mkdir(parents=True,exist_ok=True)

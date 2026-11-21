@@ -680,11 +680,13 @@ async def job_file(job_id: str, filename: str, download: bool = False):
 
 
 @app.get("/api/comfy/templates/{name}")
-async def native_template(name: str, download: bool = True):
+async def native_template(name: str, download: bool = True, format: Literal['api','native'] = 'api'):
     if name in H3_TEMPLATES:
-        path = ROOT / "docs/h3-extended/workflows" / (name + ".api.json")
+        suffix='.workflow.json' if format=='native' else '.api.json'
+        path = ROOT / "docs/h3-extended/workflows" / (name + suffix)
+        if not path.is_file(): raise HTTPException(404,'此模板尚未提供原生画布文件')
         graph = json.loads(path.read_text(encoding="utf-8"))
-        headers = {"Content-Disposition": f'attachment; filename="{name}.api.json"'} if download else {}
+        headers = {"Content-Disposition": f'attachment; filename="{name}{suffix}"'} if download else {}
         return JSONResponse(graph, headers=headers)
     options = {
         "qwen-text": (Settings(engine="qwen21", mode="text", prompt="A small red boat on a quiet lake, soft morning light", width=512, height=512, steps=25), []),

@@ -4,7 +4,7 @@ const templates = {qwen21:[['qwen-text','文字生成图片'],['qwen-edit','参�
 templates.h3.push(
   ['h3-lightx','LightX2V 首帧视频'],['h3-continuation','两段连续镜头'],
   ['h3-digital-human','录音驱动数字人'],['h3-vocal-human','提取人声并驱动数字人'],
-  ['h3-character-swap','动作迁移与人物替换'],['h3-head-swap','视频换头'],
+  ['h3-character-swap','动作迁移与人物替换'],['h3-clothing-change','视频服装替换 · 完整流程'],['h3-head-swap','视频换头'],
   ['h3-anime','真人转动漫'],['h3-motion','稳定身体动作'],['h3-sharpen','视频细节增强'],
   ['h3-latent-upscale','潜空间放大与二次采样'],['h3-face-refine','跟踪修脸与表情保留'],
   ['h3-union-control','Union 2.0 边缘动作控制'],['h3-effects','子弹时间特效'],['h3-refmod','可复用人物参考素材'],
@@ -28,7 +28,8 @@ function renderTemplates() {
     const card=document.createElement('div');card.className='template-card';
     const title=document.createElement('span');title.textContent=label;
     const open=document.createElement('a');open.href=`/open-workflow?template=${name}`;open.textContent='一键打开';open.target='_blank';open.rel='noopener';
-    const download=document.createElement('a');download.href=`/api/comfy/templates/${name}`;download.textContent='下载模板';download.download=`${name}.api.json`;
+    const native=name==='h3-clothing-change';
+    const download=document.createElement('a');download.href=`/api/comfy/templates/${name}${native?'?format=native':''}`;download.textContent='下载模板';download.download=`${name}.${native?'workflow':'api'}.json`;
     card.append(title,open,download);byId('templates').append(card);
   }
 }
