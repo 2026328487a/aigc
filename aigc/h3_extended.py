@@ -1,10 +1,13 @@
 """Small, inspectable H3 graphs for the dedicated extension environment."""
 from copy import deepcopy
+import json
+from pathlib import Path
 
 from .workflows import Settings, build_workflow
 
 TEMPLATES = {
     'h3-lightx': 'LightX2V 首帧视频',
+    'h3-hmnsfw-i2v': 'HMNSFW LoRA · 首帧视频',
     'h3-continuation': '两段连续镜头',
     'h3-digital-human': '录音驱动数字人',
     'h3-vocal-human': '提取人声并驱动数字人',
@@ -36,6 +39,12 @@ def default_inputs(info, kind):
 
 def build_h3_extended(name, info=None, *, width=512, height=320, length=124, seed=42):
     if name not in TEMPLATES:raise KeyError(name)
+    if name=='h3-hmnsfw-i2v':
+        path=Path(__file__).resolve().parents[1]/'docs/h3-extended/workflows/h3-hmnsfw-i2v.api.json'
+        graph=json.loads(path.read_text(encoding='utf-8'))
+        graph['7']['inputs'].update(width=width,height=height,length=length)
+        graph['9']['inputs']['noise_seed']=seed
+        return graph
     if name=='h3-clothing-change':
         from .clothing_workflow import build_clothing_workflow
         graph=build_clothing_workflow()
