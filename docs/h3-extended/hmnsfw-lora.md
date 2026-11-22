@@ -1,5 +1,7 @@
 # H3 HMNSFW LoRA 首帧图生视频工作流
 
+另有三份保留相同输入参数的加速 LoRA 组合，供手动对比，见 [加速工作流对比说明](hmnsfw-acceleration-comparison.md)。
+
 2026-11-21 已下载并安装 `HMNSFW-Extreme-Realism.safetensors`，并使用 DGX 当前安装的 ComfyUI 节点完成 CPU 参数与连线校验。没有启动 ComfyUI 服务、加载模型或提交视频生成。图像输入用临时占位文件完成校验，实际使用时上传自己的首帧图。
 
 ## 打开与使用

@@ -14,6 +14,8 @@ Qwen 的安装记录见 [图片部署说明](docs/qwen21/deployment.md)，音乐
 
 工作台的 **HMNSFW LoRA · 首帧视频** 模板使用现有 H3 FL2VA 主模型，配好 LoRA 强度 0.7、Euler 18 步和原生音视频 Shift。一键打开和下载模板均使用原生画布；权重位置、校验和及使用说明见 [HMNSFW LoRA 工作流](docs/h3-extended/hmnsfw-lora.md)。已通过节点校验，生成效果尚未实测。
 
+同一组输入可用 **HMNSFW + Turbo · 8 步**、**HMNSFW + LightX2V · 4 步**、**HMNSFW + Turbo 768p · 4 步** 三份加速组合做手动对比。768p 权重单独配置视频 Shift 6，其他版本为 12；音频 Shift 均为 3。默认保留相同图片、提示词、种子和尺寸，见 [加速对比说明](docs/h3-extended/hmnsfw-acceleration-comparison.md)。
+
 DGX 的模型、环境和长视频方案见 [工作流与资源调查](docs/minimax-long-video-research-2026-10-26.md)、[模型资源总账](docs/dgx-model-registry.json)及[长视频资料包](docs/dgx-long-video-kit/README.md)。资料包记录上游来源与校验和，运行兼容性需按说明另行验证。
 
 **获取项目与首次配置**
@@ -46,7 +48,7 @@ python -m venv .venv
 
 原生 ComfyUI 的已归档预览可由本地代理提供；核心 `/history` 返回本地保存的任务记录。工作流及设置的 JSON/CSS 等用户文件备份到本机，启动同一模型环境时恢复。当前备份单文件上限 5 MB、总计 20 MB。
 
-不同模型环境按需切换。H3 已增加独立扩展环境与 17 个创作模板；Qwen、Music 3 使用各自既有环境。原生前端的新资产库等功能若依赖服务器持久数据库，暂不承诺完整持久化；本地归档和核心历史是结果保存依据。
+不同模型环境按需切换。H3 已增加独立扩展环境与 20 个创作模板；Qwen、Music 3 使用各自既有环境。原生前端的新资产库等功能若依赖服务器持久数据库，暂不承诺完整持久化；本地归档和核心历史是结果保存依据。
 
 以下“清空预览”“删除历史”等表单功能说明对应保留的 `/workbench` 页面。
 

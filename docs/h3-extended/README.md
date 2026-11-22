@@ -12,6 +12,9 @@
 |---|---|---|
 | `h3-lightx` | 一张图片生成带声音的视频 | 默认 512×320、124 帧、4 步；首帧模型配首帧 LightX2V |
 | `h3-hmnsfw-i2v` | 首帧图片 + HMNSFW 内容 LoRA | 强度 0.7、Euler 18 步，原生 Shift 12；已完成节点校验，详见 [说明](hmnsfw-lora.md) |
+| `h3-hmnsfw-turbo8` | 首帧图片 + Turbo + HMNSFW | 8 步，Shift 12/3，内容强度 0.7；见 [加速对比说明](hmnsfw-acceleration-comparison.md) |
+| `h3-hmnsfw-lightx4` | 首帧图片 + LightX2V 压缩 LoRA + HMNSFW | 4 步，Shift 12/3，内容强度 0.7 |
+| `h3-hmnsfw-turbo4-768p` | 首帧图片 + 768p Turbo + HMNSFW | 4 步，Shift 6/3；默认 512×320 用于小尺寸对比，可统一改为 1344×768 |
 | `h3-continuation` | 同一人物的两段连续镜头 | 两段各 124 帧，保留 22 帧尾部约束，输出 226 帧，约 9.42 秒 |
 | `h3-digital-human` | 人物图 + WAV，录音决定台词 | 自动按录音长度确定帧数，默认最多约 5.17 秒；成片保留输入音轨 |
 | `h3-vocal-human` | 人物图 + 带伴奏录音，先分离人声再驱动视频 | 与数字人相同；成片使用分离后的人声 |

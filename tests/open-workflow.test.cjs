@@ -19,22 +19,25 @@ const { workflowForFrame, isComfyReady, restoreAutogrowLinks, verifyApiGraph } =
   '({ workflowForFrame, isComfyReady, restoreAutogrowLinks, verifyApiGraph })', context,
 );
 
-test('HMNSFW one-click opening requests the registered native canvas', async () => {
+for (const [name, nodeCount] of [
+  ['h3-hmnsfw-i2v', 16], ['h3-hmnsfw-turbo8', 18],
+  ['h3-hmnsfw-lightx4', 18], ['h3-hmnsfw-turbo4-768p', 18],
+]) test(`${name} one-click opening requests its registered native canvas`, async () => {
   const requested = [];
   const workflow = JSON.parse(fs.readFileSync(path.join(__dirname,
-    '../docs/h3-extended/workflows/h3-hmnsfw-i2v.workflow.json'), 'utf8'));
-  context.location.search = '?template=h3-hmnsfw-i2v';
+    `../docs/h3-extended/workflows/${name}.workflow.json`), 'utf8'));
+  context.location.search = `?template=${name}`;
   context.fetch = async url => {
     requested.push(url);
     return { ok: true, json: async () => workflow };
   };
   try {
     const data = await vm.runInContext('getWorkflow()', context);
-    assert.deepEqual(requested, ['/api/comfy/templates/h3-hmnsfw-i2v?download=false&format=native']);
+    assert.deepEqual(requested, [`/api/comfy/templates/${name}?download=false&format=native`]);
     assert.equal(data.engine, 'h3');
     assert.equal(data.format, 'native');
-    assert.equal(data.filename, 'h3-hmnsfw-i2v.workflow.json');
-    assert.equal(data.workflow.nodes.length, 16);
+    assert.equal(data.filename, `${name}.workflow.json`);
+    assert.equal(data.workflow.nodes.length, nodeCount);
   } finally {
     context.location.search = '';
     delete context.fetch;
