@@ -25,12 +25,14 @@ except ModuleNotFoundError as error:
     helper_source=Path('/home/jnu/models/aigc/h3-extended/staging/h3_helpers.py')
     (helper/'__init__.py').write_text(helper_source.read_text())
     web=helper/'web';web.mkdir(exist_ok=True)
-    (web/'h3_reference.js').write_text((helper_source.parent/'h3_reference.js').read_text())
+    for name in ('h3_reference.js', 'h3_image_size.js'):
+        (web/name).write_text((helper_source.parent/name).read_text())
     manifest=Path('/home/jnu/models/aigc/h3-extended/deployment.json')
     record=json.loads(manifest.read_text())
     record['compatibility_repairs']=['MiniMax Tools: optional advanced-guide node needs absent comfy.audio; other nodes load independently.',
                                      'AIGC RemoveLatentMask+ replaces the unrelated Essentials dependency for the imported graph.',
-                                     'AIGC reference export/import uses session output/input, with automatic local archive.']
+                                     'AIGC reference export/import uses session output/input, with automatic local archive.',
+                                     'AIGC H3 image sizing preserves aspect ratio and pads to 32-pixel alignment.']
     manifest.write_text(json.dumps(record,ensure_ascii=False,indent=2))
     print('H3_COMPATIBILITY_PATCHED')
 

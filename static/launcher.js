@@ -31,6 +31,7 @@ function renderTemplates() {
   for(const [name,label] of entries) {
     const card=document.createElement('div');card.className='template-card';
     const title=document.createElement('span');title.textContent=label;
+    if(name.startsWith('h3-hmnsfw-')) title.textContent+=' · 自动等比尺寸';
     const open=document.createElement('a');open.href=`/open-workflow?template=${name}`;open.textContent='一键打开';open.target='_blank';open.rel='noopener';
     const native=name==='h3-clothing-change' || name.startsWith('h3-hmnsfw-');
     const download=document.createElement('a');download.href=`/api/comfy/templates/${name}${native?'?format=native':''}`;download.textContent='下载模板';download.download=`${name}.${native?'workflow':'api'}.json`;

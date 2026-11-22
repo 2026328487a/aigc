@@ -49,11 +49,17 @@
         0
       ],
       "prompt": "Use the first frame as the visual reference. A cinematic shot of the adult person making one slow, natural movement. Consistent identity and clothing, realistic texture, smooth motion, stable anatomy, a fixed camera. Quiet room ambience, no music.",
-      "width": 512,
-      "height": 320,
+      "width": [
+        "23",
+        1
+      ],
+      "height": [
+        "23",
+        2
+      ],
       "length": 124,
       "first_frame": [
-        "20",
+        "23",
         0
       ]
     }
@@ -182,6 +188,20 @@
     "class_type": "LoadImage",
     "inputs": {
       "image": "reference.png"
+    }
+  },
+  "23": {
+    "class_type": "AIGCH3ImageResize",
+    "inputs": {
+      "image": [
+        "20",
+        0
+      ],
+      "mode": "最长边",
+      "longest_edge": 512,
+      "scale": 1.0,
+      "width": 512,
+      "height": 320
     }
   },
   "21": {

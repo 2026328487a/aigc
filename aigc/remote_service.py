@@ -32,6 +32,21 @@ def comfy_arguments(config):
     return arguments
 
 
+def prepare_h3_helpers(config):
+    files = config.pop('h3_helper_files', {})
+    if config.get('engine') != 'h3' or not files:
+        return None
+    helper = pathlib.Path(config['root']) / 'custom_nodes/AIGC-H3-Helpers'
+    allowed = {'__init__.py', 'web/h3_reference.js', 'web/h3_image_size.js'}
+    if set(files) != allowed:
+        raise ValueError('Incomplete H3 helper package')
+    for name, content in files.items():
+        path = helper / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(content, encoding='utf-8')
+    return helper
+
+
 def main():
     config = json.loads(sys.stdin.readline())
     root = pathlib.Path(config["root"]).resolve()
@@ -46,6 +61,11 @@ def main():
 
     comfy_main.cuda_malloc = cuda_malloc  # main.py imports this only in its CLI entry point.
     loop, server, start = comfy_main.start_comfyui()
+    helper = prepare_h3_helpers(config)
+    if helper is not None:
+        import nodes
+        if not loop.run_until_complete(nodes.load_custom_node(str(helper))):
+            raise RuntimeError('H3 helper package did not load')
     if config.get("engine") == "music3":
         import nodes
 

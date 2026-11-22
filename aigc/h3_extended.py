@@ -40,14 +40,19 @@ def default_inputs(info, kind):
         elif spec[0]=='COMBO' and options.get('options'):result[key]=options['options'][0]
     return result
 
-def build_h3_extended(name, info=None, *, width=512, height=320, length=124, seed=42):
+def build_h3_extended(name, info=None, *, width=None, height=None, length=124, seed=42):
     if name not in TEMPLATES:raise KeyError(name)
     if name.startswith('h3-hmnsfw-'):
         path=Path(__file__).resolve().parents[1]/'docs/h3-extended/workflows'/(name+'.api.json')
         graph=json.loads(path.read_text(encoding='utf-8'))
-        graph['7']['inputs'].update(width=width,height=height,length=length)
+        if width is not None or height is not None:
+            graph['23']['inputs'].update(mode='手动宽高', width=width if width is not None else 512,
+                                        height=height if height is not None else 320)
+        graph['7']['inputs']['length']=length
         graph['9']['inputs']['noise_seed']=seed
         return graph
+    width=512 if width is None else width
+    height=320 if height is None else height
     if name=='h3-clothing-change':
         from .clothing_workflow import build_clothing_workflow
         graph=build_clothing_workflow()

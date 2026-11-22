@@ -20,8 +20,8 @@ const { workflowForFrame, isComfyReady, restoreAutogrowLinks, verifyApiGraph } =
 );
 
 for (const [name, nodeCount] of [
-  ['h3-hmnsfw-i2v', 16], ['h3-hmnsfw-turbo8', 18],
-  ['h3-hmnsfw-lightx4', 18], ['h3-hmnsfw-turbo4-768p', 18],
+  ['h3-hmnsfw-i2v', 17], ['h3-hmnsfw-turbo8', 19],
+  ['h3-hmnsfw-lightx4', 19], ['h3-hmnsfw-turbo4-768p', 19],
 ]) test(`${name} one-click opening requests its registered native canvas`, async () => {
   const requested = [];
   const workflow = JSON.parse(fs.readFileSync(path.join(__dirname,

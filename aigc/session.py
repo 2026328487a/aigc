@@ -93,6 +93,13 @@ class Session:
             "token": self.token, "lease_seconds": 120, "engine": engine,
             "service_source": (source_dir / ("remote_tts_service.py" if engine == "voxcpm2" else "remote_service.py")).read_text(encoding="utf-8"),
         }
+        if engine == 'h3':
+            helper_dir = ROOT / 'scripts'
+            config['h3_helper_files'] = {
+                '__init__.py': (helper_dir / 'h3_helpers.py').read_text(encoding='utf-8'),
+                'web/h3_reference.js': (helper_dir / 'h3_reference.js').read_text(encoding='utf-8'),
+                'web/h3_image_size.js': (helper_dir / 'h3_image_size.js').read_text(encoding='utf-8'),
+            }
         if engine == "voxcpm2":
             config["worker_source"] = (source_dir / "remote_tts_worker.py").read_text(encoding="utf-8")
         bootstrap = base64.b64encode((source_dir / "remote_supervisor.py").read_bytes())

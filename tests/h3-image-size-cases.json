@@ -1,0 +1,12 @@
+[
+  {"name":"landscape", "original":[1920,1080], "values":{"mode":"最长边","longest_edge":512}, "content":[512,288], "canvas":[512,288]},
+  {"name":"portrait", "original":[1080,1920], "values":{"mode":"最长边","longest_edge":1024}, "content":[576,1024], "canvas":[576,1024]},
+  {"name":"portrait padding", "original":[1080,1920], "values":{"mode":"最长边","longest_edge":768}, "content":[432,768], "canvas":[448,768]},
+  {"name":"square half", "original":[1000,1000], "values":{"mode":"缩放倍数","scale":0.5}, "content":[500,500], "canvas":[512,512]},
+  {"name":"landscape half", "original":[1920,1080], "values":{"mode":"缩放倍数","scale":0.5}, "content":[960,540], "canvas":[960,544]},
+  {"name":"upscale", "original":[100,50], "values":{"mode":"缩放倍数","scale":2.0}, "content":[200,100], "canvas":[224,128]},
+  {"name":"manual contain", "original":[1080,1920], "values":{"mode":"手动宽高","width":512,"height":320}, "content":[180,320], "canvas":[512,320]},
+  {"name":"round half up", "original":[3,2], "values":{"mode":"缩放倍数","scale":0.5}, "content":[2,1], "canvas":[32,32]},
+  {"name":"narrow image", "original":[33,1], "values":{"mode":"手动宽高","width":32,"height":32}, "content":[32,1], "canvas":[32,32]},
+  {"name":"odd aspect", "original":[117,59], "values":{"mode":"最长边","longest_edge":512}, "content":[512,258], "canvas":[512,288]}
+]

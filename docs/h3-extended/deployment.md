@@ -31,11 +31,13 @@
 
 H3 的 profile 明确启用自定义节点；启动仍通过已有 SSH 会话系统，输入、输出和工作目录位于随机会话目录。扩展源代码会缓存插件和模型；部分第三方节点有自己的保存行为。提供的模板关闭 RefMod 自动写入模型目录，不使用原大图的自动写提示词支路。
 
+2026-11-23 起，工作台每次连接 H3 会把项目中的 `h3_helpers.py`、`h3_reference.js` 和 `h3_image_size.js` 写入会话临时目录，重新注册辅助节点并提供前端脚本。该包包含自动等比缩放与 32 像素边缘补齐；不用修改共用插件源码，断开后随会话清理。下面的 staging / patch 流程仍可用于维护独立 ComfyUI 安装。
+
 重复部署命令（维护用途）如下。第一步需要原下载目录，权重上传支持已校验文件跳过；基础源码和环境必须已经存在：
 
 ```powershell
 .\.venv\Scripts\python.exe -X utf8 scripts\prepare_h3_extended.py "E:\Quark\dowmload\MiniMax H3"
-scp test-results/h3-extended/plugins.tar.gz test-results/h3-extended/manifest.json scripts/h3_helpers.py scripts/h3_reference.js dgx:/home/jnu/models/aigc/h3-extended/staging/
+scp test-results/h3-extended/plugins.tar.gz test-results/h3-extended/manifest.json scripts/h3_helpers.py scripts/h3_reference.js scripts/h3_image_size.js dgx:/home/jnu/models/aigc/h3-extended/staging/
 .\.venv\Scripts\python.exe -X utf8 scripts\dgx_exec.py scripts\deploy_h3_extended.py
 .\.venv\Scripts\python.exe -X utf8 scripts\upload_h3_extended.py
 .\.venv\Scripts\python.exe -X utf8 scripts\dgx_exec.py scripts\patch_h3_extended.py
